@@ -1,16 +1,16 @@
-%global amdvlk_commit       56ae0901b977cdfef60f4f7cb64ff765b72a69e4
-%global llvm_commit         a29b3901405f374cf77f183b033cf67d8df86a5b
-%global xgl_commit          aa330d8e9acffb578c88193e4abe017c8fe15426
-%global pal_commit          c9a9f1954e770f1142fa25d311def93a087927ee
+%global amdvlk_commit       35bf91d01a5d4a78b9900b432712fc8c344350e6
+%global llvm_commit         920c9e13bc68e638144d8eb84c5a6fa01ef947fb
+%global xgl_commit          0eb739638710b51fd37b4d92ef12b75d259e646a
+%global pal_commit          b834a1f285ff3853b55112fd77c5d71974eef001
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
-%global commit_date         20180214
+%global commit_date         20180227
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.15
+Version:       2.16
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -51,10 +51,6 @@ following AMD GPUs:
     AMD FirePro™ Workstation Wx000/Wx100/Wx300 Series
     Radeon™ Pro WX x100 Series
     Radeon™ Pro 400/500 Series
-
-Note: Pipeline compiler support for geometry and tessellation shaders is
-not fully implemented for the Radeon™ RX Vega Series. APU support is
-limited. These issues will be addressed in upcoming releases.
 
 %prep
 %setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3
@@ -109,6 +105,30 @@ mkdir -p %{buildroot}%{_libdir}
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Tue Feb 27 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.16-0.20180227.git35bf91d
+
+- pal: Fix vulkan CTS failures of dEQP-VK.api.external.memory.opaque_fd.dedicated
+       with VM-always-valid enabled.
+- pal: Fix a multi-thread segfault issue
+- pal: Fix some Coverity Warnings
+- pal: Improve CPU performance by removing read modify writes in
+       CreateUntypedBufferViewSrds
+- xlg: Complete Geometry shader and tessellation support for gfx9
+- xlg: Clear v1.0 CTS failures for  Radeon™ RX Vega Series
+- xlg: Generate extension related source files during driver building time
+- xlg: Enable VK_EXT_depth_range_unrestricted extension
+- xlg: Fix vrcompositor startup crash issue
+- xlg: Fix random failure in AMD_buffer_marker tests
+- xlg: Reduce time to clear AllGpuRenderState structure by removing
+       Pal::DynamicGraphicsShaderInfos graphicsShaderInfo and
+       Pal::DynamicComputeShaderInfo computeShaderInfo and making them local
+       variables
+- xlg: [LLPC] use PassManagerBuilder instead of a forked and modified copy of opt
+- xlg: Vulkan queue marker to trigger RGP capture (Frame terminator)
+- xlg: Re-order the PreciseAnisoMode enum for clarity; Change the
+       PreciseAnisoMode value based on the public Radeon Settings Texture filter
+       quality (TFQ) setting
+
 * Wed Feb 14 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.15-0.20180214.git56ae090
 
 - pal: Program CHKSUM register with the value obtained from the pipeline binary for SPP.
