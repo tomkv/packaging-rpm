@@ -106,7 +106,7 @@ mkdir -p %{buildroot}%{_libdir}
 
 %changelog
 
-* Wed Mar 7 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.18-0.20180307.git9215e86
+* Wed Mar 07 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.18-0.20180307.git9215e86
 
 * xgl: Enable Vulkan 1.1 support
 * xgl: Enable  VK_AMD_shader_core_properties extension
