@@ -108,19 +108,19 @@ mkdir -p %{buildroot}%{_libdir}
 
 * Wed Mar 07 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.18-0.20180307.git9215e86
 
-* xgl: Enable Vulkan 1.1 support
-* xgl: Enable  VK_AMD_shader_core_properties extension
-* xgl: Force per-sample shading if the shader is using per-sample features
-* xgl: [LLPC] added addr space translation pass
-* xgl: Handle OOM errors during command buffer recording
-* pal: Fix the problem that driver unbinds vertex buffers when binding a new pipeline
-* pal: Fix gpuProfiler crash when starting capture from first frame)
-* pal: [gfx6] Update DB with correct address for PERFCOUNTERx_SELECT1 register,
+- xgl: Enable Vulkan 1.1 support
+- xgl: Enable  VK_AMD_shader_core_properties extension
+- xgl: Force per-sample shading if the shader is using per-sample features
+- xgl: [LLPC] added addr space translation pass
+- xgl: Handle OOM errors during command buffer recording
+- pal: Fix the problem that driver unbinds vertex buffers when binding a new pipeline
+- pal: Fix gpuProfiler crash when starting capture from first frame)
+- pal: [gfx6] Update DB with correct address for PERFCOUNTERx_SELECT1 register,
        fixing GPU hang on issuing spm traces with more than 2 events for DB
-* pal: Fix a CmdClearDepthStencil bug and adds validation to avoid 3D depth/stencil
+- pal: Fix a CmdClearDepthStencil bug and adds validation to avoid 3D depth/stencil
        images
-* pal: Expose perSampleShading PS parameter in PipelineInfo
-* pal: Enable VmAlwaysValid feature for kernel 4.16 and above
+- pal: Expose perSampleShading PS parameter in PipelineInfo
+- pal: Enable VmAlwaysValid feature for kernel 4.16 and above
 
 * Tue Feb 27 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.16-0.20180227.git35bf91d
 
