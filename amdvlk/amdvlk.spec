@@ -1,16 +1,16 @@
-%global amdvlk_commit       35bf91d01a5d4a78b9900b432712fc8c344350e6
+%global amdvlk_commit       9215e86b5654fe5f20d8221ee137e16d6e63b739
 %global llvm_commit         920c9e13bc68e638144d8eb84c5a6fa01ef947fb
-%global xgl_commit          0eb739638710b51fd37b4d92ef12b75d259e646a
-%global pal_commit          b834a1f285ff3853b55112fd77c5d71974eef001
+%global xgl_commit          d62dbcce24a1332773f25ddf8d369ed80da0cc4f
+%global pal_commit          b809c34bf6b2b703afcfd1be69050786e9a7b3d6
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
-%global commit_date         20180227
+%global commit_date         20180307
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.16
+Version:       2.18
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -105,6 +105,23 @@ mkdir -p %{buildroot}%{_libdir}
 %{_libdir}/amdvlk*.so
 
 %changelog
+
+* Wed Mar 7 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.18-0.20180307.git9215e86
+
+* xgl: Enable Vulkan 1.1 support
+* xgl: Enable  VK_AMD_shader_core_properties extension
+* xgl: Force per-sample shading if the shader is using per-sample features
+* xgl: [LLPC] added addr space translation pass
+* xgl: Handle OOM errors during command buffer recording
+* pal: Fix the problem that driver unbinds vertex buffers when binding a new pipeline
+* pal: Fix gpuProfiler crash when starting capture from first frame)
+* pal: [gfx6] Update DB with correct address for PERFCOUNTERx_SELECT1 register,
+       fixing GPU hang on issuing spm traces with more than 2 events for DB
+* pal: Fix a CmdClearDepthStencil bug and adds validation to avoid 3D depth/stencil
+       images
+* pal: Expose perSampleShading PS parameter in PipelineInfo
+* pal: Enable VmAlwaysValid feature for kernel 4.16 and above
+
 * Tue Feb 27 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.16-0.20180227.git35bf91d
 
 - pal: Fix vulkan CTS failures of dEQP-VK.api.external.memory.opaque_fd.dedicated
