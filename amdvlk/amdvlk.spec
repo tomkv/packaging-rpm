@@ -1,16 +1,16 @@
 %global amdvlk_commit       9215e86b5654fe5f20d8221ee137e16d6e63b739
-%global llvm_commit         920c9e13bc68e638144d8eb84c5a6fa01ef947fb
-%global xgl_commit          d62dbcce24a1332773f25ddf8d369ed80da0cc4f
-%global pal_commit          b809c34bf6b2b703afcfd1be69050786e9a7b3d6
+%global llvm_commit         9d63413d0223a53ff242ea6aa231e0e7fad87b0b
+%global xgl_commit          03a38def1e140315cff7d04470217bab4b46251a
+%global pal_commit          6ff9e237806de48c94f9ce74552ecb6747421408
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
-%global commit_date         20180307
+%global commit_date         20180316
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.18
+Version:       2.19
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -105,6 +105,65 @@ mkdir -p %{buildroot}%{_libdir}
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Fri Mar 16 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.19-0.20180307.git9215e86
+
+- xgl: Add Instance- and Device-specific dispatch tables. Comply with
+       spec requirements.
+- xgl: Handle unaligned memory to image and image to memory copies on the
+       DMA Queue
+- xgl: Use included headers to determine apiVersion instead of manual bumps
+- xgl: Complete VK_EXT_sampler_filter_minmax extension, allows more
+       formats and is completely driven by the formats spreadsheet
+- xgl: VK_KHR_subgroup support:
+        -  Add missing subgroup builtins in compute shader
+        - Move the implementation of gl_SubGroupSize from patch phase to
+          .ll library
+        - Support for the shufflexor, shuffleup, shuffledown function
+- xgl: VK_KHR_multiview support:
+       - LoadOp Clears implementation
+       - Rewrite the function ConfigBuilder::BuildUserDataConfig to
+         support merged shader.
+       - Adjust the position of SGPR to emulate ViewIndex.
+       - Set the user data configuration of ViewId even if the stage is
+         not the last vertex processing stage.
+- xgl: Implement interaction between VK_KHR_multiview and
+       VK_KHR_device_group by adding support for
+       VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT.
+- xgl: Change implementation of KHR_descriptor_update_template to move
+       work from vkUpdateDescriptorSetWithTemplateKHR to
+       vkCreateDescriptorUpdateTemplateKHR
+- xgl: Batch large numbers of copy/clear/etc. image regions to avoid OOM
+       errors
+- xgl: Rearranged the loop in DescriptorSet::InitImmutableDescriptors()
+       to avoid looking up the the descriptor sizes in the device unless
+       necessary. Cuts time in DescriptorSet::Reassign() in half.
+- xgl: Remove DescriptorSetHeap::m_pHandles. We can compute the handle
+       with a little arithmetic instead of a memory lookup. Cuts the time in
+       AllocDescriptorSets() in half.
+- xgl: [LLPC]Implement sparse texture residency
+- xgl: [LLPC]Fix Crash when parsing Hull Shader
+- xgl: [LLPC]Fix problems with address space mapping
+- xgl: [LLPC]Restored correct addr space for gs-vs ring buffer descriptor
+       load
+- xgl: Fix  an assert when running DOOM in Wine
+- xgl: Fix 58 failures of vulkan-cts-1.1.0.3
+- pal: Don't treat MSAA image as pure shader resolve/read src if CB fixed
+       function resolve method is preferred
+- pal: Implement the changes needed to change the fast clear code from
+       the 3 special values ((0,0,0,1) , (1,1,1,1) and (1,1,1,0)) to
+       ClearColorReg when we mix signed and unsigned formats views for a
+       resource
+- pal: Don't write IA_MULTI_VGT_PARAM and VGT_LS_HS_CONFIG in
+       ValidateDrawTimeHwState
+- pal: Remove unnecessary calls to SetContextRollDetected() during GFX9
+       command buffer generation
+- pal: Remove the software-based dynamic primgroup optimization on GFX9
+- pal: Fix GpuProfiler ThreadTrace shader hashes. 64-bit to 128-bit
+- pal: Optimize path with depth clamp disabled. Set
+       DISABLE_VIEWPORT_CLAMP only if depth clamp is disabled in pipeline and
+       depth is exported in fragment shader
+- pal: Trace SQTT Causes Driver AV if sqtt.gpuMemoryLimit is Too Small
+- pal: Update formats capable of min\max filtering
 
 * Wed Mar 07 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.18-0.20180307.git9215e86
 
