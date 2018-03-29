@@ -1,16 +1,18 @@
-%global amdvlk_commit       9215e86b5654fe5f20d8221ee137e16d6e63b739
+%global amdvlk_commit       c38b52d299be3da8524dc4fb5c283e12177a4ab4
 %global llvm_commit         9d63413d0223a53ff242ea6aa231e0e7fad87b0b
-%global xgl_commit          03a38def1e140315cff7d04470217bab4b46251a
-%global pal_commit          6ff9e237806de48c94f9ce74552ecb6747421408
+%global xgl_commit          baf3c1cfd0f037b3c25168c6d40de0e2151bcef7
+%global pal_commit          bdeefc26995fb5b9196e67d16053febfd4ad63ba
+%global wsa_commit          9fd92444855245a70be752d35c91fd3222009a33
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
-%global commit_date         20180316
+%global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
+%global commit_date         20180329
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.19
+Version:       2.21
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -19,6 +21,7 @@ Source0:       %url/AMDVLK/archive/%{amdvlk_commit}.tar.gz#/AMDVLK-%{amdvlk_shor
 Source1:       %url/llvm/archive/%{llvm_commit}.tar.gz#/llvm-%{llvm_short_commit}.tar.gz
 Source2:       %url/xgl/archive/%{xgl_commit}.tar.gz#/xgl-%{xgl_short_commit}.tar.gz
 Source3:       %url/pal/archive/%{pal_commit}.tar.gz#/pal-%{pal_short_commit}.tar.gz
+Source4:       %url/wsa/archive/%{wsa_commit}.tar.gz#/wsa-%{wsa_short_commit}.tar.gz
 
 Requires:      vulkan
 Requires:      vulkan-filesystem
@@ -36,6 +39,7 @@ BuildRequires: libxcb-devel
 BuildRequires: libX11-devel
 BuildRequires: libxshmfence-devel
 BuildRequires: gtest-devel
+BuildRequires: wayland-devel
 
 %description
 The AMD Open Source Driver for Vulkan® is an open-source Vulkan driver
@@ -53,11 +57,12 @@ following AMD GPUs:
     Radeon™ Pro 400/500 Series
 
 %prep
-%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3
+%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4
 ln -s AMDVLK-%{amdvlk_commit} AMDVLK
 ln -s llvm-%{llvm_commit} llvm
 ln -s xgl-%{xgl_commit} xgl
 ln -s pal-%{pal_commit} pal
+ln -s wsa-%{wsa_commit} wsa
 
 %build
 mkdir -p xgl/build && pushd xgl/build
@@ -81,6 +86,21 @@ cmake .. -DCMAKE_AR=`which gcc-ar` \
 ninja
 popd
 
+mkdir -p wsa/build && pushd wsa/build
+
+cmake .. -DCMAKE_AR=`which gcc-ar` \
+    -DCMAKE_NM=`which gcc-nm` \
+    -DCMAKE_RANLIB=`which gcc-ranlib` \
+    -DCMAKE_C_FLAGS_RELEASE=-DNDEBUG \
+    -DCMAKE_CXX_FLAGS_RELEASE=-DNDEBUG \
+    -DCMAKE_VERBOSE_MAKEFILE=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+     -G Ninja
+ninja
+popd
+
 %clean
 rm -rf %{buildroot}
 
@@ -98,13 +118,83 @@ mkdir -p %{buildroot}%{_libdir}
     install -m 644 AMDVLK/json/Redhat/amd_icd32.json %{buildroot}%{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
     install -m 755 xgl/build/icd/amdvlk32.so %{buildroot}%{_libdir}
 %endif
+install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 
 %files
 %doc AMDVLK/LICENSE.txt AMDVLK/README.md AMDVLK/topLevelArch.png
 %{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
 %{_libdir}/amdvlk*.so
+%{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Thu Mar 29 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.21-0.20180329.gitc38b52d
+
+- wsa: New component Window System Agent, for Wayland support.
+- xgl: Enable Wayland extension
+- xgl: Implement below AMD extensions:
+       - AMD_shader_fragment_mask
+       - AMD_gcn_shader,
+       - AMD_texture_gather_bias_lod
+       - AMD_shader_trinary_minmax
+       - AMD_shader_explicit_vertex_parameter
+       - AMD_shader_ballot
+       - AMD_texture_gather_bias_lod
+- xgl: Enable subgroupQuadSwapHorizontal, subgroupQuadSwapVertical,
+       subgroupQuadSwapDiagonal, subgroupQuadBroadcast(uint/int, uint)
+- xgl: Enable support to group the devices if they have matching
+       Pal::DeviceProperties::deviceIds,  pass CTS device group testing
+- xgl: Hide VK_AMD_negative_viewport_height in Vulkan 1.1: using the
+       extension is no longer legal, because 1.1 core includes
+       VK_KHR_maintenance1
+- xgl: [LLPC] make spir-v bool-in-mem i8 rather than i1
+- xgl: Enable shader prefetcher for Serious Sam Fusion and Dota2, about
+       2.5% performance gain
+- xgl: Remove redundant divide in BindVertexBuffers() (PAL does the same
+       divide). Remove extra bookeeping needed for the redundant divide
+- xgl: Fix some issues in the RGP command buffer tag based capture code
+- pal: Add Wayland support
+- pal: Move Pipeline & User-Data Binding to Draw-Time, observed some nice
+      gains in several applications, and other apps were neutral in terms of
+      performance loss/gain
+- pal: Fix an order of initialization issue related to public settings
+- pal: VK_KHR_image_format_list for swapchains:  add the necessary PAL
+       support for deciding image compression policy for presentable images
+       based on a list of possible view formats
+- pal: Report to clients that GFX OFF may reset the GFX timestamp to 0
+       after an idle period
+- pal: Fix some issues in command buffer dumping
+- pal: Implement COND_EXEC style predication for CP DMA path in
+       CmdCopyMemory on compute command buffers
+- pal: Change CreateTypedBufferViewSrds() and
+       CreateUntypedBufferViewSrds() to remove the requirement that the range is
+       a multiple of the stride
+- pal: Make Pal Linux VA manager support multi-device cases
+- pal: Fix
+       dEQP-VK.api.object_management.multithreaded_per_thread_resources.instance
+       random crash
+- pal: Fix validation bug with computing PBB bin sizes
+- pal: Don't allow LayoutCopySrc on images of a format that doesn't
+       support buffers
+- pal: Fix issues  when grouping all identical devices into single device group
+- pal: Add call to DevDriver ShowOverlay() function to determine if the
+       developer driver overlay should be displayed.
+- pal: Handle unaligned memory to image and image to memory copies on the
+       DMA Queue
+- pal: Convert some PAL inline utility functions into constexpr functions
+       and fix some const-correctness issues.
+- pal: Resolve potential HW bug with SDMA copy overlap syncs on GFX9
+- pal: Temporarily disable the SDMA copy overlap sync feature on GFX9 for
+       a suspected HW ucode bug with SDMA's ability to detect certain hazards
+       which results in race conditions in SDMA stress tests.
+- pal: Fix bug in PA_SC_MODE_CNTL_1 validation
+- pal: Improve hotspots related to Color-Target & Depth/Stencil views,
+       some improvements in CPU performance when creating color-target and
+       depth-stencil view objects in PAL
+- pal: Make GFX9's BuildSetSeqContextRegs() and BuildSetSeqConfigRegs()
+       avoid reading from the command buffer similar to what is done for GFX6.
+       Cleans up big spikes if Vulkan uses write combined command buffers (they
+       were small bumps when using cacheable command buffers)
+
 * Fri Mar 16 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.19-0.20180307.git9215e86
 
 - xgl: Add Instance- and Device-specific dispatch tables. Comply with
