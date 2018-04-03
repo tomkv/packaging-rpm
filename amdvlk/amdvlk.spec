@@ -1,18 +1,18 @@
-%global amdvlk_commit       c38b52d299be3da8524dc4fb5c283e12177a4ab4
-%global llvm_commit         9d63413d0223a53ff242ea6aa231e0e7fad87b0b
-%global xgl_commit          baf3c1cfd0f037b3c25168c6d40de0e2151bcef7
-%global pal_commit          bdeefc26995fb5b9196e67d16053febfd4ad63ba
-%global wsa_commit          9fd92444855245a70be752d35c91fd3222009a33
+%global amdvlk_commit       ae72750cbfe1ee1dcdd3184e50ae9a7ee5785f95
+%global llvm_commit         58e64af54524428217c436fbff956076b0bbdd2c
+%global xgl_commit          9e6992fed83008b294f61cb04a9ed4b61622fb93
+%global pal_commit          82e1184cee2e84394fe48c762fcc42aee238f6e6
+%global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180329
+%global commit_date         20180402
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.21
+Version:       2.23
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -127,6 +127,39 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Tue Apr 02 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.23-0.20180402.gitae72750
+
+- xgl:  Enable below extensions:
+       - AMD_shader_explicit_vertex_parameter
+       - AMD_shader_trinary_minmax
+       - AMD_mixed_attachment_samples
+       - AMD_shader_fragment_mask
+       - EXT_queue_family_foreign
+- xgl: Enable AMD_gpu_shader_int16 for gfx9
+- xgl: Enable shaderInt64
+- xgl: Disable extension  AMD_gpu_shader_half_float since the
+       interpolation in FS is not implemented.
+- xgl: Add arithmetic operations of AMD_shader_ballot
+- xgl: Implement subgroup arithmetic reduce int ops
+- xgl: Remove KHR suffixes for promoted extensions: replace some of the
+       KHXs with KHRs, the rest should go away whenever device group KHXs are
+       removed
+- xgl: Remove Vulkan  1.0 headers because 1.1's are backward compatible,
+       1.0 driver functionality can still be built with USE_NEXT_SDK=0
+- xgl: Fix an issue that incorrect buffer causes compute shader loop
+       infinitely
+- xgl: Disable FmaskBasedMsaaRead for Dota2, which can bring ~1%
+       performance gain for Dota2 4K + best-looking on Fiji:
+- xgl: Add FMASK shadow table support to LLVM / LLPC
+- xgl: Fix the issue that Wolfenstein 2 fails to compile compute shader
+- pal: Fix dEQP-VK.api.image_clearing.core.clear_color_image.3d.* CTS
+       tests failure
+- pal: Eliminate Stalls Between Command Buffers, Phase #1
+- pal: Clarifies an existing 3D color target interface requirement and
+       fixes a bug which can cause DCC corruption.
+- pal: Fix an issue related to fast clear eliminate
+- pal: Do late expand for HTILE if it used fixfuction resolve
+
 * Thu Mar 29 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.21-0.20180329.gitc38b52d
 
 - wsa: New component Window System Agent, for Wayland support.
