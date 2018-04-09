@@ -1,18 +1,18 @@
-%global amdvlk_commit       ae72750cbfe1ee1dcdd3184e50ae9a7ee5785f95
+%global amdvlk_commit       e59fdd2ed0af99140c46a3be5c8e7ce9c376c1a9
 %global llvm_commit         58e64af54524428217c436fbff956076b0bbdd2c
-%global xgl_commit          9e6992fed83008b294f61cb04a9ed4b61622fb93
-%global pal_commit          82e1184cee2e84394fe48c762fcc42aee238f6e6
+%global xgl_commit          5c4a9497570200781d054416832f55e8b64d7e58
+%global pal_commit          3ce3d9a004e8ed15134567c0fd800ee81916b423
 %global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180402
+%global commit_date         20180409
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.23
+Version:       2.24
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -127,6 +127,43 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Mon Apr 09 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.24-0.20180409.gite59fdd2
+
+- xgl: Add int16 support to AMD_shader_ballot and AMD_trinary_minmax extension
+- xgl: [LLPC] Enable RetBlock in GS to make sure only one return is used in GS
+- xgl: Refine Pipeline dump
+       - Simplify pipeline panel options
+       - Update variable name in llpcAbiMetadata.h to match
+         palPipelineAbi original name.
+       - Remove metadata name in RegNameMap, instead,
+         Util::Abi::PipelineMetadataNameStrings is used.
+       - Fix a bug in PipelineCompiler::ApplyBilConvertOptions, the
+         return value of GetRuntimeSettings must be a reference
+- xgl: AMD_shader_ballot:
+       - Rename glslSpecialOpEmuF16 to glslSpecialOpEmuD16.
+       - Add stubs of subgroup arithmetic operations for i64 and f16.
+       - use tbuffer_load_d16 to do vertex fetching.
+- xgl: Implement a consistent dispatch table mechanism across the driver
+       - Now we have separate global, per-instance, and per-device
+         dispatch tables
+       - We can override individual entry points in each dispatch table
+         to enable optimizations based on app profile or any other criteria
+       - Entry points now can have complex requirement criteria and we
+         now clearly distinguish between instance and device level
+         functions
+       - SQTT layer handling is still a bit clumsy because it operates
+         more like a device-only layer, but at least it's injection code is
+         less intrusive now
+       - Also fixed a bunch of unrelated bugs and missing implementation
+         on the way, as the new code revealed those
+- pal: Update Pipeline Dump service to inherit from IService instead of
+       URIService (which is deprecated and being removed).
+- pal: Support marker offset for WriteMarker.
+- pal: Changes ValidateDraw to reserve its own space rather than
+       including it with the rest of the draw related packets. This avoids
+       running out of reserved space in TimeSpy.
+- pal: Move MetroHash and jemalloc to src/util/imported from src/core/imported.
+
 * Tue Apr 02 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.23-0.20180402.gitae72750
 
 - xgl:  Enable below extensions:
