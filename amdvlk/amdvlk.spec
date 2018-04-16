@@ -1,18 +1,18 @@
 %global amdvlk_commit       e59fdd2ed0af99140c46a3be5c8e7ce9c376c1a9
 %global llvm_commit         58e64af54524428217c436fbff956076b0bbdd2c
-%global xgl_commit          5c4a9497570200781d054416832f55e8b64d7e58
-%global pal_commit          3ce3d9a004e8ed15134567c0fd800ee81916b423
+%global xgl_commit          949c501c1b4871c7f561ab77a38f3a40db77965d
+%global pal_commit          08f3e54209cdc794588f6fd82418e04b6a787a28
 %global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180409
+%global commit_date         20180416
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.24
+Version:       2.25
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -127,6 +127,38 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Mon Apr 16 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.25-0.20180416.gite59fdd2
+
+- xgl: Reduce unnecessary malloc/free calls
+- xgl: [LLPC] Change the undef value to 0 or 0.0 for those unsupported
+       functions. This is because undef value will block constant folding in
+       LLVM and the nested constant expression after lower will be
+       time-consuming when backend does analysis
+- xgl: [LLPC] Support int64 atomic operations
+- xgl: Tweaks the way tha handles load op clears in renderpasses to fix too
+- xgl: many barriers in render pass clear
+- xgl: Add error handling where AddMemReference() is used; Add
+- xgl: vk::Memory::CreateGpuMemory() and vk::Memory::CreateGpuPinnedMemory()
+- xgl: Fix assertion when running DOOM 2016 in Wine
+- xgl: Set "vm" flag for all fragment outputs
+- xgl: Add FMASK shadow table support to the Vulkan Driver which changes
+       descriptors are stored in memory. This allows writing the FMASK
+       descriptors in the same corresponding upper 32 bits of the STA
+       descriptors VA address
+- pal: Fix missing cmd scratch memory heap in gpasession.  Prevents a
+       divide by zero exception when initializing driver for RGP traces
+- pal: Explicitly acquire and release ownership of the queue context in
+       PAL's preamble and postamble command streams
+- pal: PAL no longer try to chain from the last command buffer to the
+       postamble command streams
+- pal: Fix interfaceLogger access violation. DataAllocNames array does
+       not match CmdAllocType enum.
+- pal: VK_AMD_gpu_shader_int16 + VK_AMD_shader_trinary_minmax +
+       GFX9:Graphics pipeline fails to create if functionality dependent on the
+       two exts is used
+- pal: Rewrite VamMgrSingleton to avoid static members
+- pal: Clean-Up of User Data Table Management Code
+
 * Mon Apr 09 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.24-0.20180409.gite59fdd2
 
 - xgl: Add int16 support to AMD_shader_ballot and AMD_trinary_minmax extension
