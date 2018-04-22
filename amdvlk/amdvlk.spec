@@ -1,18 +1,18 @@
 %global amdvlk_commit       e59fdd2ed0af99140c46a3be5c8e7ce9c376c1a9
 %global llvm_commit         58e64af54524428217c436fbff956076b0bbdd2c
-%global xgl_commit          949c501c1b4871c7f561ab77a38f3a40db77965d
-%global pal_commit          08f3e54209cdc794588f6fd82418e04b6a787a28
+%global xgl_commit          01ec481e972066d02412333a895ccf4fe05dc540
+%global pal_commit          c20b7c94df1076c99c1f9bec98632b58abedfe55
 %global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180416
+%global commit_date         20180422
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.25
+Version:       2.27
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -127,6 +127,35 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Sun Apr 22 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.27-0.20180422.gite59fdd2
+
+- xgl: Enable extension VK_AMD_shader_image_load_store_lod
+- xgl: Enable extension VK_AMD_gcn_shader
+- xgl: Implement SYNC_FD handle type for External Fence and Semaphore.
+- xgl: Implement subgroup arithmetic operations
+- xgl: [LLPC] Add missing pipeline member in pipeline dump
+- xgl: Optimize subgroup function name generating process, generate
+       functions based on the subgroup arithmetic group op
+- xgl: Remove releasing stack allocator in CmdBuffer::End()
+- xgl: Set UseRingBufferForCeRamDumps default back to true
+- xgl: No need to allocate memory for Sampler descriptors for all Gpus in
+       the device group.
+- xgl: Fix verification error using R32ui image format
+- xgl: Fix pipeline compilation failure when running ManiaPlanet on Wine
+- xgl: Fix and optimize the use of some of the barrier flags which were
+       noted to be handled incorrectly or inconsistently
+- pal: Enable SyncobjFence and choose which fence type to use during
+       runtime
+- pal: Expand reporting of CmdBindTargets in the logger
+- pal: Enable support for IL_OP_LOAD_DWORD_AT_ADDR in ILP
+- pal: Implement SYNC_FD handle type for KHR_EXTERNAL_SEMAPHORE_FD
+- pal: Add logic to memtracker to detect when someone corrupts the
+       allocation list by scribbling into the heap
+- pal: Remove CE/DE counter syncs from the postamble command streams on
+       gfxip8+
+- pal: Fix the issue that vkAcquireNextImageKHR returning VK_TIMEOUT w/o
+       waiting the timeout duration
+
 * Mon Apr 16 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.25-0.20180416.gite59fdd2
 
 - xgl: Reduce unnecessary malloc/free calls
