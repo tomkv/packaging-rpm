@@ -1,6 +1,6 @@
 %global amdvlk_commit       e59fdd2ed0af99140c46a3be5c8e7ce9c376c1a9
 %global llvm_commit         58e64af54524428217c436fbff956076b0bbdd2c
-%global xgl_commit          01ec481e972066d02412333a895ccf4fe05dc540
+%global xgl_commit          7c74b046787310fda345ed1366062591fb895f85
 %global pal_commit          c20b7c94df1076c99c1f9bec98632b58abedfe55
 %global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -8,7 +8,7 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180422
+%global commit_date         20180424
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
@@ -127,6 +127,11 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Tue Apr 24 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.27-0.20180424.gite59fdd2
+
+- xgl: Fix the issue of TombRaider, which causes Gpu hangs with the third
+       benchmark.
+
 * Sun Apr 22 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.27-0.20180422.gite59fdd2
 
 - xgl: Enable extension VK_AMD_shader_image_load_store_lod
