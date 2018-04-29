@@ -1,18 +1,18 @@
 %global amdvlk_commit       e59fdd2ed0af99140c46a3be5c8e7ce9c376c1a9
-%global llvm_commit         58e64af54524428217c436fbff956076b0bbdd2c
-%global xgl_commit          7c74b046787310fda345ed1366062591fb895f85
-%global pal_commit          c20b7c94df1076c99c1f9bec98632b58abedfe55
+%global llvm_commit         e3f5785291b62525f766dd559fd0a57bdd333ce6
+%global xgl_commit          67fcf19388b66a3ceb66e1917050efe535fe6de3
+%global pal_commit          7cbbceffd676c89f024c620e4c477c4bf90b2915
 %global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180424
+%global commit_date         20180429
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.27
+Version:       2.29
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -108,8 +108,8 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/vulkan/icd.d
 mkdir -p %{buildroot}%{_libdir}
 
-#mkdir -p %{buildroot}%{_sysconfdir}amd
-#echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amdPalSettings.cfg
+mkdir -p %{buildroot}%{_sysconfdir}/amd
+echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettings.cfg
 
 %if 0%{?__isa_bits} == 64
     install -m 644 AMDVLK/json/Redhat/amd_icd64.json %{buildroot}%{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
@@ -122,11 +122,53 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 
 %files
 %doc AMDVLK/LICENSE.txt AMDVLK/README.md AMDVLK/topLevelArch.png
+%dir %{_sysconfdir}/amd
+%config %{_sysconfdir}/amd/amdPalSettings.cfg
 %{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
 %{_libdir}/amdvlk*.so
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Sun Apr 29 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.29-0.20180429.gite59fdd2
+
+- xgl: Enable AMD_shader_ballot and AMD_gpu_shader_half_float extension
+- xgl: Expose the subgroup shuffle capabilities, implement  arithmetic
+       16bit and 64bit operation
+- xgl: Enable app_shader_optimizer in LLPC path
+- xgl: Barrier optimization
+- xgl: Workaroud TombRaider  third benchmark hang issue
+- xgl: Fix allocation granularity issue
+- xgl: Add max mask enum for ImageLayoutUsageFlags and
+       CacheCoherencyUsageFlags
+- xgl: Fix issues in FragColorExport::ComputeExportFormat()
+- xgl: Remove 32-bit CTS workaround
+- xgl: Set unboundDescriptorDebugSrdCount PAL setting to 0 to avoid CTS
+       issues with using multiple devices through testing
+- xgl: Fix the issue that driver reports currentExtent of (N, 0) on zero
+       sized width/height surface;  According to Vulkan spec 1.1.70.1,
+       currentExtent of a valid window surface(Win32/Xlib/Xcb) must have both
+       width and height greater than 0, or both of them 0.
+- xgl: Fix LLPC assert on image type
+- xgl: Use runtime cache mode to get contextCache and reduce the time of
+       running CTS tests
+- pal: Command buffer dumping fixes,  provide the correct engine ID for
+       SDMA command buffers
+- pal: Set DropIfSameContext for the CE preamble stream.
+- pal: Add max mask enum for ImageLayoutUsageFlags and
+       CacheCoherencyUsageFlags
+- pal: Fix assert and build error for PAL null device
+- pal: Fix app crash when reading amdPalSettings.cfg
+- pal: Fix source image descriptors for graphics depth/stencil copies.
+- pal: Fix dEQP-VK.api.external.semaphore.opaque_fd.import_twice_temporary CTS
+       test hang on Vega
+- pal: Partially revert earlier change for clean-up of user data table
+       management code. Most of the original change is not reverted, just the
+       portion which moves some common structures from each HWL to the
+       independent layer for universal command buffers. The compute command
+       buffer changes were left as-is.
+- pal: Moves the DescribeDraw calls after validateDraw in all CmdDraw calls
+- pal: Implement support needed for KHR_Display extension
+
 * Tue Apr 24 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.27-0.20180424.gite59fdd2
 
 - xgl: Fix the issue of TombRaider, which causes Gpu hangs with the third
