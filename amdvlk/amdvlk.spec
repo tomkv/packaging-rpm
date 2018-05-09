@@ -1,18 +1,18 @@
 %global amdvlk_commit       e59fdd2ed0af99140c46a3be5c8e7ce9c376c1a9
 %global llvm_commit         e3f5785291b62525f766dd559fd0a57bdd333ce6
-%global xgl_commit          67fcf19388b66a3ceb66e1917050efe535fe6de3
-%global pal_commit          7cbbceffd676c89f024c620e4c477c4bf90b2915
+%global xgl_commit          bf3dc9d1061f7568d06d7edcdc03d88ce30a74da
+%global pal_commit          d4a03e0a5d0a554f7c1f5a2fded05d8f3cc7bec9
 %global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180429
+%global commit_date         20180509
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.29
+Version:       2.30
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -129,6 +129,26 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Wed May 09 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.30-0.20180509.gite59fdd2
+
+- xgl: Update Vulkan headers to 1.1.73
+- xgl: Implement VK_EXT_descriptor_indexing (not enabled )
+- xgl: [LLPC]Begin to add support  (ImageRead and ImageFetch) for
+       dimension aware image intrinsics which is newly added in LLVM backend
+       and will replace old hardware oriented image intrinsics
+- xgl: [LLPC]Use wqm intrinsic for ds_swizzle derivatives
+- xgl: [LLPC]Update SPIR-V header
+- xgl: Fix bugs in fetch RGB10A2
+- xgl: Barrier optimization, moving the responsibility of handling image
+       layouts to the barrier policy classes
+- pal: Set PARTIAL_VS_WAVE_ON to 1 for off-chip GS to work-around an
+       issue of system hang
+- pal: Remove support for image atomics from formats that should not
+       support it
+- pal: Remove the Per-Device Ring Buffers for CE RAM Dumps
+- pal: Make Internal CE RAM Dumps Cacheline-Aligned
+- pal: Fix GPU Scratch Memory Allocation Bug
+
 * Sun Apr 29 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.29-0.20180429.gite59fdd2
 
 - xgl: Enable AMD_shader_ballot and AMD_gpu_shader_half_float extension
