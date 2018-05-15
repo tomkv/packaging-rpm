@@ -1,18 +1,18 @@
-%global amdvlk_commit       e59fdd2ed0af99140c46a3be5c8e7ce9c376c1a9
-%global llvm_commit         e3f5785291b62525f766dd559fd0a57bdd333ce6
-%global xgl_commit          bf3dc9d1061f7568d06d7edcdc03d88ce30a74da
-%global pal_commit          d4a03e0a5d0a554f7c1f5a2fded05d8f3cc7bec9
+%global amdvlk_commit       3540e83043efe2cdadce2fc4cd29b37f80ef6669
+%global llvm_commit         c791da72ae4a04607c36653f4f0e8b57e4697a22
+%global xgl_commit          ef2ad117191bca6b4fc3b4a0c6e35db02b30b313
+%global pal_commit          a921d263badf956e1ddcab488040e581b486b51b
 %global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180509
+%global commit_date         20180515
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.30
+Version:       2.31
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -129,6 +129,23 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Tue May 15 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.31-0.20180515.git3540e83
+
+- xgl: Enable extension VK_KHR_display
+- xgl: [LLPC]Add missing int64 function
+- xgl: [LLPC]Support new dimension aware image instrinsics
+        - Add runtime option to support switching between dimension aware
+          image intrinsics and old image intrinsic
+        - Add dimension aware version of fetch fmaskvalue,
+        - Fix fmask loading failure in VulkanCTS
+          dEQP-VK.amd.shader_fragment_mask group
+- xgl: Expose the subgroup arithmetic capabilities
+- pal: Pipeline stats crash the GPU profiler.
+- pal: Only disable DE workload IB when PAL MCBP is off
+- pal: Buffer->image copy op truncates output written to the image if a
+       2D R32G32B32 linear 48x240 image is used.
+- pal: Add new interface CmdDrawOpaque()
+
 * Wed May 09 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.30-0.20180509.gite59fdd2
 
 - xgl: Update Vulkan headers to 1.1.73
