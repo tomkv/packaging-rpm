@@ -1,18 +1,18 @@
 %global amdvlk_commit       3540e83043efe2cdadce2fc4cd29b37f80ef6669
-%global llvm_commit         c791da72ae4a04607c36653f4f0e8b57e4697a22
-%global xgl_commit          ef2ad117191bca6b4fc3b4a0c6e35db02b30b313
-%global pal_commit          a921d263badf956e1ddcab488040e581b486b51b
+%global llvm_commit         f12ada52c53bcc0cd34376fe354dd9a93cb0dd31
+%global xgl_commit          3ef40274448e9bce3e4a0658c3ed4335c3131ca7
+%global pal_commit          ca2073448141cc14f4c5f3be3056dd7064bdc0ea
 %global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180515
+%global commit_date         20180525
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.31
+Version:       2.34
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -129,6 +129,40 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Sun May 27 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.34-0.20180525.git3540e83
+
+- xgl: Add fp16 interpolation intrinsics and register settings for
+- xgl: AMD_gpu_shader_half_float
+- xgl: Add extension VK_AMD_gpu_shader_half_float_fetch (not enabled)
+- xgl: Support dual source blend on LLPC
+- xgl: [LLPC]Enable on-chip GS by default for GFX6-8
+- xgl: Check VkPhysicalDeviceFeatures2 on device create
+- xgl: Barrier optimization: move decision about whether to apply layout
+       transitions for this barrier in case of ownership transfers to the
+       ImageBarrierPolicy class
+- xgl: [LLPC] spir-v reader: fix clang compile error in image code
+- xgl: Remove the support for PRT depth/stencil formats. Single-aspect
+       depth and stencil are still supported
+- xgl: Report per-aspect sparse image format properties for depth/stencil
+- xgl: [LLPC] Fix an issue of MRT color out
+- xgl: Simplify sparse texture bind virtual offset calculation
+- xgl: Remove the implicit null sparse bind on queue 0
+- xgl: Disable loop unroll for game TombRaider to work-around an issue
+       that lighting is incorrect on main menu and in benchmark
+- xgl: [LLPC]Support new dimension aware image instrinsics
+        - Support general Fmask loading
+        - Fix SubpassDataArray dimension in GL_EXT_multiview
+- xgl: Fix assert caused by missing image layout in renderpass logger
+- pal: Add IHashProvider and IHashContext to Util namespace
+- pal: New a flag sampleLocsAlwaysKnown to enable defer MSAA depth expand
+       optimization for GFX6~9
+- pal: Null initialize the fmask srd if in CreateFmaskViewSrdsInternal()
+       there is no fmask for the image
+- pal: Fix the issue that VK_KHR_maintenance1 + sDMA queue: 2D Array
+       image -> 3d image copy ops (and vice versa) does not work
+- pal: Fix copies of BCn mip-levels where the HW determines the incorrect
+       size of the mip level.
+
 * Tue May 15 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.31-0.20180515.git3540e83
 
 - xgl: Enable extension VK_KHR_display
