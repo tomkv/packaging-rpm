@@ -1,18 +1,18 @@
 %global amdvlk_commit       3540e83043efe2cdadce2fc4cd29b37f80ef6669
-%global llvm_commit         f12ada52c53bcc0cd34376fe354dd9a93cb0dd31
-%global xgl_commit          3ef40274448e9bce3e4a0658c3ed4335c3131ca7
-%global pal_commit          ca2073448141cc14f4c5f3be3056dd7064bdc0ea
+%global llvm_commit         cb172bababadb01395fc1da4bc8aa6e2889f0369
+%global xgl_commit          46e77e335179446647943517a0c27f36d7cfd959
+%global pal_commit          a8ec6588ea2ebdeb6501a5516aa406e5ed50077a
 %global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180525
+%global commit_date         20180603
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.34
+Version:       2.35
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -129,6 +129,24 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Sun Jun 03 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.35-0.20180603.git3540e83
+
+- xgl: [LLPC] Add image operation lz optimization
+- xgl: [LLPC] Add an option to dump llvm module's CFG
+- xgl: Add timestamp hash to VkPipielineCache ID to make it more unique
+- xgl: Add more implementation for sparse texture support
+- xgl: Support new dimension aware image intrinsic: sample group and
+       gather group
+- pal: Add recommended heap in Pal::DeviceProperties to client for each
+       engine for best performance
+- pal: Add Util::ArrayLen, a constexpr function to get the length of an
+       array at compile time. This is meant to be used in place of
+       "sizeof(foo)/ sizeof(foo[0])"
+- pal: Remove asserts that fire on images that aren't render targets
+- pal: WriteEventCmd should translate HwPipePostIndexFetch to WRITE_DATA
+       on ME engine
+- pal: Add implmentations for ComputeResults for StreamoutStats queries
+
 * Sun May 27 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.34-0.20180525.git3540e83
 
 - xgl: Add fp16 interpolation intrinsics and register settings for
