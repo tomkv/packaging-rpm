@@ -1,18 +1,18 @@
-%global amdvlk_commit       3540e83043efe2cdadce2fc4cd29b37f80ef6669
-%global llvm_commit         cb172bababadb01395fc1da4bc8aa6e2889f0369
-%global xgl_commit          46e77e335179446647943517a0c27f36d7cfd959
-%global pal_commit          a8ec6588ea2ebdeb6501a5516aa406e5ed50077a
+%global amdvlk_commit       0615262dc687cf2a6bc6e7ecabc40942b8e1fddb
+%global llvm_commit         30c5597061ed3b5c929b31030e9258f095e0e341
+%global xgl_commit          2fa2e2fcf89c77437e50c06e67cf9bb045b55e72
+%global pal_commit          b131c0e3aa35fd6d42a604b3a787b6def7c65082
 %global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180603
+%global commit_date         20180608
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.35
+Version:       2.36
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -129,6 +129,34 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Sun Jun 10 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.36-0.20180608.git0615262
+
+- xgl: Add Barrier optimization to avoid unnecessary cache
+       flushes/invalidations in case of ownership transfer barriers
+- xgl: [LLPC]Default enable new LLVM dimension aware image intrinsics
+- xgl: Add MGPU support for VkDeviceGroupBindSparseInfo. Sparse binding
+       with resourceDeviceIndex != memoryDeviceIndex still doesn't work
+       correctly. The root cause wasn't found yet
+- xgl: [LLPC] Add an option to set loop unroll count
+- xgl: Fix an issue for sparse texture support that gather component is
+       not correctly passed to dmask
+- xgl: Fix dEQP-VK.pipeline.push_constant.graphics_pipeline
+       .overlap_4_shaders_vert_tess_frag failure on Vega10
+- pal: Fix an issue that clSVMAlloc is failing to create allocations
+       greater than 2GB
+- pal: Update pm4 packet headers
+- pal: Fix a typo that was causing an explosion of stack space.
+- pal: Force fMask swizzle mode to be 4kB on GFX9 platforms in order to
+       take advantage of optimized copy path.
+- pal: Fix Gfx6 failure on
+       VK_KHR_maintenance1_copy_image_2D_array_to_3D_transfer_R32G32B32A32_*
+- pal: Remove the usage of AMDGPU_CS_MAX_IBS_PER_SUBMIT because it's
+       deprecated in libdrm after version 2.4.92
+- pal: Remove explict fence reset check in Queue::SubmitInternal
+- pal: Add IndirectAllocator utility class
+- pal: Print ClientMem pointer in the leaked list, which helps debugging
+       memory leak
+
 * Sun Jun 03 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.35-0.20180603.git3540e83
 
 - xgl: [LLPC] Add image operation lz optimization
