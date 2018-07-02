@@ -1,27 +1,30 @@
-%global amdvlk_commit       0615262dc687cf2a6bc6e7ecabc40942b8e1fddb
+%global amdvlk_commit       dbb9dda34e68d87ae446f32049c24f03bba684bb
 %global llvm_commit         30c5597061ed3b5c929b31030e9258f095e0e341
-%global xgl_commit          2fa2e2fcf89c77437e50c06e67cf9bb045b55e72
-%global pal_commit          b131c0e3aa35fd6d42a604b3a787b6def7c65082
+%global llpc_commit         d2eea6db82251e7fd6ed628a269e56f06934b739
+%global xgl_commit          3cf9e93c84c17c3c0f01861e29472c9a07c8570e
+%global pal_commit          f43dc7c78b62c6bafb5e0ca756adbdb5afa4d4fb
 %global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
+%global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180608
+%global commit_date         20180702
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.36
+Version:       2.40
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
 Url:           https://github.com/GPUOpen-Drivers
 Source0:       %url/AMDVLK/archive/%{amdvlk_commit}.tar.gz#/AMDVLK-%{amdvlk_short_commit}.tar.gz
 Source1:       %url/llvm/archive/%{llvm_commit}.tar.gz#/llvm-%{llvm_short_commit}.tar.gz
-Source2:       %url/xgl/archive/%{xgl_commit}.tar.gz#/xgl-%{xgl_short_commit}.tar.gz
-Source3:       %url/pal/archive/%{pal_commit}.tar.gz#/pal-%{pal_short_commit}.tar.gz
-Source4:       %url/wsa/archive/%{wsa_commit}.tar.gz#/wsa-%{wsa_short_commit}.tar.gz
+Source2:       %url/llpc/archive/%{llpc_commit}.tar.gz#/llpc-%{llpc_short_commit}.tar.gz
+Source3:       %url/xgl/archive/%{xgl_commit}.tar.gz#/xgl-%{xgl_short_commit}.tar.gz
+Source4:       %url/pal/archive/%{pal_commit}.tar.gz#/pal-%{pal_short_commit}.tar.gz
+Source5:       %url/wsa/archive/%{wsa_commit}.tar.gz#/wsa-%{wsa_short_commit}.tar.gz
 
 Requires:      vulkan
 Requires:      vulkan-filesystem
@@ -57,9 +60,10 @@ following AMD GPUs:
     Radeon™ Pro 400/500 Series
 
 %prep
-%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4
+%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5
 ln -s AMDVLK-%{amdvlk_commit} AMDVLK
 ln -s llvm-%{llvm_commit} llvm
+ln -s llpc-%{llpc_commit} llpc
 ln -s xgl-%{xgl_commit} xgl
 ln -s pal-%{pal_commit} pal
 ln -s wsa-%{wsa_commit} wsa
@@ -129,6 +133,55 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Mon Jul 02 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.40-0.20180702.gitdbb9dda
+
+- xgl: Separate LLPC to https://github.com/GPUOpen-Drivers/llpc
+- xgl: Enable EXT_vertex_attribute_divisor extension
+- xgl: Enable EXT_descriptor_indexing extension (limited to dynamic
+       indexing)
+- xgl: Enable VK_KHR_draw_indirect_count  extension
+- xgl: Update Vulkan headers 1.1.76
+- xgl: Increase reported mip tail size to match Addrlib alignment
+       requirements (3D PRT)
+- xgl: Zero-initialize data in Semaphore
+- xgl: Refactor the device group resource binding logic
+- xgl: Add device group for semaphore
+- xgl: Clean up PRT CTS test failures
+- xgl: Idle time in between submits during RGP capture
+- xgl: Remove the copy in GetSparseImageFormatProperties2
+- xgl: Change barrier policy to handle 3 aspects - in case of YUV images
+- xgl: Add FS2 support and some colorspace and transfer function tweaks
+- xgl: Barrier optimization: add per-queue family policies to limit the
+       scope of buffer and image memory barriers to those applicable to
+       the specified queue family.
+- xgl: Remove DescriptorSet::m_pPool sine it is only used in Destroy()
+       and Destroy() is never called
+- xgl: Fix an issue that vkCmdPipelineBarrier calls which only define
+       execution dependencies are ignored
+- xgl: Make sure DescriptorSet::dynamicDescriptorData is 64 bit aligned.
+- xgl: Skip the subpass self-dependencies
+- xgl: Pass fmaskBasedMsaaReadEnabled and robustBufferAccess  as template
+       parameters to avoid using space in each descriptor set.
+- xgl: Ordered Approach to App Detection
+- pal: Fix pEngineInfo->sizeAlignInDwords evaluation
+- pal: Disable degamma for sRGB source images when executing
+       vkCmdColorSpaceBlitImageAMD
+- pal: Add Util::Event::Wait and remove the unused Util::WaitForEvents
+- pal: vk_Interop support: waite on a master fence whose OPAQUE_FD
+       payload has been reset by waiting on a "user" fence succeeds as if
+       it were still signaled
+- pal: Use virtual page size instead of buffer size to map/unmap External
+       Physical buffer. For External Physical memory, free marker before
+       freeing its surface
+- pal: Add a script timingReport.py which could be used to analyze GPU
+       profiling result to identify top pipelines
+- pal: FastClearEliminate optimization for performance
+- pal: Fix F1 2017 Corruption observed while running benchmark
+- pal: Add SyncobjFence created with FENCE_CREATE_SIGNALED_BIT
+- pal: Add a workaround for the issue that amdgpu doesn’t synchronize PTE
+       updates
+- pal: Fix several device group PRT test failures
+
 * Sun Jun 10 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.36-0.20180608.git0615262
 
 - xgl: Add Barrier optimization to avoid unnecessary cache
