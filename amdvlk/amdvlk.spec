@@ -1,20 +1,20 @@
-%global amdvlk_commit       dbb9dda34e68d87ae446f32049c24f03bba684bb
-%global llvm_commit         30c5597061ed3b5c929b31030e9258f095e0e341
-%global llpc_commit         d2eea6db82251e7fd6ed628a269e56f06934b739
-%global xgl_commit          3cf9e93c84c17c3c0f01861e29472c9a07c8570e
-%global pal_commit          f43dc7c78b62c6bafb5e0ca756adbdb5afa4d4fb
-%global wsa_commit          c3ad69014e56f21a78a815e07a9834e1e5c22898
+%global amdvlk_commit       402097f4a0075f07e327fa212d781d758dfc0689
+%global llvm_commit         99b5c6f5a1a031e7a46ed82a1e62e534d31c0687
+%global llpc_commit         c0c713b36bbadfb2acccb996cc5d2c892eb05b1a
+%global xgl_commit          d88feeed611a7774d7847b4235aa0b12d91d03e6
+%global pal_commit          aa568df3471787b4bf573780e47c2c625e819c37
+%global wsa_commit          6470007ad8943fba868e6d25b773b60102ec6b73
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180702
+%global commit_date         20180716
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.40
+Version:       2.41
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -133,6 +133,36 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Mon Jul 16 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.41-0.20180716.git402097f
+
+- xgl: Enable VK_EXT_direct_mode_display extension
+- xgl: Implement VK_EXT_acquire_xlib_display extension
+- xgl: Enable variable pointer of storage buffer
+- xgl: Update Vukan headers to 1.1.77.0
+- pal: Direct rendering display support
+- pal: Add image usage flag to make 3d arrays work when accessed as 2d
+- pal: Add a counting suffix to the end of every layer's per-platform
+       logging directory to prevent collisions when PAL is recreated in
+       less than a second.
+- pal: Move WAIT_CE_COUNTER To Immediately Before Draw
+- pal: Disable Write Confirm for CPDMA Shader Prefetch
+- pal: Expose the feature of gathering different global perf counter per
+       block instance through gpu profiler
+- pal: Fix the command buffer IDs in the Gpu Profiler and Cmd Buffer
+       Logger layers.
+- pal: Fix issue that clSVMAlloc is failing to create allocations greater
+       than 2GB on Vega10
+- llpc: dxvk: F.E.A.R. 3 black screen in menu #39
+- llpc: Implement variable pointer of storage buffer
+- llpc: Add integer gather patch for i32 resource format
+- llpc: Fix DXVK flickering garbage issue
+- llpc: Extract 6 low bits from 1D offset since we translate 1D texture
+        to 2D on gfx9
+- llpc: Fix some 64-bit case failures in dEQP-VK.spirv_assembly.type.*
+- llpc: Fix clang compile error in image code
+- llpc: Fix some Renderpass attachment_write_mask test failures
+- llpc: Sync LLPC translator source code with upstream
+
 * Mon Jul 02 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.40-0.20180702.gitdbb9dda
 
 - xgl: Separate LLPC to https://github.com/GPUOpen-Drivers/llpc
