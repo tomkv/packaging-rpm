@@ -1,20 +1,20 @@
 %global amdvlk_commit       402097f4a0075f07e327fa212d781d758dfc0689
-%global llvm_commit         99b5c6f5a1a031e7a46ed82a1e62e534d31c0687
-%global llpc_commit         c0c713b36bbadfb2acccb996cc5d2c892eb05b1a
-%global xgl_commit          d88feeed611a7774d7847b4235aa0b12d91d03e6
-%global pal_commit          aa568df3471787b4bf573780e47c2c625e819c37
-%global wsa_commit          6470007ad8943fba868e6d25b773b60102ec6b73
+%global llvm_commit         2ac3d4684ac76f889573a4cf438e2dbfe1764d3b
+%global llpc_commit         83bce6fb92e5684843b1d3439962d1c38e59a2b3
+%global xgl_commit          f36c6cc91c4fc8f3ca6cde3110bd68934a51f9b6
+%global pal_commit          cbc16cc219c193907d39ba663022d6ea00911da3
+%global wsa_commit          72ad1af369a20082b0f8d9ee58c30e4a89326084
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180716
+%global commit_date         20180721
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.41
+Version:       2.43
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -133,6 +133,57 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Sat Jul 21 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.43-0.20180721.git402097f
+
+- xgl: Enable general variable pointer support
+- xgl: Enable VK_KHR_create_renderpass2 extension
+- xgl: Enable  VK_KHR_get_display_properties2 extension
+- xgl: Add a runtime setting (OptEnablePrt) to enable PRT feature
+- xgl: Add support for non-MSAA programmable sample locations
+- xgl: Add support for non-0 defaultIndex for memory object allocated in
+       device group.
+- xgl: Use thin tiles for non-standard 3D PRT 64-bit format images
+- xgl: Don't use LayoutShaderFmaskBasedRead for depth/stencil images
+- xgl: Fix compile error with clang.
+- xgl: Fix device groups enumeration: use GetMultiGpuCompatibility() to
+       check for mGPU support.
+- xgl: Fix memory error handling
+- xgl: Add option to control zero-initialization of IL registers
+- xgl: Dota2: Enable ReZ for several G-Buffer shaders on Ellesmere
+- xgl: Report VK_ERROR_OUT_OF_DEVICE_MEMORY once heap size is exceeded.
+       Currently the feature is hidden behind the
+       MemoryEnableExternalLocalTracking panel setting
+- pal: Correct logic for CreatePlatformKey() argument validation
+- pal: Use thin tiles for 3D PRT 64-bit format images
+- pal: Add support for non-MSAA programmable sample location
+- pal: Refine code and fix issue for PRT support
+- pal: Fix soft hang in EQP-VK.wsi.wayland.swapchain.render.basic
+- pal: Fix initialization of indirect user data table pointer
+- pal: Fix MGPU support
+- pal: Adjust code to fit new Wayland window system interface definition
+- pal: Disable the workaround for delayed reserve of PRT VA Range
+       starting from version 2.27 of amdgpu kernel module or version 4.18
+       of Linux kernel
+- pal: Change FCE optimization to remove CPU perf hotspot due to memset
+- pal: Remove PAL setting forcedUserDataSpillThreshold
+- pal: Fix build error when comparing int32 with uint32
+- pal: Fix build and link error with clang
+- llvm: Part of the adjustCopiesBackFrom method wasn't correctly dealing
+        with SubRange intervals when updating.
+- llpc: Add general variable pointer support
+- llpc: Enable new dimension aware image intrinsic by default
+- llpc: Add i32 format integer gather patch to dimension aware intrinsic
+        path
+- llpc: Enable ReZ support
+- llpc: Fix GL_AMD_gpu_shader_int16 + GL_AMD_shader_ballot interaction
+        issue: various GLSL functions return invalid output
+- llpc: Fix PushConstants issue
+- llpc: Refine ELF dump related code
+- wsa: Fixed the soft hang issue of CTS
+       dEQP-VK.wsi.wayland.swapchain.render.basic
+- wsa: Fixed the issue that assert is not triggerred properly with debug
+       driver.
+
 * Mon Jul 16 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.41-0.20180716.git402097f
 
 - xgl: Enable VK_EXT_direct_mode_display extension
