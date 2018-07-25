@@ -1,8 +1,8 @@
 %global amdvlk_commit       402097f4a0075f07e327fa212d781d758dfc0689
 %global llvm_commit         2ac3d4684ac76f889573a4cf438e2dbfe1764d3b
-%global llpc_commit         83bce6fb92e5684843b1d3439962d1c38e59a2b3
-%global xgl_commit          f36c6cc91c4fc8f3ca6cde3110bd68934a51f9b6
-%global pal_commit          cbc16cc219c193907d39ba663022d6ea00911da3
+%global llpc_commit         89eb0e81a86e858a08ad0367be679cfa322298ca
+%global xgl_commit          48d46fa11849297f5ed017c83d356c5f4c57db37
+%global pal_commit          78242ca469350afb2860813d1a9d82f8a2711963
 %global wsa_commit          72ad1af369a20082b0f8d9ee58c30e4a89326084
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180721
+%global commit_date         20180725
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.43
+Version:       2.44
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -133,6 +133,23 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Wed Jul 25 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.44-0.20180725.git402097f
+
+- xgl: Disable memory clause formation if forcing si-scheduler
+- xgl: Change the type of ConnectorId from int32 to uint32
+- xgl: vkUpdateDescriptorSetWithTemplate(): move the loop over the GPUs
+       into the UpdateEntryXXX() functions. This avoids having to pass
+       the device index to each UpdateEntryXXX() function and makes the
+       loop over the number of GPUs a compile time loop which simplifies
+       the code that is generated
+- pal: Update timingReport.py script
+- llpc: Move some functions in llpcInternal.h/.cpp to other proper files
+- llpc: Refine  register settings
+- llpc: Fix dEQP-VK.spirv_assembly.type.scalar.u16.switch_* failure
+- llpc: Implement non-uniform descriptor index support
+- llpc: Add an option to do dynamic loop unroll
+- llpc: Fix dxvk: F.E.A.R. 3 black screen in menu
+
 * Sat Jul 21 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.43-0.20180721.git402097f
 
 - xgl: Enable general variable pointer support
