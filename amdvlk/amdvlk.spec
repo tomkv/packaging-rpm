@@ -1,8 +1,8 @@
 %global amdvlk_commit       402097f4a0075f07e327fa212d781d758dfc0689
 %global llvm_commit         2ac3d4684ac76f889573a4cf438e2dbfe1764d3b
-%global llpc_commit         89eb0e81a86e858a08ad0367be679cfa322298ca
-%global xgl_commit          48d46fa11849297f5ed017c83d356c5f4c57db37
-%global pal_commit          78242ca469350afb2860813d1a9d82f8a2711963
+%global llpc_commit         57ebe6db0b6332939aa83fdd7d91a09e10e65fe8
+%global xgl_commit          e15b26329b0bfc6ca5ad45e867f01afb6186e25b
+%global pal_commit          7ccd54869e36626000148f8c05484ddfa79e077b
 %global wsa_commit          72ad1af369a20082b0f8d9ee58c30e4a89326084
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180725
+%global commit_date         20180803
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.44
+Version:       2.46
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -41,6 +41,7 @@ BuildRequires: libstdc++-devel
 BuildRequires: libxcb-devel
 BuildRequires: libX11-devel
 BuildRequires: libxshmfence-devel
+BuildRequires: libXrandr-devel
 BuildRequires: gtest-devel
 BuildRequires: wayland-devel
 
@@ -133,6 +134,51 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Fri Aug 03 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.46-0.20180803.git
+
+- xgl: Enable VK_KHR_8bit_storage extension
+- xgl: Set GpaSession queue timing flag
+- xgl: Revert a previous  change which changed RenderPass::m_createInfo
+       from including the structure in the class to including a pointer
+       to the structure.  Change it back to avoid a step through memory
+       when accessing it
+- xgl: Fix bugs in testShaders.py: compile_name is not set in asyc
+       process; crash when shader number is less than 8
+- pal: Add option to prefix the ICD's multiple debugging paths
+- pal: Use BitMaskScanForward instead of log2 for power-2 numeric
+- pal: Move non-uniform table nodes to a separate client populated array
+       instead of inlined in user data node list
+- pal: Fix an issue for MGPU that
+       vkGetPhysicalDeviceXlibPresentationSupportKHR returns false when
+       presentation is supported
+- pal: Increase the MaxOutputSlots from 33 to 37: There are up to 5
+       built-in variables which export to position buffer, so the total
+       output should be (32+5)
+- pal: Bumps RGP file version to 1.1 so back end can detect the prior
+       addition of the ETW queue semaphore data flag
+- pal: Switch some code to more Cpu-friendly in hotspot functions
+- pal: Refine WaitForCompletion for Wayland support,  let wsa to wait
+       event to fulfill doWait requirement
+- pal: Fix memory error handling
+- pal: Update implementation for VK_EXT_acquire_xlib_display extension
+       - Don’t build lease-related functions if the xcb-randr dev package
+         used for driver build doesn’t support lease
+       - Dri3WindowSystem::AcquireScreenAccess returns error if lease is
+         not supported at runtime
+- pal: Implement Util::IsKeyPressed
+- pal: Properly initialize and enable stalls when SQTT fifo is full
+- pal: Fix some compile and runtime issues with the ShaderDbg logic
+- pal: Clean-up code for LOAD_*_REG_INDEX on Gfx9+
+- pal: Replace numTotalRbs with numActiveRbs in
+       Gfx9RsrcProcMgr::HwlBeginGraphicsCopy in case some Rbs are
+       disabled
+- pal: Settings Refactor - convert the legacy settings config files to
+       the new JSON format that is used by the DevDriver settings service
+- pal: Fast clear eliminate performance optimization
+- llpc: Support VK_KHR_8bit_storage
+- llpc: Begin to add dpp (data parallel primitive) support for gfxip8/9
+- llpc: Fix failure to parse some bad SPIR-V
+
 * Wed Jul 25 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.44-0.20180725.git402097f
 
 - xgl: Disable memory clause formation if forcing si-scheduler
