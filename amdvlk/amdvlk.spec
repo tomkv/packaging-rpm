@@ -1,9 +1,9 @@
 %global amdvlk_commit       402097f4a0075f07e327fa212d781d758dfc0689
-%global llvm_commit         2ac3d4684ac76f889573a4cf438e2dbfe1764d3b
-%global llpc_commit         57ebe6db0b6332939aa83fdd7d91a09e10e65fe8
-%global xgl_commit          e15b26329b0bfc6ca5ad45e867f01afb6186e25b
-%global pal_commit          7ccd54869e36626000148f8c05484ddfa79e077b
-%global wsa_commit          72ad1af369a20082b0f8d9ee58c30e4a89326084
+%global llvm_commit         f9aac31ab092232a4f3e9b4844c8be3b609fcdbd
+%global llpc_commit         b1973132a8e0a01acc98660a685e4c150b5c4812
+%global xgl_commit          b81968c2287a33ec9ceaf9851ca99f3bbc291c05
+%global pal_commit          69127aa54fdc18d7e7e9dc1095419c8e1f5b28c7
+%global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
@@ -14,7 +14,7 @@
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.46
+Version:       2.47
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,7 +134,36 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
-* Fri Aug 03 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.46-0.20180803.git
+* Wed Aug 15 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.47-0.20180815.git402097f
+
+- xgl: Fix setting of pQuadSamplePattern in RPSyncPoint().
+- xgl: Add option to prefix cache and debug file paths
+- pal: Fix the reading of the NggMode register
+- pal: Fix that Bristol's queue 1 is non-functional
+- pal: Fix some issues in Util::IsKeyPressed implementation. Now GPU
+       profiling could be triggered by pressing shift-F11
+- pal: Updates ISettingsLoader interface to remove Device dependency and
+       to use IndirectAllocator
+- pal: Clean up Linux VA partition initialization
+- pal: Fix handling of OS specific #if blocks in auto-generated settings
+       code.  Some default values were not being set when other fields in
+       the same structure had OS specific defaults
+- pal: Fix InterfaceLogger crash due to mismatched function locations and
+       invalid Init call.
+- pal: Fix mistake made in rename of palSettingsLoaderImpl.h to
+       palSettingsLoader.cpp
+- pal: Upgrade gpuopen
+- wsa:  Fix file descriptor leak issue.
+- llpc: Add some workarounds
+- llpc: Add NGG state
+- llpc: Change the setting of pipeline cache and dump file paths
+- llvm: Revert "xfailed test for [AMDGCN] InstCombine work-around"
+- llvm: Re-enable image inst_combine 
+- llvm: Extra waterfall test for multiple readfirstlane intrinsics. Make
+        sure that the waterfall intrinsic clauses support multiple
+        readfirstlane intrinsics.
+
+* Fri Aug 03 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.46-0.20180803.git402097f
 
 - xgl: Enable VK_KHR_8bit_storage extension
 - xgl: Set GpaSession queue timing flag
