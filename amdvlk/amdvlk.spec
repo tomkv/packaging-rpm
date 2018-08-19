@@ -1,8 +1,8 @@
-%global amdvlk_commit       402097f4a0075f07e327fa212d781d758dfc0689
+%global amdvlk_commit       40b2f81d49e2f97113064358b9fdc62f4b3839a4
 %global llvm_commit         f9aac31ab092232a4f3e9b4844c8be3b609fcdbd
-%global llpc_commit         b1973132a8e0a01acc98660a685e4c150b5c4812
-%global xgl_commit          b81968c2287a33ec9ceaf9851ca99f3bbc291c05
-%global pal_commit          69127aa54fdc18d7e7e9dc1095419c8e1f5b28c7
+%global llpc_commit         70ec075a21e28de6cfe5585bf67ad51f57c82eda
+%global xgl_commit          d7dd65219a853180c7d9f3a1a0255d7943129172
+%global pal_commit          141041117bc2932fd6e22b779ba92d3c37db9d8d
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180803
+%global commit_date         20180817
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.47
+Version:       2.49
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,55 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Sat Aug 18 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.49-0.20180817.git40b2f81
+
+- xgl: Refine WriteFmaskDescriptors and CopyDescriptorSets for fmask
+- xgl: Enable non-uniform indexing support for VK_EXT_descriptor_indexing
+- xgl: Add debug support with  pipeline binary replacement
+- xgl: Update PAL Interface in Vulkan to 424
+- xgl: Fix a potential build dependency issue of strings.cpp
+- xgl: Fix flag externalOpened is misused, it only needs to be set in
+       open path
+- xgl: Fix sparseAddressSpaceSize physical device limit
+- xgl: Add some shift op tests to shaderdb
+- xgl: Disable jemalloc from CMake
+- pal: Change GpuProfiler setting name enumerations to be more readable
+       and remove a redundant setting.
+- pal: Don’t use raw copy when pal format is match but swizzle is not
+       matched.
+- pal: Update ICompiler interface to add OverrideCreateInfo entry points
+       and add settings URI service support
+- pal: [Raven] - Support UMC block perfcounters
+- pal: Recommend more sensible heaps for query pools
+- pal: Implement MemoryCacheLayer for PAL cache layer system
+- pal: Minor profile and shader dumping fixes
+- pal: Fix overhead of RGP capture in some applications.
+- pal: Fix VK_AMD_shader_info is broken on top of PAL NULL backend
+- pal: Fix device groups enumeration for mGPU support
+- pal: Remove imported Jemalloc from Pal
+- pal: Disable multisampled and depth/stencil PRT features
+- pal: Bump version number to 174
+- llpc: Support non-uniform descriptor index for store operations
+- llpc: Remove format A8B8G8R8_SRGB_PACK32 from support list in LLPC;
+        Disable A2B10G10R10 patch on gfx9
+- llpc: Support pipeline binary replacement
+- llpc: Fix a witcher3  crash issue
+- llpc: Set shaderCacheFileDirOption to "-shader-cache-file-dir=."  if no
+        environment variable is set
+- llpc: Add Wave32 support in subgroup arithmetic code path
+- llpc: Use python to generate subgroup arithmetic Op wrapper code
+- llpc: Replace  spvCompileAndLinkProgram with
+        spvCompileAndLinkProgramWithOptions, and enable EOptionDebug in
+        default
+- llpc: Support re-parse command options in Llpc::Compiler.  It only
+        works when all compiler instance are destroyed
+- llpc: Add dump compiler option in LLPC
+- llpc: Remove AcquireContext in Llpc::Compiler::Compiler()
+- llpc: Move verifySpirvBinary from ValidatePipelineShaderInfo to
+        BuildShaderModule
+- llpc: Add ShaderCacheManager::Shutdown to fix the memory leak in
+        amdllpc
+
 * Wed Aug 15 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.47-0.20180815.git402097f
 
 - xgl: Fix setting of pQuadSamplePattern in RPSyncPoint().
