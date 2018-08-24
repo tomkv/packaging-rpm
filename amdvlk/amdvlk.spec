@@ -1,8 +1,8 @@
-%global amdvlk_commit       40b2f81d49e2f97113064358b9fdc62f4b3839a4
-%global llvm_commit         f9aac31ab092232a4f3e9b4844c8be3b609fcdbd
-%global llpc_commit         70ec075a21e28de6cfe5585bf67ad51f57c82eda
-%global xgl_commit          d7dd65219a853180c7d9f3a1a0255d7943129172
-%global pal_commit          141041117bc2932fd6e22b779ba92d3c37db9d8d
+%global amdvlk_commit       3775c7f5a1b0f4603667c88a923cfbe65cd7c240
+%global llvm_commit         32eb74d29956bbf23e71696c9b57184692b97649
+%global llpc_commit         2402bc53b221a925d1a04c6b788789ec70fd0d92
+%global xgl_commit          8d7aa2e5985450deb3ed9c081f59abf385af09e3
+%global pal_commit          2eee818efc9293ce8871df2091d3683ff55570ee
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180817
+%global commit_date         20180824
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.49
+Version:       2.50
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,32 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Fri Aug 24 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.50-0.20180824.git3775c7f
+
+- xgl: Set sampleLocsAlwaysKnown flag for PAL images. This enables a PAL
+       optimization to skip/defer any MSAA depth decompress until resolve
+       (where the sample pattern must now be provided)
+- xgl: Support for 64-bit hash input to OverrideShaderHashUpper/Lower
+- xgl: Fix build failure after make clean
+- pal: Add vega12 support
+- pal: Allow linear even if the image type was requested to be optimal. 
+       There are cases where the only choice is linear
+- pal: [GpuProfiler] Fences used by GpuProfiler not reset before re-use
+- pal: DB_SHADER_CONTROL causing excessive context rolls
+- pal: Remove unused IL Opcodes
+- pal: PAL fence refactoring (phase 1)
+- pal: Pick addrlib fix to fix WGF11ResourceAccess -11on12 failures
+- pal: Use the real definition of DISABLE_CONSTANT_ENCODE_REG since we
+       now have chip headers that define it correctly
+- pal: Added support for VK_EXT_conservative_rasterization extension
+- llpc: Add Vega12 support
+- llpc: Educate LLPC on choosing better loop trip counts for loop
+        unrolling  (Note: The change causes some performance drop in Dawn
+        of War 3, will be fixed in next drop)
+- llpc: Fix crash issue when running Doom with wine/dxvk
+- llpc: Move the GroupOp Code of glslSpecialOpEmu.ll  to glslGroupOpEmuxx.ll
+- llpc: Fix amdllpc compile warning-as-error with clang
+
 * Sat Aug 18 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.49-0.20180817.git40b2f81
 
 - xgl: Refine WriteFmaskDescriptors and CopyDescriptorSets for fmask
