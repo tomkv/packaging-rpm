@@ -1,8 +1,8 @@
 %global amdvlk_commit       3775c7f5a1b0f4603667c88a923cfbe65cd7c240
 %global llvm_commit         32eb74d29956bbf23e71696c9b57184692b97649
-%global llpc_commit         2402bc53b221a925d1a04c6b788789ec70fd0d92
-%global xgl_commit          8d7aa2e5985450deb3ed9c081f59abf385af09e3
-%global pal_commit          2eee818efc9293ce8871df2091d3683ff55570ee
+%global llpc_commit         57e0b0399da7ab022e0d675299a5c26b1616526f
+%global xgl_commit          f2c77b75eb94c5f970bf8c5de5a90fc069fb9c1b
+%global pal_commit          7ce51b199c72021b8d027c50b55da515fd9b2e0b
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180824
+%global commit_date         20180830
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.50
+Version:       2.51
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,26 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Sat Sep 01 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.-0.20180830..git3775c7f
+
+- xlg: Update to VulkanSDK 1.1.82
+- xlg: VK_KHR_create_renderpass2 and VK_KHR_8bit_storage are now in
+       public headers, remove the header files under devext.
+- xlg: Added support for VK_EXT_conservative_rasterization, only
+       "Primitive overestimation" feature is supported.
+- xlg: Fix dereference of
+       pDeviceGroupRenderPassBeginInfo->pDeviceRenderAreas when
+       pDeviceGroupRenderPassBeginInfo->deviceRenderAreaCount == 0
+- xlg: VK_EXT_descriptor_indexing: support non-uniform flag in image and
+       atomic operations.
+- pal: Fix F1 2017 Corruption observed while running benchmark
+- pal: Fix assertion in RsrcProcMgr::CopyImageCompute()
+- pal: [DbgOverlay] Fixes invalid gpu time in Debug overlay.
+- llpc: Fixed uniform_buffer_dynamic_array_non_uniform_access_* test
+        failures issues on GFX6.
+- llpc: Moved translator files to match upstream Khronos
+        spirv-llvm-reader
+
 * Fri Aug 24 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.50-0.20180824.git3775c7f
 
 - xgl: Set sampleLocsAlwaysKnown flag for PAL images. This enables a PAL
