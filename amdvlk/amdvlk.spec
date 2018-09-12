@@ -1,8 +1,8 @@
-%global amdvlk_commit       3775c7f5a1b0f4603667c88a923cfbe65cd7c240
-%global llvm_commit         32eb74d29956bbf23e71696c9b57184692b97649
-%global llpc_commit         57e0b0399da7ab022e0d675299a5c26b1616526f
-%global xgl_commit          f2c77b75eb94c5f970bf8c5de5a90fc069fb9c1b
-%global pal_commit          7ce51b199c72021b8d027c50b55da515fd9b2e0b
+%global amdvlk_commit       e57ec8ce335bbda1d758dfa27cfad30869238406
+%global llvm_commit         2150e1519c6fe9c16826db674cd413eabca6c4ae
+%global llpc_commit         a5e4ba679cd1e429dcfaa5b922358b69774060bb
+%global xgl_commit          12a6803f4d960dbab44089a6418c0ef91156c998
+%global pal_commit          ec4457f9b005dcb7a6178debc19b1df65da57280
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180830
+%global commit_date         20180912
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.51
+Version:       2.52
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,7 +134,52 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
-* Sat Sep 01 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.-0.20180830..git3775c7f
+* Wed Sep 12 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.52-0.20180912.gite57ec8c
+
+- xgl: Don't use LayoutShaderFmaskBasedRead for depth/stencil images
+- xgl: Reduce size of Buffer object, remove fields that aren't necessary,
+       merge three flags members into one,  lowers size from 168 bytes to
+       88 bytes for single GPU.
+- xgl: Check settings before using the passed in pPipelineCache argument
+       during compilation, otherwise application calls to
+       vkCreatePipelineCache override panel/registry keys to disable
+       shader caching
+- xgl: Remove DOTA 2 APU workaround since Valve has fixed this and will
+       now consider system ram when determining the size of the texture
+       pool on integrated GPUs
+- xgl: Fix the issue of vkGetDeviceQueue2 crash and incorrect behavior
+- xgl: Fix sign-compare compiling issue
+- xgl: Reduce size of Image class from 288 bytes to 136 bytes
+- pal: Implement  a graphics path for scaled copy in PAL.  There are some
+       CTS failures, so force to use computer path for scaled copy first
+- pal: Change the different cull modes to enable masks so that we can
+       enable on a per-pipeline type.
+- pal: Fix the issue that GpuProfiler return zero when getting GPU
+       counters for Vega10/Vega12/Raven
+- pal: Pipeline/code object metadata refactoring using MsgPack
+- pal: Fix segfaults on gpuProfiler/RDP
+- pal: Speed up gpuProfiler SQTT dumps
+- pal: Move GpuProfiler granularity from GpuProfilerPerfCounterConfig to
+       GpuProfilerConfig as it is applies to traces as well
+- pal: Remove setting to gather global perf counter per instance since
+       the config file now determines this behavior
+- pal: Enable direct display for console mode
+- pal: Change AmdGpuMachineType to be uint8-based. Interpret only the
+       first byte of ELF header e_flags as this enum
+- pal: Fix a memory segfault issue when running PRT on SRIOV
+- pal: Fix some CTS failures for vega12
+- pal: GpuProfiler: increase max TargetCmdBuffer allocator size
+- pal: Remove support for graphics-only command buffers from PA
+- llpc: Fix the issue of "No data written to a non-zero color attachment
+        if previous attachments are not bound image views"
+- llpc: Fix amdllpc test, option AutoLayoutDesc is dependent on the
+        inOutUsage.fs.cbShaderMask from LowerResourceCollect
+- llpc: Support PAL new metadata format in Vulkan and dump pipeline with
+        new PAL metadata format
+- llpc: Set allowContract and allow reassociation by recursively search
+        user functions for fadd
+
+* Sat Sep 01 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.51-0.20180830.git3775c7f
 
 - xlg: Update to VulkanSDK 1.1.82
 - xlg: VK_KHR_create_renderpass2 and VK_KHR_8bit_storage are now in
