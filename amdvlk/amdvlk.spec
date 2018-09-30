@@ -1,8 +1,8 @@
-%global amdvlk_commit       e57ec8ce335bbda1d758dfa27cfad30869238406
-%global llvm_commit         2150e1519c6fe9c16826db674cd413eabca6c4ae
-%global llpc_commit         a5e4ba679cd1e429dcfaa5b922358b69774060bb
-%global xgl_commit          12a6803f4d960dbab44089a6418c0ef91156c998
-%global pal_commit          ec4457f9b005dcb7a6178debc19b1df65da57280
+%global amdvlk_commit       e718bcf22dffbe23c3c55b0bc5fa2b73451ec95e
+%global llvm_commit         c6d19b9af129014684759151d5816948557ec78a
+%global llpc_commit         e98886a07039e35a1f978ba9d071c6b46a5dacc3
+%global xgl_commit          082297b2a15eb661d1e44a312bc39d757a8870f1
+%global pal_commit          8781e2d873528f764554dc5479de222ec49011a5
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180912
+%global commit_date         20180929
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.52
+Version:       2.55
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,74 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Sat Sep 29 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.55-0.20180929.gite718bcf
+
+- xgl: Enable VK_KHR_driver_properties extension
+- xgl: Implement VK_KHR_shader_atomic_int64 extension
+- xgl: Add MGPU support to DynamicDescriptorData. The second GPUs VA's
+       dynamic descriptor data was getting bound for the first GPU
+       causing a PageFault
+- xgl: Fix vkGetPhysicalDeviceSurfacePresentModes
+- xgl: Fix corruption observed in game Just cause 3 + dxvk
+- xgl: Allow mapping the memory on device index > 0 in device group
+- xgl: Remove the redundant device group loop from vkCmdFillBuffer
+- xgl: Refine the implementation of GetRandROutputDisplay
+- xgl: Add a panel setting to drop the instruction in pipeline binary
+       specified in order to debug the shader quickly
+- pal: Implement direct display for console mode
+       - Get the drm file descriptor from device while there is no leased
+         screen
+       - Find a proper crtc (the old one or an idle one) right before set
+         mode
+- pal: Refine the interface for screen to simplify the interface of
+       palScreen, and remove the un-necessary properties
+- pal: Investigate DATA_AND_OFFSET mode for LOAD_*_REG_INDEX, Part #1
+- pal: Add code object database chunk to RGP traces. Part 1 of 2
+- pal: Update NULL device names to include compute capability
+- pal: In NullGpuId::All mode, create the last MaxDevices null devices in
+       the enumerated list
+- pal: Add new query to obtain the PCI bus id for a physical device
+- pal: Add dest color key and src alpha blend support in graphics scaled
+       copy path and enable the path
+- pal: Pipeline reinjection
+- pal: Support YCbCr plane of UYVY and YUY2 color filling
+- pal: Hook up new dev mode platform halt point and creates platform
+       settings component
+- pal: Merge VS and PS Pipeline Chunk Classes in Gfx9 HWL
+- pal: Remove QueryResultWait requirement (just to eliminate the
+       assertion) for streamout stats query and add wait support in
+       ComputeResults
+- pal: Increase cache line size for Gfx9
+- pal: Change DCC UAV support
+- pal: Fix incorrect GpaSessionFlags reserved bit count
+- pal: Fix the memory leak when the exception/error cause the trace
+       capture to be aborted
+- pal: Fix undefined symbol: AddrCreate with debug driver
+- pal: Add panel setting to allow for restricting DCC to surfaces with a
+       minimum BPP
+- pal: Fix RGP profiling regression caused by full screen metadata
+       feature enable
+- pal: Add setting to never set clock values
+- pal: [GPUProfiler]Do more perfcounter error handling
+- pal: Add setting to disable XOR modes for AddrMgr2
+- llpc: Replace buffer.load intrinsic with raw.buffer.load intrinsic in
+        GS off-chip path
+- llpc: Add peephole optimizations for PHI's & vector operations, up to
+        6% performance improvement
+- llpc: Fix CTS ssbo, ubo test failures
+- llpc: Fix sparse bindings/residency: texture gather operations doesn’t
+        work correctly
+- llpc: Fix FP16 support issue for GFX8
+- llpc: Fix several crash/hang issues for running games on dxvk
+- llpc: Code Refine
+        - Add certain rsState fields to hash calculation. This is missing
+        - Rename files PassPeepholeOpt to SpirvLowerPeepholeOpt
+        - Rename files PassLoopUnrollInfoRectify to
+          SpirvLowerLoopUnrollInfoRectify
+- llpc: Correct some coding comments
+- llpc: Remove option -enable-dim-aware-image-intrinsic and all related
+        LLVM IR functions
+
 * Wed Sep 12 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.52-0.20180912.gite57ec8c
 
 - xgl: Don't use LayoutShaderFmaskBasedRead for depth/stencil images
