@@ -1,8 +1,8 @@
 %global amdvlk_commit       e718bcf22dffbe23c3c55b0bc5fa2b73451ec95e
-%global llvm_commit         c6d19b9af129014684759151d5816948557ec78a
-%global llpc_commit         e98886a07039e35a1f978ba9d071c6b46a5dacc3
-%global xgl_commit          082297b2a15eb661d1e44a312bc39d757a8870f1
-%global pal_commit          8781e2d873528f764554dc5479de222ec49011a5
+%global llvm_commit         678b8d52b91af51de5839f44144701432df30a00
+%global llpc_commit         0f67688486dcfd5e22e7d0a6abae69c2065aadab
+%global xgl_commit          a39c836e481a28cad06980367c89ac54492fec4e
+%global pal_commit          b88de6c975d81881686d709803f130b264c8d58c
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20180929
+%global commit_date         20181017
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.55
+Version:       2.59
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,65 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Fri Oct 19 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.59-0.20181017.gite718bcf
+
+- xlg: Update Vulkan headers to 1.1.86
+- xlg: Enable VK_KHR_shader_atomic_int64 extension
+- xlg: Enable VK_GOOGLE_decorate_string and VK_GOOGLE_hlsl_functionality1
+       extension
+- xlg: Use VK_KHR_image_format_list to set PAL flag noStencilShaderRead
+- xlg: Add driver software compositor
+- xlg: Add code object API Loader Events chunk to RGP traces
+- xlg: Remove VK_KHX_device_group
+- xlg: Fix MGPU Present Caps / Surfrace Modes
+- xlg: Reserve ALL Mode for Querying Targets
+- xlg: Implicit fullscreen mode optimization/cleanup
+- xlg: Remove support for 3D PRT BC 128-bit block-compressed formats
+- pal: Refine wayland window system support in PAL
+- pal: Add Indirect Function Support to PAL
+- pal: Improve CPU performance hotspots that a large amount of time was
+       spent in a few CmdUtil functions that RMW command memory
+- pal: Improve handling of scratch memory in PAL
+- pal: Change MaxOutputSlots to 32+6
+- pal: Updates flags for bitmask settings to allow the RDP UI to
+       display/modify them properly
+- pal: Add implicit fullscreen exclusive mode query
+- pal: Add code object API Loader Events chunk to RGP traces, Part 2 of 2
+- pal: Always enable, disable SQG events in SPI_CONFIG_CNTL for
+       gfx9PerfExperiment
+- pal: Add the support for rotated copy in graphics scaled copy path
+- pal: Enable gamma conversion in graphics scaled copy path
+- pal: Handle failure better while dumping command buffers
+- pal: Update to view3dAs2dArray
+- pal: Implement a PAL_NOT_IMPLEMENTED() in the CmdBufferLogge
+- pal: Flush DB data and meta cache in case CmdClearDepthStencil of
+       rsrcProcMgr.cpp take graphic engine based fast clear
+- pal: Avoid crashing if the shaderDbg.cfg file is not available and add
+       the option to only trace a specific number of draws per command
+       buffer
+- pal: Improve GpaSession handling of per-draw granularity performance
+       counters
+- pal: Adds State field to the settings JSON schema to indicate to the
+       tool which driver state the settings can be changed during
+- pal: Allow calling TemporarilyHangTheGpu() debug feature from non
+       hw-specific classes
+- pal: Add more null devices, one for each AsicRevision not already
+       represented. Change some GFXIP stepping versions to match the
+       latest version of HSA's table
+- pal: Fix GpuMemory leak in GpaSession
+- pal: Fix User-Data Management when finishing an RPM blit
+- pal: Fix gpuProfiler crash when both perfcounters and sqtt are enabled
+- pal: Fix an issue with the load index context register path that was
+       affecting GFX9 asics
+- llpc: Add support for VK_KHR_shader_atomic_int64
+- llpc: Support .raw.buffer and .struct.buffer
+- llpc: Fix  error on ICompiler::Create for 2 different GPUs
+- llpc: [dxvk/wine] Fix Final Fantasy XII  missing text
+- llpc: Fix peephole crash in the Witcher 3
+- llpc: Remove sample_lz optimization since it is implemented in LLVM
+- llpc: Fix intermittent assert on gfx9
+- llpc: Switch emu lib to an archive of bitcode modules
+
 * Sat Sep 29 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.55-0.20180929.gite718bcf
 
 - xgl: Enable VK_KHR_driver_properties extension
