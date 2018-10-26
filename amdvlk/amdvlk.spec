@@ -1,8 +1,8 @@
-%global amdvlk_commit       e718bcf22dffbe23c3c55b0bc5fa2b73451ec95e
+%global amdvlk_commit       96a0ad87960674e57b340460ebd919f9e2e7f9d1
 %global llvm_commit         678b8d52b91af51de5839f44144701432df30a00
-%global llpc_commit         0f67688486dcfd5e22e7d0a6abae69c2065aadab
-%global xgl_commit          a39c836e481a28cad06980367c89ac54492fec4e
-%global pal_commit          b88de6c975d81881686d709803f130b264c8d58c
+%global llpc_commit         bb201a35e5128fe047d3456ffe7142535a721926
+%global xgl_commit          b87235ec110d2b7b5ef9db1579c315d13356115d
+%global pal_commit          a9038c9449e684de32287185570c703856fec6a7
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20181017
+%global commit_date         20181026
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.59
+Version:       2.60
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,40 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+
+* Fri Oct 26 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.60-0.20181026.git96a0ad8
+
+- xgl: Support swapchain composite alpha
+- xgl: Fix crash when running Killer Instinct with Steam Proton
+- xgl: Fix testShaders.py to not depend on AMDLLPC SUCCESS message
+- pal: Change CreateBvhSrds() to allow for a NULL GPU memory object when
+       useZeroOffset==1
+- pal: Refine wayland window system support in PAL
+- pal: Remove dx9Mipclamping from SamplerInfo and keep MIP_POINT_PRECLAMP
+       = 0
+- pal: Add swapchain composite alpha support
+- pal: Fix packet files RELEASE_MEM missing ordinal2 fieldname
+- pal: Remove support for view 3d as 2d array
+- pal: [GpuProfiler] Add support for injecting pipeline and shader hashes
+       into ThreadTraceViewer thread traces
+- pal: Unset color flag for block-compressed format
+- pal: Fix clears of 32-32-32 format images.  Address library computes
+       the dimensions of a 96bpp surfaces as if were a 3xWidth 32bpp
+       surface, which is happily just what we need to do image clears
+       instead of buffer-based image clears
+- llpc: Fix an issue that loop invariant code motion does not work in
+        certain cases when there are multiple push constant, seeing ~13%
+        performance gain in  Serious Sam Fusion 4k - Low setting
+- llpc: Fix llvm.amdgcn.fmed3.f16 doesn't work on gfx8, use min/max to
+        emulate it
+- llpc: Move lowering optimizations to after patch phase
+- llpc: Enable building amdllpc on clang, including MacOS
+- llpc: Compile multiple pipelines in the same context
+- llpc: amdllpc do not output 'AMDLLPC SUCCESS' when -enable-outs=false
+- llpc: Enable asserts on debug build of amdllpc
+- llpc: enable-outs now defaults off. -v is an alias for it
+- llpc: amdllpc -emit-llvm now outputs .ll not .bc
+
 * Fri Oct 19 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.59-0.20181017.gite718bcf
 
 - xlg: Update Vulkan headers to 1.1.86
