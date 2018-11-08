@@ -1,8 +1,8 @@
-%global amdvlk_commit       96a0ad87960674e57b340460ebd919f9e2e7f9d1
+%global amdvlk_commit       b15aaf9184d18e76e0e814509ba92b1c87789982
 %global llvm_commit         678b8d52b91af51de5839f44144701432df30a00
-%global llpc_commit         bb201a35e5128fe047d3456ffe7142535a721926
-%global xgl_commit          b87235ec110d2b7b5ef9db1579c315d13356115d
-%global pal_commit          a9038c9449e684de32287185570c703856fec6a7
+%global llpc_commit         1c4e5d10bed83b96ec08077c5e48b3b0a1497605
+%global xgl_commit          4730177e34e414e233cddfbe923ef64b7aac5f83
+%global pal_commit          f0762ce47b89935c02dc2e784bc120d93255c08d
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20181026
+%global commit_date         20181108
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.60
+Version:       2.61
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,36 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+
+* Thu Nov 08 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.61-0.20181108.gitb15aaf9
+
+- xgl: Implement VK_EXT_inline_uniform_block
+- xgl: testShaders.py: don't use amdllpc -auto-layout-desc
+- xgl: Add script for lit test
+- xgl: Add panel setting for debugging shader
+- pal: Add SamplerInfo::disableSingleMipAnisoOverride flag to allow
+       client have control over this Sampler optimization when creating
+       Sampler SRDs
+- pal: Clean up some old code in PAL related to state inheritance
+- pal: Move SyncReqs determination code from RPM to barrier functions
+- pal: Refine wayland window system support (last change)
+- pal: Fix CB_DCC_CONTROL register is programmed incorrectly
+- pal: Fix barrier secondary buffer test failure
+- pal: Make setting to test lateAllocVs behavior
+- pal: Fix empty perf traces under gfx9
+- pal: Fix external_memory_host.bind_image_memory_and_render tests
+       failing on Vega10
+- pal: Fix GFX9's hardware specific CmdBarrier functions forgot to call
+       its base function
+- pal: Refactor thread trace token mask interface
+- pal: [GpuProfiler] Fix ThreadTraceViewer CRCs for full frame captures
+- llpc: cmake: fix dependencies for emulation library
+- llpc: Tidy amdllpc's use of spvgen
+- llpc: amdllpc switched to using static vfx library
+- llpc: Remove need for -auto-layout-desc option
+- llpc: New -verify-ir option: This option adds a verify pass after each
+        pass in the LLPC compilation process
+- llpc: Fix clang warnings
 
 * Fri Oct 26 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.60-0.20181026.git96a0ad8
 
