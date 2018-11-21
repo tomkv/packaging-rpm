@@ -1,8 +1,8 @@
-%global amdvlk_commit       b15aaf9184d18e76e0e814509ba92b1c87789982
-%global llvm_commit         678b8d52b91af51de5839f44144701432df30a00
-%global llpc_commit         1c4e5d10bed83b96ec08077c5e48b3b0a1497605
-%global xgl_commit          4730177e34e414e233cddfbe923ef64b7aac5f83
-%global pal_commit          f0762ce47b89935c02dc2e784bc120d93255c08d
+%global amdvlk_commit       81fd87809330b5f4cb1f4fa81a3e80e3c0ba3605
+%global llvm_commit         e594994ad722355e8f34b32cd18687f0cb74410f
+%global llpc_commit         82d693edcacd1eeb3d661fe55c105fd6f0ca5cc4
+%global xgl_commit          4b820f073cc7d6328642436d1e0317354d56f088
+%global pal_commit          d939792519fd2a3e845c850a2d61da0fc619980f
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20181108
+%global commit_date         20181120
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.61
+Version:       2.63
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,52 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Tue Nov 20 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.63-0.20181120.git81fd878
+
+- xgl: Enable sparse support by default
+- xgl: Enable VK_AMD_memory_overallocation_behavior extension
+- xgl: Enable degenerate triangles for conservative rasterizations
+- xgl: Fix issue that can't clear a mutable format image
+- xgl: Fix CTS memory.pipeline_barrier.transfer_dst_storage_image tests
+       fail
+- xgl: Fix MGPU asserts when creating graphics pipeline
+- xgl: Fix issue that wrong target device ID passed to PAL
+- xgl: Fix issue that dual source bend is being enabled when blending is
+       disabled
+- xgl: Add setting for exiting after compilation failure
+- xgl: Update base address offset calculation to be per device
+- pal: Hook up more pipeline ABI metadata fields
+- pal: Shader prefetch updates, remove the PrefetchMgr entirely
+- pal: Change a SparseVector assert to be more clear
+- pal: Add a pair of more generic BuildReleaseMem and BuildAcquireMem
+       functions
+- pal: Fix a couple inconsistencies in platform settings
+- pal: Fix copies of BCn mip-levels where the HW determines the incorrect
+       size of the mip level
+- pal: Check if pMsaaState is null to avoid possible access violate
+- pal: Add parameters firstInstance and instanceCount to CmdDrawOpaque to
+       support Vulkan API DrawIndirectByteCount
+- pal: Fix GetPeerImageSizes relying on zero initialization of parameters
+- pal: Fix a regression
+       dEQP-VK.wsi.wayland.swapchain.create.min_image_count test crashes
+- pal: Fix dependency on x11/xcb libraries even there is no x11/xcb
+       surface created
+- pal: Add setting CsCuEnLimitMask for limiting CUs enabled for compute
+       shaders
+- pal: Add the ability to dump debug stack traces
+- pal: Update swap chain to handle VSync fullscreen present
+- pal: Add ICmdBuffer::CmdSetBufferFilledSize
+- llpc: Fix clang unused function warnings
+- llpc: Fix clang unused-variable warnings
+- llpc: Fix default output file extension for ISA asm output
+- llpc: Build emu lib with opt -strip
+- llpc: Set default -log-file-dbgs to "" (meaning stderr): this brings
+        amdllpc into line with other LLVM tools.
+- llpc: Implement transform_feedback support
+- llpc: Fix a typo to calculate ldsSizeDwordGranularity for on-chip ESGS
+        ring on GFX9
+- llpc: Correct minor issues for inline constant
+- llpc: Add proper type mangling to llpc builtin and generic functions
 
 * Thu Nov 08 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.61-0.20181108.gitb15aaf9
 
