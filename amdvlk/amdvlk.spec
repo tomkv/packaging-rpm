@@ -1,8 +1,8 @@
-%global amdvlk_commit       81fd87809330b5f4cb1f4fa81a3e80e3c0ba3605
-%global llvm_commit         e594994ad722355e8f34b32cd18687f0cb74410f
-%global llpc_commit         82d693edcacd1eeb3d661fe55c105fd6f0ca5cc4
-%global xgl_commit          4b820f073cc7d6328642436d1e0317354d56f088
-%global pal_commit          d939792519fd2a3e845c850a2d61da0fc619980f
+%global amdvlk_commit       bb801918069a8b797ba7a3f01f0e33906972b4e9
+%global llvm_commit         620beb6e1ee14c179aedfc1b9083e1ca8975330c
+%global llpc_commit         a911acad98f4b3bf39ac15607487de799df08f69
+%global xgl_commit          979a1a79ea00f3c8bf70661577c4324e1701d99f
+%global pal_commit          3d5fe51548a8b47f538d005d9f2f807138c304eb
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20181120
+%global commit_date         20181205
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.63
+Version:       2.65
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,79 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Wed Dec 05 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.65-0.20181205.gitbb80191
+
+- xgl: Enable VK_EXT_scalar_block_layout extension
+- xgl: Enable VK_KHR_swapchain_mutable_format extension
+- xgl: Enable on-chip GSVS ring on GFX9, seeing up to 10% performance
+       gain
+- xgl: Update base address offset calculation to be per device
+- xgl: Use SW compositor path for MGPU in windowed modes
+- xgl: Add missing files to CMakelist to fix undefined reference to
+       vk::OverrideDispatchTable_ND(vk::DispatchTable*)
+- xgl: Fix errors with multiple monitors and direct display
+- xgl: Add dccBitsPerPixelThreshold setting
+- xgl: Fix the issue that Pipeline keeps a reference to layout after it
+       is created
+- xgl: Fix dEQP-VK.api.device_init.create_instance_device_intentional_alloc_fail
+       test failure
+- xgl: Fix a crash issue on Raven caused by the implementation of
+       VK_AMD_memory_overallocation_behavior extension
+- xgl: Fix calculation of the pRegions offset in
+       CmdBuffer::PalCmdResolveImage()
+- pal: Change the unit of buffer-filled-size to bytes
+- pal: Add an option to print all pipelines in GPUprofiler
+       timingReport.py
+- pal: Add the ability for certain settings to be reread from the
+       registry/file
+- pal: Implement Release-acquire based barrier
+- pal: Add timeline_semaphore support
+- pal: Clarify when .sgpr_limit and .sgpr_limit are written to pipeline
+       metadata
+- pal: Add 64-bit version of BitMaskScanForward
+- pal: Add BitMaskScanReverse to optimize Log2 and Pow2Pa
+- pal: In BitMaskScanForward, replace bsf with tzcnt
+- pal: Replace some PsUsesUavs() checks in OOO prim and DFSM
+       optimizations with PsWritesUavs(). Add PsWritesUavs,
+       PsWritesDepth, and PsUsesAppendConsume fields to legacy pipeline
+       metadata
+- pal: [ThreadTrace] Change assert to an alert when the perf token is
+       enabled in the token mask config
+- pal: Remove Bundle State Inheritance
+- pal: Add HawaiiPro to AsicRevision and NullGpuId
+- pal: Change PBB alpha to mask condition check to also require MSAA log2
+       samples > 0
+- pal: Re-enable tracing of missing registers in thread trace
+- pal: Don't initialize counters when not in a mode for counter collection
+- pal: Remove some useless settings
+- pal: Simplify unnecessary BitMaskScanForward, replace another use of
+       BitMaskScanForward with Reverse in gfx9MetaEq
+- pal: Change note namespace from "AMD" to "AMDGPU" to match HSA code
+       objects.
+- pal: Fix compile and link error with clang
+- pal: Fix CopyTextureRegion failure when copying a MSAA Resource in
+       D32_FLOAT or D16_UNORM to a R32_UINT format
+- pal: Fix  GFX9: CB_DCC_CONTROL register is programmed incorrectly
+- pal: Fix perf counter instance incorrect calculation
+- llpc: Add implementation for VK_KHR_shader_float16_int extension
+- llpc: Add implementation for transform feedback extension
+- llpc: Rationalize LLPC's various ad-hoc pass managers into a single
+        pass manager that runs on a single whole-pipeline LLVM IR module
+- llpc: Ensure declaration attributes copied from external lib
+- llpc: Ensure llvm.amdgcn.set.inactive is not marked readnone
+- llpc: Remove unnecessary and illegal alloca in emulation functions
+- llpc: Clear sets of unused values after use
+- llpc: Remove +vgpr-spilling from default options as this is now always
+        enabled in LLVM upstream
+- llpc: Ensure llvm.amdgcn.set.inactive is not moved in control flow
+- llpc: Avoid remembering view index value outside of IR
+- llpc: Fix incorrect implementation of OpSubgroupAllEqual
+- llpc: Fix clang unused variable error
+- llpc: Fix  dEQP-VK.glsl.atomic_operations.*_*signed64bit_* failure on
+        gfx7
+- llpc: Fix some dodgy deleting of instructions in SpirvLowerAccessChain
+- llpc: Fix ELEX crash with Steam Proton
+
 * Tue Nov 20 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.63-0.20181120.git81fd878
 
 - xgl: Enable sparse support by default
