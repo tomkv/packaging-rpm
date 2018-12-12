@@ -1,8 +1,8 @@
-%global amdvlk_commit       bb801918069a8b797ba7a3f01f0e33906972b4e9
-%global llvm_commit         620beb6e1ee14c179aedfc1b9083e1ca8975330c
-%global llpc_commit         a911acad98f4b3bf39ac15607487de799df08f69
-%global xgl_commit          979a1a79ea00f3c8bf70661577c4324e1701d99f
-%global pal_commit          3d5fe51548a8b47f538d005d9f2f807138c304eb
+%global amdvlk_commit       63811556d533858caba2b95ccf46a8a322363b1c
+%global llvm_commit         0843ddd6f5a03468d42b90715e98e9798f772555
+%global llpc_commit         27692580ad9eb4f173ad0c421c932d6dd4300184
+%global xgl_commit          6df80a52773aa1126fd7518254fa4cc01d38b819
+%global pal_commit          bf91cb29233ffceff95eb9ad16c6dc00b2029541
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20181205
+%global commit_date         20181212
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.65
+Version:       2.66
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,42 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Wed Dec 12 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.66-0.20181212.git6381155
+
+- xgl: Update Vulkan headers to 1.1.94
+- xgl: Use VK_DRIVER_ID_x in xgl for driver properties
+- xgl: Enable primitiveUnderestimation capability of
+       VK_EXT_conservative_rasterization
+- pal: PCOM and Blt Shaders integration to mmpipelines in PAL
+- pal: Remove call to WriteVsFirstSliceOffset() if the pipeline doesn't
+       require it
+- pal: Move the ownership of conservative rasterization register back to
+       the MSAA state
+- pal: Modify copybuffer byte and dword shaders to support a copy size of
+       up to 4GB
+- pal: Modify the RPM code to perform multiple smaller copies (of
+       currently 16MB) in place of a single large copy and now it should
+       be able to handle gpusize (64 bit) copy sizes
+- pal: Fix Cube crash on debug version due to empty ShaderCacheFileDir
+- pal: Fix GPU hang when Vulkan API accesses the stencil aspect of
+       VK_Format_S8_Uint image explicitly
+- pal: Fix mmVGT_GS_ONCHIP_CNTL access issue
+- llpc: Merge tbuffer.store.i32 with tbuffer.store.v2i32 and
+        tbuffer.store.v4i32, up to 5% performance gain for tessellation
+- llpc: Enable the atomic optimizer
+- llpc: Hook up Spirv Support for VK_KHR_shader_float_controls
+- llpc: Fix compile error: non-scalar type cannot be used in a
+        pseudo-destructor expression
+- llpc: Rename PatchPrepareAbi to PatchPreparePipelineAbi
+- llpc: Fix dxvk streamoutput11.exe on gfxip 8 and 9 cards for extension
+        Ext-transformfeedback buffer
+- llpc: Fix unused variable error in clang build
+- llpc: Temp whole-pipeline passmgr fix for CTS 
+        dEQP-VK.spirv_assembly.instruction.graphics.16bit_storage.struct_mixed_types.uniform_geom
+        failure
+- llpc: Remove conservative rasterization register from the pipeline ABI.
+        This is now managed by PAL MSAA state
+
 * Wed Dec 05 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.65-0.20181205.gitbb80191
 
 - xgl: Enable VK_EXT_scalar_block_layout extension
