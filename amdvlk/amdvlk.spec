@@ -1,8 +1,8 @@
-%global amdvlk_commit       63811556d533858caba2b95ccf46a8a322363b1c
+%global amdvlk_commit       094be24945d227e9c0724adb82fcc23717c09223
 %global llvm_commit         0843ddd6f5a03468d42b90715e98e9798f772555
-%global llpc_commit         27692580ad9eb4f173ad0c421c932d6dd4300184
-%global xgl_commit          6df80a52773aa1126fd7518254fa4cc01d38b819
-%global pal_commit          bf91cb29233ffceff95eb9ad16c6dc00b2029541
+%global llpc_commit         f36099d4c778327f22b050432f09e17dc815474a
+%global xgl_commit          bca286c1146f9f0662bbb7c10d193e487579e6f0
+%global pal_commit          f924a4fb84efde321f7754031f8cfa5ab35055d3
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20181212
+%global commit_date         20190107
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.66
+Version:       2.68
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,64 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Mon Jan 07 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.68-0.20190107.git094be24
+
+- xgl: Update Vulkan Headers to 1.1.96
+- xgl: Add GPU memory references to SW compositing images
+- xgl: Switch the default error code in PalToVkError from
+       VK_ERROR_INTIALIZATION_FAILED to VK_ERROR_OUT_OF_HOST_MEMORY
+- xgl: Fix a potential access violation if pPalMemory is nullptr
+- xgl: Barrier cleanup
+- xgl: Remove code for PAL_CLIENT_INTERFACE_MAJOR_VERSION <= 450
+- xgl: Add new shaderdb test cases for transform feedback and variable
+       pointer
+- pal: Fix format X10Y10Z10W2Bias_Unorm is missed in Image::GetAddrFormat
+- pal: Move the dccBitsPerPixelThreshold setting from a private Gfx9
+       setting to a public Pal setting that can be set by clients.
+       Refactor the code to use the public PAL setting when checking for
+       the threshold to determine if DCC should be turned off
+- pal: Avoid redundant pixel copy for BCn format
+- pal: [RGP] Switch 64-bit pipeline compiler hashes to 128-bit internal
+       pipeline hashes. Add PSO Correlation RGP chunk, update Code Object
+       Database and Loader Event RGP chunks
+- pal: Don't allow any meta-data texture fetches through that surface's
+       hTile for the stencil if the hTile surface for a depth / stencil
+       buffer doesn't contain any stencil data
+- pal: Fix an RGP regression in the gpasession back-compat code
+- pal: Pad shader size with shader instruction prefetch cache lines
+- pal: Add new TossPoint for killing primitives in the PA during setup
+- pal: Fix improper order of string for the enum EngineType
+- pal: Fix the issue that pipelineAbiProcessor::LoadFromBuffer then
+       PipelineAbiProcessor::SaveToBuffer ends up with different ELF size
+- pal: Optimization for fully overwritten resolve
+- pal: Make client specific debug string in public settings work
+- pal: Fix Multi-process failure
+- llpc: Rationalize LLPC's various ad-hoc pass managers into a single
+        pass manager that runs on a single whole-pipeline LLVM IR module
+- llpc: Move LLPC pass initialization so that a pass name can be used in
+        an option such as -print-after, or the forthcoming
+	-llpc-stop-after
+- llpc: Add -dump-cfg-after=<passname> to dump CFG to a file per function
+        after the specified pass
+- llpc: Add additional flags to keep floating point optimization after
+        limited opt pass
+- llpc: Add pipeline optimizer key to pipeline dump file
+- llpc: Use DEBUG_TYPE in all passes' INITIALIZE_PASS
+- llpc: Use global Create function for all passes
+- llpc: Include llvm-ir in ELF section
+- llpc: Remove IR Value pointers from pipeline state
+- llpc: Add 16-bit and 64-bit data to transform feedback.
+- llpc: Correct the behavior of XFB enablement. In glslang, xfb_offset
+        will trigger XFB rather than other XFB decorations.
+- llpc: Remove glslCopyShaderEmu.ll. Add the function to
+        llpcPatchCopyShader.cpp. Generate expected IR by C++.
+- llpc: Fix dynamic loop unroll GetPipelineStatistics which was broken in
+        PR#16
+- llpc: Fix failure for clspv shader using atomic increment, add atomicOp
+        support for the variable pointer
+- llpc: Fix unused variable error on clang
+- llpc: Fix asin float 16 CTS errors
+
 * Wed Dec 12 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.66-0.20181212.git6381155
 
 - xgl: Update Vulkan headers to 1.1.94
