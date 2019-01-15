@@ -1,8 +1,8 @@
-%global amdvlk_commit       094be24945d227e9c0724adb82fcc23717c09223
-%global llvm_commit         0843ddd6f5a03468d42b90715e98e9798f772555
-%global llpc_commit         f36099d4c778327f22b050432f09e17dc815474a
-%global xgl_commit          bca286c1146f9f0662bbb7c10d193e487579e6f0
-%global pal_commit          f924a4fb84efde321f7754031f8cfa5ab35055d3
+%global amdvlk_commit       45222f88e3b2872d40ee68e60a023e2c880680c8
+%global llvm_commit         3c7dbb214c3680803f7d3e3c3aed02fddb2f7dbb
+%global llpc_commit         797be964eb8d65f2ec162a783708b36834a62000
+%global xgl_commit          0d7c5a69ba314bfabe2d5dbe3e5e4d1ea3228845
+%global pal_commit          2e94fa1533a606d076061db8d5be514bb69adfc3
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190107
+%global commit_date         20190115
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.68
+Version:       2.70
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,45 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Tue Jan 15 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.70-0.20190115.git45222f8
+
+- amdvlk: Update Vulkan Headers to 1.1.96
+- amdvlk: Add pipeline optimizer key to pipeline dump file
+- amdvlk: Optimization for fully overwritten resolve
+- amdvlk: Add atomicOp support for the variable pointer
+- amdvlk: Fix A performance regression with the Talos Principle
+- amdvlk: Fix A potential access violation
+- amdvlk: Fix A RGP regression
+- amdvlk: Fix Multi-process failure
+- xgl: Expose YUV planes, allow applications to implement their own color
+       conversion accessing each YUV planes
+- xgl: Do not include symbols while building release driver
+- xgl: Code refactoring for pipeline dump
+- xgl: Fix random VM fault caused by that the image descriptor and the
+       fmask descriptor contain the same lower virtual address (as
+       designed) but use different offsets in the suballocation
+- xgl: Change the default WgpMode from wgp to cu
+- xgl: Fix a null pointer access violation
+- xgl: Implement VK_EXT_debug_utils
+- xgl: Fix dxvk ELEX  corruption issue
+- pal: Expose CuMask to gpaSession clients
+- pal: Fix a  performance regression introduced by changes which added
+       support for the LOAD_INDEX path for handling pipeline binds
+- pal: Revise the alert of doing expand in late phase to print more info
+- pal: Use mmTA_GRAD_ADJ_UCONFIG on GFX9 to prevent writing to a
+       privileged register
+- pal: Enable Int8 Arithmetic op in PAL ILP
+- pal: Update ELF strtab section name offset when loading an ELF binary
+- pal: Fix QuerySystemInfo() implementation for a number of issues
+       affecting many-core CPUs like Threadripper and Epyc
+- pal: Add a new declaration for the name prefix of ELF section dedicated
+       to storing comments such as compiler intermediate representation
+       (e.g. LLVM IR)
+- llpc: Update naming scheme of LLVM IR inclusion:
+- llpc: Add pipeline option includeIr for including IR in the ELF section
+        in AMD_SHADER_INFO
+- llpc: Fix  float test failure for transform_feedback
+
 * Mon Jan 07 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.68-0.20190107.git094be24
 
 - xgl: Update Vulkan Headers to 1.1.96
