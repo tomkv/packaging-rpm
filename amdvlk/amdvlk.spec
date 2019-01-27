@@ -1,8 +1,8 @@
-%global amdvlk_commit       45222f88e3b2872d40ee68e60a023e2c880680c8
+%global amdvlk_commit       96f3ad778d87b9ab6e0b86a0d0d07dc198d5f4f5
 %global llvm_commit         3c7dbb214c3680803f7d3e3c3aed02fddb2f7dbb
-%global llpc_commit         797be964eb8d65f2ec162a783708b36834a62000
-%global xgl_commit          0d7c5a69ba314bfabe2d5dbe3e5e4d1ea3228845
-%global pal_commit          2e94fa1533a606d076061db8d5be514bb69adfc3
+%global llpc_commit         fc32df219915b72ece2007079063b3942c843630
+%global xgl_commit          f42a5b845ba784eb9990ed7182a8c4ff1f7cf7e3
+%global pal_commit          ee4e837d08ec933714df20e76abe0aebee42d457
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190115
+%global commit_date         20190125
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.70
+Version:       2.71
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,24 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Sun Jan 27 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.71-0.20190125.git96f3ad7
+
+- xgl: Enable EXT_INLINE_UNIFORM_BLOCK extension
+- xgl: Enable EXT_PCI_BUS_INFO extension
+- xgl: Add barrier filtering
+- xgl: Implement extension VK_KHR_vulkan_memory_model in vulkan api layer
+- xgl: Implement VK_EXT_display_surface_counter support
+- xgl: Fix asserts related to valid vkCmdPushConstants usage
+- pal: Fix wrong reported LDS size per threadgroup for GFX7+
+- pal: Add new flag 'notLockable' into GpuMemoryCreateFlags to indicate
+       the GpuMemory will be indirect lock
+- pal: Upgrade gpuopen
+- llpc: Remove unnecessary assert in amdllpc
+- llpc: Fix CTS v1.1.2.2 failure in ./deqp-vk -n
+        dEQP-VK.binding_model.descriptorset_random.sets32.noarray.ubolimitlow
+- llpc: Enable inclusion of llvm-ir in section of ELF output
+- llpc: Expand the shader inout meta node from 64 bit to 64 bit array
+
 * Tue Jan 15 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.70-0.20190115.git45222f8
 
 - amdvlk: Update Vulkan Headers to 1.1.96
