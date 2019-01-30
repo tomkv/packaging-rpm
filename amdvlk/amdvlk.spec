@@ -1,8 +1,8 @@
-%global amdvlk_commit       96f3ad778d87b9ab6e0b86a0d0d07dc198d5f4f5
+%global amdvlk_commit       fbfa56c61409417c96483347f0de6f6b629543eb
 %global llvm_commit         3c7dbb214c3680803f7d3e3c3aed02fddb2f7dbb
-%global llpc_commit         fc32df219915b72ece2007079063b3942c843630
-%global xgl_commit          f42a5b845ba784eb9990ed7182a8c4ff1f7cf7e3
-%global pal_commit          ee4e837d08ec933714df20e76abe0aebee42d457
+%global llpc_commit         7476cddf9a7e1d47546e57c9ee654907889d0891
+%global xgl_commit          6a629e8286ed9d2a8a3799131a274ee58590765d
+%global pal_commit          1af0abb8cfa370284878d5aeaa74d1d0c7406c23
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190125
+%global commit_date         20190130
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.71
+Version:       2.72
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,28 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Wed Jan 30 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.72-0.20190130.gitfbfa56c
+- amdvlk: Add Vega20 and Raven2 support
+- xgl: Implement VK_EXT_transform_feedback
+- xgl: Move VK_EXT_swapchain_colorspace to instance extension
+- xgl: Add int8 shaderdb tests
+- pal: Report CPU clock speed to RGP
+- pal: Properly reset events in EventPool and CmdReleaseThenAcquire
+- pal: Fix bugs in Release/acquire-based barrier
+- pal: Fix a typo in parsing /proc/cpuinfo output
+- pal: Add a L2 flush and invalidate before copying leftover
+       block-compressed pixels (Gfx9)
+- pal: Add a flag in DeviceProperties to indicate whether the engine
+       supports trackBusyChunks
+- pal: Fix top pipelines identified by timeReport.py is mismatched with
+       the dumped pipelines
+- llpc: Implement VK_KHR_vulkan_memory_model
+- llpc: Add arithmetic support for int8
+- llpc: Use explicit waterfall intrinsics for subgroupshuffle
+- llpc: Add xfblocation support for the Transformfeedback
+- llpc: Fix assert in switch emu lib to an archive of bitcode modules
+- llpc: gsPrimsPerSubgroup shouldn't be bigger than wave size
+
 * Sun Jan 27 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.71-0.20190125.git96f3ad7
 
 - xgl: Enable EXT_INLINE_UNIFORM_BLOCK extension
