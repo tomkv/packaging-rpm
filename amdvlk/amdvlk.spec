@@ -1,8 +1,8 @@
-%global amdvlk_commit       fbfa56c61409417c96483347f0de6f6b629543eb
-%global llvm_commit         3c7dbb214c3680803f7d3e3c3aed02fddb2f7dbb
-%global llpc_commit         7476cddf9a7e1d47546e57c9ee654907889d0891
-%global xgl_commit          6a629e8286ed9d2a8a3799131a274ee58590765d
-%global pal_commit          1af0abb8cfa370284878d5aeaa74d1d0c7406c23
+%global amdvlk_commit       20a62e872fc5cc7fe312df049072c34df578a5c4
+%global llvm_commit         d3c2b9d104f0de0be59d914578a28275c8b4784d
+%global llpc_commit         a1ee25169453ba909ba940d7d25e2739d2f453ed
+%global xgl_commit          dbabc93bc9c3a5a1e7e73672b3d4594b0611fa36
+%global pal_commit          3bb2d4082ef9b95a114258a90c7044939a5f0638
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190130
+%global commit_date         20190201
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.72
+Version:       2.73
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,7 +134,48 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+
+* Fri Feb 01 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.73-0.20190201.git20a62e8
+
+- xgl: Update Vulkan Headers to 1.1.97
+- xgl: Enable the extensions under development (VK_EXT_DEBUG_UTILS,
+       VK_KHR_SHADER_FLOAT16_INT8,VK_ EXT_TRANSFORM_FEEDBACK) through the
+       environment variable AMDVLK_ENABLE_DEVELOPING_EXT
+- xgl: Implement VK_KHR_shader_float16_int8 extension
+- xgl: Fix a memory priority issue: MemoryPriority shall select priority
+       instead of offset as the high 16bit
+- xgl: Refine the code to distinguish between
+       VkGraphicsPipelineCreateInfo and
+       GraphicsPipeline::CreateInfo/ComputePipeline::CreateInfo.
+- xgl: Use the correct features pointer when VkPhysicalDeviceFeatures2 is
+       used during device creation
+- xgl: Implement SQTT support for the marker/label functionality of
+       VK_EXT_debug_utils
+- xgl: [shadertest] amdllpc lit test changes for per-shader lowering
+- pal: Upgrade the VAM component
+- pal: Add proper handling of allocation failures
+- pal: Fix up some of the support for ECC GPR protection on Vega20
+- pal: Fix GFX7: vkCmdDispatchIndirect() does not work correctly when
+       submitted to a compute queue
+- pal: Add support for GPU un-cached memory allocation
+- pal: Add IL opcodes for some Dot ops
+- pal: Fix regressions caused by CPU clock support in RGP
+- llpc: Default to -enable-shadow-desc
+- llpc: Remove address-space mutation passes
+- llpc: Add proper handling of allocation failures
+- llpc: Initial definition of Builder interface
+- llpc: Increase max line to 65536. because we may have very long
+        comments in .pipe file
+- llpc: Fix the so-called "native" emu lib functions with allocas to use
+        the right datalayout and put their allocas into the right address
+        space
+- llpc: Fix transformfeedback stride calculation in the output shader
+        block
+- llpc: Revert previous changes for lowering passes to per-shader
+- llpc: Added timing of LLPC phases to -time-passes
+
 * Wed Jan 30 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.72-0.20190130.gitfbfa56c
+
 - amdvlk: Add Vega20 and Raven2 support
 - xgl: Implement VK_EXT_transform_feedback
 - xgl: Move VK_EXT_swapchain_colorspace to instance extension
