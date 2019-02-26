@@ -1,8 +1,8 @@
-%global amdvlk_commit       20a62e872fc5cc7fe312df049072c34df578a5c4
-%global llvm_commit         d3c2b9d104f0de0be59d914578a28275c8b4784d
-%global llpc_commit         a1ee25169453ba909ba940d7d25e2739d2f453ed
-%global xgl_commit          dbabc93bc9c3a5a1e7e73672b3d4594b0611fa36
-%global pal_commit          3bb2d4082ef9b95a114258a90c7044939a5f0638
+%global amdvlk_commit       27ef34e9579b772771fb8782f7946855d01121c2
+%global llvm_commit         666d463e73a67dd3ccb304a5b13a5b1f09f784f0
+%global llpc_commit         b26545220db28772ac07491e17d31bbcf9c249ec
+%global xgl_commit          666d463e73a67dd3ccb304a5b13a5b1f09f784f0
+%global pal_commit          534ab72b967e07934dade777caf15686dc04b940
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190201
+%global commit_date         20190225
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.73
+Version:       2.76
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,63 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Tue Feb 26 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.76-0.20190225.git27ef34e
+
+- xgl: Implement VK_EXT_memory_priority support
+- xgl: Add transfer queue workaround for Gfx6-8 to avoid PRT issues with
+       SDMA
+- xgl: Add barrier performance debug settings
+- xgl: Implement an API PSO hash for Vulkan that is consistent from run
+       to run and unique to the state of the PSO. This hash is registered
+       with the dev driver profiling GpaSession to be written into .rgp
+       files
+- pal: Remove unnecessary assert in CmdDrawOpaque()
+- pal: Add SupportsUnmappedPrtPageAccess flag to
+       DeviceProperties::engineProperties::flags.
+- pal: Fix corruption when enhanced sync enabled with Vsync on
+- pal: Indirect User-Data Clean-Up and Refactor, Part #1: reduces the
+       number of indirect user-data tables offered by PAL to one
+- pal: Indirect User-Data Clean-Up and Refactor, Part #2: makes the
+       internal changes in PAL necessary to start treating indirect
+       user-data tables as what they really are used for by clients: the
+       vertex buffer table
+- pal: [RGP]Add functionality to enable instruction-level trace
+       per-pipeline
+- pal: Make sure that waitOnMetadataMipTail and
+       depthStencilNeedsEopFlushTcc are both false in the CmdBindTargets
+       function to avoid unnecessary cache flushes
+- pal: Add multi-wave copy option for HS
+- pal: Resolve Vulkan CTS OOM test case crashes, and a wide range of many
+       other potential PAL_NEW alloc failure crashes
+- pal: Delete queuesUseCaches flag
+- pal: Update RGP API_INFORMATION chunk to reflect latest spec changes to
+       include profile mode information
+- pal: Update settings generation to calculate and populate the
+       settingsDataHash field for each component
+- pal: Add debug support to the CmdBufferLogger layer that allows for
+       "single-stepping" of draws/dispatches
+- pal: Don't reset GpuEvents on the CPU
+- pal: Add settings to control the number of parameter cache lines for
+       GE_PC_ALLOC and to control the number of cache lines for
+       SPI_SHADER_LATE_ALLOC_VS
+- pal: Improve AllocateGpuScratchMem function flexibility, prepare for
+       changing IGpuEvent to IGpuMemoryBindable interface
+- llpc: Fix the broken path of offchip GS
+- llpc: Change TFE mechanism to use up-streamed support
+- llpc: Change the builder interface to be more forward-looking & efficient
+- llpc:  Move fmask and subpass data handling into lowering
+- llpc: Remove ICmpInst from StoreValueToStreamOutBuffer
+- llpc: Fix transformfeedback multi-stream cts on gfxip 8 and gfxip 9.
+        Now transformfeedback cts erros are cleared
+- llpc: New fix for CTS v1.1.2.2 hang in ./deqp-vk -n
+        dEQP-VK.binding_model.descriptorset_random.sets32.noarray.ubolimitlow
+- llpc: Add LLPC support for VK_KHR_shader_clock
+- llpc: Moved auto-layout-desc code into amdllpc
+- llpc: Introduce a new Builder::CreateWaterfallLoop method to create
+        waterfall loop code for a buffer/image op with a non-uniform
+	descriptor
+- llpc: Separate descriptor load out of buffer op
+- llpc: Add assert that lib func has the right type
 
 * Fri Feb 01 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.73-0.20190201.git20a62e8
 
