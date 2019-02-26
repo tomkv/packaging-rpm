@@ -1,7 +1,7 @@
 %global amdvlk_commit       27ef34e9579b772771fb8782f7946855d01121c2
 %global llvm_commit         666d463e73a67dd3ccb304a5b13a5b1f09f784f0
 %global llpc_commit         b26545220db28772ac07491e17d31bbcf9c249ec
-%global xgl_commit          666d463e73a67dd3ccb304a5b13a5b1f09f784f0
+%global xgl_commit          1d35effd11e3d47a8e5281f06b75dd334641476e
 %global pal_commit          534ab72b967e07934dade777caf15686dc04b940
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
