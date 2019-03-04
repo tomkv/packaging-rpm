@@ -1,8 +1,8 @@
-%global amdvlk_commit       27ef34e9579b772771fb8782f7946855d01121c2
-%global llvm_commit         666d463e73a67dd3ccb304a5b13a5b1f09f784f0
-%global llpc_commit         b26545220db28772ac07491e17d31bbcf9c249ec
-%global xgl_commit          1d35effd11e3d47a8e5281f06b75dd334641476e
-%global pal_commit          534ab72b967e07934dade777caf15686dc04b940
+%global amdvlk_commit       c59b9988e48c472411e9307fb378680fd51db349
+%global llvm_commit         c7a5a5c3bac75699d45824523b4fcf045913413f
+%global llpc_commit         8eecb4baef898f0a5b9902406626887c3646dbb6
+%global xgl_commit          f2af4b0c33963842f544107d005f0a6c82ea513f
+%global pal_commit          e8a5acd90310871053a40015ebcea5b32391a824
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190225
+%global commit_date         20190301
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.76
+Version:       2.77
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,22 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Tue Mar 04 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.77-0.20190301.gitc59b998
+
+- xgl: Add result check pattern in shaderdb test for llvm-lit test
+- pal: Upgrade addrlib
+- pal: Add supports for min and max stencil resolve using compute
+       pipeline.
+- pal: Add support for VK_EXT_calibrated_timestamps
+- pal: Fix memory leak in CmdBufferLogger
+- pal: Fix vkmark corruption observed on Fiji + wayland
+- pal: Fix perf counter max event id for CPG block
+- llpc: Support .raw.buffer and .struct.buffer
+- llpc: Resolve swizzling of LLPC API shader hash by removing call to
+        MetroHash::Compact64()
+- llpc: [TransformFeedback] Fix the register setting for
+        RasterizationStreamSelect capablitity
+
 * Tue Feb 26 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.76-0.20190225.git27ef34e
 
 - xgl: Implement VK_EXT_memory_priority support
