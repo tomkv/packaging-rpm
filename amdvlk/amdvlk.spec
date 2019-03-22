@@ -1,8 +1,8 @@
 %global amdvlk_commit       735d2043656edbc5c5ef1babc19709f5a3cf8a9f
 %global llvm_commit         97cc33415120ae3ed472b6dd5cb234b74a80bd80
-%global llpc_commit         cf5610192a65cddb20c0775b46013067fc7f3d2c
-%global xgl_commit          61ee6484930effa39fc806c2f941c5f073a2dfbe
-%global pal_commit          94501ac9adc214f5c61de042205929eb8681d175
+%global llpc_commit         f32a3f6f5021019ef1b43e6c7f3e289cd12e7062
+%global xgl_commit          292ea8da8a985a72b9efe4db424f664b2e79d64d
+%global pal_commit          e8b82e5f183f4cfcf4f7b893295c49d0fc929fa0
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190315
+%global commit_date         20190318
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.78
+Version:       2.79
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,39 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Fri Mar 22 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.79-0.20190318.git735d204
+
+- xgl: Add test result check in shaderdb test using lit
+- xgl: Fix abnormal timestamp on transfer queue
+- xgl: Do not stop instruction tracing at pipeline unbind since it may
+       cut the trace short
+- xgl: Enable PAL skip fast clear eliminate optimization by default
+- xgl: Fix noisy assert by moving it after extensions are populated in
+       late physical device init
+- pal: Use the peerWritable flag when creating presentable images: this
+       fixes a few assertions that fire when rendering using a swapchain
+       with a device group (MGPU) in Vulkan
+- pal: Remove palRuntimeHash and add ApiPsoHash to CmdBindPipeline
+- pal: Reduce unnecessary L2 cache actions on GFX9
+- pal: Gfx9 SPM changes
+- pal: Fix ShaderDbg bugs
+- pal: Update pipeline ABI metadata note ID to 32 (from 13) to match HSA
+       code objects
+- pal: Add compute queue support for pausing perf experiments and
+       CmdUpdateSqttTokenMask
+- pal: Improve CPU-Bound Performance in Mad Max: make the internal
+       timestamp memory allocated using GpuScratch; makes internal GPU
+       event objects able to use the BindGpuMemory to avoid the internal
+       memory manager for the internal release/acquire event and instead
+       uses GpuScratch
+- pal: [GFX7/8] Default IndexBuffer fetchs to STREAM cache policy instead
+       of LRU
+- pal: Use the proper CP path for all non-user-mode config registers on
+       gfx9
+- pal: Change srd creation to handle (un)compressed writes
+- pal: Minor profiling validation and memory leak fixes
+- pal: Resolve hang sending dummy LOAD_CONST_RAM packet
+
 * Fri Mar 15 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.78-0.20190315.git735d204
 
 - xgl: Implement and enable VK_KHR_vulkan_memory_model extension
