@@ -1,8 +1,8 @@
-%global amdvlk_commit       c59b9988e48c472411e9307fb378680fd51db349
-%global llvm_commit         c7a5a5c3bac75699d45824523b4fcf045913413f
-%global llpc_commit         8eecb4baef898f0a5b9902406626887c3646dbb6
-%global xgl_commit          f2af4b0c33963842f544107d005f0a6c82ea513f
-%global pal_commit          e8a5acd90310871053a40015ebcea5b32391a824
+%global amdvlk_commit       735d2043656edbc5c5ef1babc19709f5a3cf8a9f
+%global llvm_commit         97cc33415120ae3ed472b6dd5cb234b74a80bd80
+%global llpc_commit         cf5610192a65cddb20c0775b46013067fc7f3d2c
+%global xgl_commit          61ee6484930effa39fc806c2f941c5f073a2dfbe
+%global pal_commit          94501ac9adc214f5c61de042205929eb8681d175
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190301
+%global commit_date         20190315
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.77
+Version:       2.78
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,63 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Fri Mar 15 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.78-0.20190315.git735d204
+
+- xgl: Implement and enable VK_KHR_vulkan_memory_model extension
+- xgl: Implement and enable VK_EXT_depth_clip_enable extension
+- xgl: Implement and enable VK_KHR_depth_stencil_resolve extension
+- xgl: Enable VK_KHR_shader_float16_int8 extension by default
+- xgl: Enable VK_EXT_debug_utils extension extension by default
+- xgl: Enable VK_EXT_transform_feedback extension by default
+- xgl: Implement VK_EXT_memory_budget extension (not finished)
+- xgl: Don't count preserve attachments as first use
+- xgl: PipelineCompiler refactor: separate CompilerSolution into isolated
+       files
+- xgl: Add support for  BindPipeline marker
+- xgl: Start/Stop instruction trace based on ApiPsoHash
+- xgl: Set apiPsoHash for binding of internal and NULL XGL pipelines to
+       Pal::InternalApiPsoHash
+- xgl: Move memory usage tracking from Device to PhysicalDevice.
+- xgl: Set semaphore use in device group to be shareable
+- pal: Add new Developer Callback BindPipeline for support to generate
+       instrumentation describing the Pipeline bind event
+- pal: Choose fixed function resolve pipeline based on resolve format
+       instead of surface format
+- pal: Fix dEQP-VK.spirv_assembly.instruction.graphics.float16.derivative_*
+       - tests fail on gfx9
+- pal: Minor fixes relevant to adding Developer Callback CmdBindPipeline
+- pal: Support Vulkan driver implementation for VK_EXT_memory_budget
+- pal: Indirect User-Data Clean-Up and Refactor, Part #3: mainly focused
+       around PAL ABI changes for how the GPU virtual addresses for the
+       vertex buffer and stream-out tables are mapped to user-SGPR's
+- pal: Add ICmdBuffer::CmdSetVertexBuffers() to update the vertex buffer
+       SRD table
+- pal: Optimize the query pool slot reset operation in occlusion query's
+       issue_begin which causes too many map/unmap of GPU memory
+- pal: Add a "most" section to the generated register structs which helps
+       prevent register definition fragmentation
+- pal: Change IGpuEvent interface from IDestroyable to IGpuMemoryBindable
+- pal: Convert a bunch of const CmdUtil methods to static
+- pal: Supplement the judgment conditions of CB fixed function resolve
+- pal: Add an optional path which can update the spill table, vertex
+       buffer table and stream-out table using the CPU and embedded data
+       instead of the existing CE RAM path
+- pal: Edit the UseDcc setting to allow separate dcc control for
+       resources that are used as a render target and a UAV and for
+       resources that are only used as a UAV
+- pal: Only execute DepthStencilCopy when resolve mode is average (i.e.
+       sample_zero)
+- pal: Fix shareable semaphore to stall queue
+- llpc: Fix a bug in the LLPC ShaderCache Merge function which cause
+        Dota2 stuttering and performance drop after recent game update
+- llpc: Fall back to the internal shader cache for the case of
+        VkPipelineCache miss
+- llpc: Implement VK_KHR_shader_float_controls extension (not finished)
+- llpc: Fix dynamic loop unroll crash
+- llpc: Add LLVM library func tanf in emu lib to fix Rise of the Tomb
+        Rider game crash with gcc 7 build
+- llpc: Fix Witcher3-dxvk hang after loading screen
+
 * Tue Mar 04 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.77-0.20190301.gitc59b998
 
 - xgl: Add result check pattern in shaderdb test for llvm-lit test
