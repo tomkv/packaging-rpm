@@ -1,8 +1,8 @@
-%global amdvlk_commit       735d2043656edbc5c5ef1babc19709f5a3cf8a9f
+%global amdvlk_commit       3160bb61cc737617bc0cf5ed053b746d53cc5bfd
 %global llvm_commit         97cc33415120ae3ed472b6dd5cb234b74a80bd80
-%global llpc_commit         f32a3f6f5021019ef1b43e6c7f3e289cd12e7062
-%global xgl_commit          292ea8da8a985a72b9efe4db424f664b2e79d64d
-%global pal_commit          e8b82e5f183f4cfcf4f7b893295c49d0fc929fa0
+%global llpc_commit         32c0c28b1b7fd36b2f9cb17411af2963f6cfc48a
+%global xgl_commit          a082b41ad4a8aed476cb39e6b63cddd25ab9e0b4
+%global pal_commit          e17272e1581ae6e222293880db08e0df7b1f1f75
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190318
+%global commit_date         20190326
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.79
+Version:       2.81
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,47 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+
+* Tue Mar 26 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.81-0.20190326.git3160bb6
+
+- xgl: Enable VK_EXT_memory_priority extension
+- xgl: Enable VK_EXT_memory_budget extension
+- xgl: Set dccBitsPerPixelThreshold to 16 for Vega20
+- xgl: Update PAL Interface in Vulkan to 473
+- xgl: PipelineCompiler refactor: separate Llpc part
+- xgl: Convert VkPipelineLayout to support an arbitrary number of
+       descriptor sets
+- xgl: Add replace isa shader function in the pipeline
+- xgl: Add offset number before shader output text
+- xgl: Add per-shader stage wave size settings
+- xgl: Use the correct heap index to determine if the heap is
+       multi-instance
+- xgl: Fix nullptr deref while walking over
+       VkPhysicalDeviceSurfaceInfo2KHR chain
+- pal: CmdUtil Enhancements, mostly changes to BuildWriteDat
+- pal: Link gpu memory priority system to os on linux
+- pal: Add the extended SPM segment size registers to the non-shadowed
+       lists
+- pal: [GFX9] Minor fix and opt for draw-time conservative rast register
+- pal: [GFX9] Trivial removal of unneeded BlendState field
+- pal: [GFX6-9] Trivial removal of unneeded code related to MSAA
+       SamplePos
+- pal: Modify release mem path to explicitly read and write through L2
+- pal: Refactor of various code related to GPU page sizes > 4KiB
+- pal: Change ApiInfo chunk version bump to be a minor version change
+       instead of a major one
+- pal: Return the default color gfx layout for multi-media surfaces
+- pal: Fix wrong ICmdBuffer pointer passed through developer callbacks
+       when GpuProfiler layer is enabled
+- pal: PAL IPerfExperiment implementation refactoring
+- pal: Fix a bug in ApiPsoHash support
+- pal: Fix a dead loop in converting a FP16 denorm back to normalized
+       FP32
+- pal: Fix memory leak in GpaSession
+- pal: [CmdBufferLogger] Fixes for the timestamp/waitIdle features
+- pal: [AcqRelBarrier] Bug fixes and clean-ups
+- pal: Retire PAL interfaces up to 443
+
 * Fri Mar 22 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.79-0.20190318.git735d204
 
 - xgl: Add test result check in shaderdb test using lit
