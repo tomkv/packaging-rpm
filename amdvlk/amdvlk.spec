@@ -1,8 +1,8 @@
 %global amdvlk_commit       3160bb61cc737617bc0cf5ed053b746d53cc5bfd
 %global llvm_commit         97cc33415120ae3ed472b6dd5cb234b74a80bd80
-%global llpc_commit         32c0c28b1b7fd36b2f9cb17411af2963f6cfc48a
-%global xgl_commit          a082b41ad4a8aed476cb39e6b63cddd25ab9e0b4
-%global pal_commit          e17272e1581ae6e222293880db08e0df7b1f1f75
+%global llpc_commit         a72a60ade90ec92a423c4db9ec6c64ca8f8f8284
+%global xgl_commit          42e8b58860e4c049a3545d2559ba56420841dd1f
+%global pal_commit          f40b53f526b1221a4efbd7beb00152ab32036882
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190326
+%global commit_date         20190329
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.81
+Version:       2.82
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,34 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Tue Fri 29 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.82-0.20190329.git3160bb6
+
+- xgl: Update shaderdb OpImageSample_TestSeparateSampler_lit.frag test
+- xgl: Fix issue for capturing detailed tracing on a per PSO basis
+- xgl: Enable priority regardless of whether VK_EXT_memory_priority is
+       enabled or not for all external queues, relying on PAL interface
+       version 479
+- xgl: Disable TC compatible reads for MSAA depth-stencil target for
+       Thrones of Britannia, relying on PAL interface version 481
+- xgl: Add per shader optimizations to disable loop unroll  for
+       Total:WarhammerII, relying on LLPC interface version 24
+- xgl: Update PAL Interface in Vulkan to 475
+- pal: Replace the existing "noMetadata" image-create flag with an enum
+       that adds an option to disable TC compatibility
+- pal: GpuEvent: fix bug related to heap type count
+- pal: Fix null buffer views
+- pal: Change the late alloc scheme to limit the amount of late alloc to
+       a specific amount of space in the Position Buffer based on CU/SA
+- pal: Remove L2 Cache flushes from indirect command generation for gfx9
+- pal: Fix crash in GpaSession
+- pal: Set GpaSession's default SQTT size to 128MB, clamped to whatever
+       the max reported by PAL is
+- pal: Maximize concurrency accessing Pipeline ELF cache
+- pal: Clean up some additional L2 Flush and Invalidate related things in
+       gfx9Barrier.cpp
+- llpc: Factored out new base class ConfigBuilderBase
+- llpc: Set PAL metadata pseudo-registers in ConfigBuilderBase
+- llpc: Add support when image resource are selected from control flow
 
 * Tue Mar 26 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.81-0.20190326.git3160bb6
 
