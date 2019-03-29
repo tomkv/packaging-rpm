@@ -134,7 +134,7 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
-* Tue Fri 29 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.82-0.20190329.git3160bb6
+* Fri Mar 29 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.82-0.20190329.git3160bb6
 
 - xgl: Update shaderdb OpImageSample_TestSeparateSampler_lit.frag test
 - xgl: Fix issue for capturing detailed tracing on a per PSO basis
@@ -293,7 +293,7 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
         Rider game crash with gcc 7 build
 - llpc: Fix Witcher3-dxvk hang after loading screen
 
-* Tue Mar 04 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.77-0.20190301.gitc59b998
+* Mon Mar 04 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.77-0.20190301.gitc59b998
 
 - xgl: Add result check pattern in shaderdb test for llvm-lit test
 - pal: Upgrade addrlib
@@ -1511,7 +1511,7 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
        running out of reserved space in TimeSpy.
 - pal: Move MetroHash and jemalloc to src/util/imported from src/core/imported.
 
-* Tue Apr 02 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.23-0.20180402.gitae72750
+* Mon Apr 02 2018 Tomas Kovar <tkov_fedoraproject.org> - 2.23-0.20180402.gitae72750
 
 - xgl:  Enable below extensions:
        - AMD_shader_explicit_vertex_parameter
