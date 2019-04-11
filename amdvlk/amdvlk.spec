@@ -1,8 +1,8 @@
-%global amdvlk_commit       3160bb61cc737617bc0cf5ed053b746d53cc5bfd
+%global amdvlk_commit       b21105a42895d0f98101485feae5cff79fa0c8b8
 %global llvm_commit         97cc33415120ae3ed472b6dd5cb234b74a80bd80
-%global llpc_commit         a72a60ade90ec92a423c4db9ec6c64ca8f8f8284
-%global xgl_commit          42e8b58860e4c049a3545d2559ba56420841dd1f
-%global pal_commit          f40b53f526b1221a4efbd7beb00152ab32036882
+%global llpc_commit         6c6de1dab3927bfb0f6659ba89c6fe80be8a4a04
+%global xgl_commit          5b4058dc288a25f6554fcc61f80bf3f27eb35d8d
+%global pal_commit          99901922d67e502ff4233a8bfcbfa0347c0ffa1b
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190329
+%global commit_date         20190411
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.82
+Version:       2.84
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,6 +134,36 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Thu Apr 11 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.84-0.20190411.gitb21105a
+
+- xgl: Fix Just Cause3 flicker issue: skip the store instruction when the
+       index is out-of-bound if feature robustBufferAccess is used,
+       relying on LLPC interface version 23
+- xgl: Simplify the implementation of ShaderReplaceShaderISA
+- xgl: PipelineCompiler refactoring
+- xgl: Add support for AMDIL to VK_AMD_shader_info, relying on LLPC
+       interface version 25
+- xgl: Add shader optimizer JSON options for enableSelectiveInline and
+       disableloopunrolls
+- xgl: Implement VK_EXT_host_query_reset
+- xgl: Update Vulkan headers to 1.1.105
+- xgl: Update PAL Interface in Vulkan to 481
+- xgl: Update LLPC Interface in Vulkan to 24
+- pal: Update block instance counts (GL2A and GL2C)
+- pal: Minor SPM logging enhancements
+- pal: Correct copy_data alignment assert logic
+- pal: Fix interface 478: relax compression in srds in the new interface
+       from “enable only if we know the image is compressed” to “enable
+       unless we write”
+- pal: Add global Src/Dst cache masks to BarrierInfo
+- pal: Tidy up ISettingsLoader's use of IndirectAllocator
+- pal: Allow shared memory to be CPU visible
+- pal: Reset query pool from CPU
+- pal: Tweaks to PA_SC_SHADER_CONTROL draw-time code
+- llpc: Move shaderdb test from xgl to llpc repository
+- llpc: Add support for dumping AMDIL binaries through the LLPC
+        PipelineDumper with new interface version 25
+
 * Fri Mar 29 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.82-0.20190329.git3160bb6
 
 - xgl: Update shaderdb OpImageSample_TestSeparateSampler_lit.frag test
