@@ -1,20 +1,22 @@
-%global amdvlk_commit       1dd300ae8d21079de8e5e2ee26f0d3028bcef76b
-%global llvm_commit         1ca248e6fc6d4d15491756f92f4da139222ef3ca
-%global llpc_commit         d1c1a55cfa58147c4814929e21038d30e6d48429
-%global xgl_commit          54194f5ebb7d1d6b44b9eb87217041f44e08f789
-%global pal_commit          14045067091d226072437527359a54c8b8e898eb
+%global amdvlk_commit       8d085a79d46214a305e9f7750df0b3511c92ed0f
+%global llvm_commit         4305f776f1207189667a383e22661ccd1e99cd25
+%global llpc_commit         b153a902b0a574fb0ab2356c87c3446d9a9d80b2
+%global xgl_commit          4d91a4045078cf6884ee05007eac9eec2b881dbb
+%global pal_commit          9a1f99f049f3b417242dc7c09b86c52fd7d9ceaf
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
+%global spvgen_commit       64013f150c2d41965a3d36fa159b55fba52b727a
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
-%global commit_date         20190421
+%global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
+%global commit_date         20190524
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.85
+Version:       2.91
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -25,6 +27,7 @@ Source2:       %url/llpc/archive/%{llpc_commit}.tar.gz#/llpc-%{llpc_short_commit
 Source3:       %url/xgl/archive/%{xgl_commit}.tar.gz#/xgl-%{xgl_short_commit}.tar.gz
 Source4:       %url/pal/archive/%{pal_commit}.tar.gz#/pal-%{pal_short_commit}.tar.gz
 Source5:       %url/wsa/archive/%{wsa_commit}.tar.gz#/wsa-%{wsa_short_commit}.tar.gz
+Source6:       %url/spvgen/archive/%{spvgen_commit}.tar.gz#/spvgen-%{spvgen_short_commit}.tar.gz
 
 Requires:      vulkan
 Requires:      vulkan-filesystem
@@ -61,13 +64,14 @@ following AMD GPUs:
     Radeon™ Pro 400/500 Series
 
 %prep
-%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5
+%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5 -a 6
 ln -s AMDVLK-%{amdvlk_commit} AMDVLK
 ln -s llvm-%{llvm_commit} llvm
 ln -s llpc-%{llpc_commit} llpc
 ln -s xgl-%{xgl_commit} xgl
 ln -s pal-%{pal_commit} pal
 ln -s wsa-%{wsa_commit} wsa
+ln -s spvgen-%{spvgen_commit} spvgen
 
 %build
 mkdir -p xgl/build && pushd xgl/build
@@ -134,6 +138,114 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Mon May 27 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.91-0.20190524.git8d085a7
+
+- xgl: Enable VK_EXT_host_query_reset extension
+- xgl: Enable VK_EXT_separate_stencil_usage  extension
+- xgl: Enable VK_KHR_uniform_buffer_standard_layout extension
+- xgl: Fix VK.renderpass*.suballocation.multisample.
+       separate_stencil_usage.*.testing_stencil failure
+- xgl: Use internal pipeline hash for Vulkan pipeline reinjection
+- xgl: Add enableSPP option to Vulkan Panel
+- xgl: Fix VkExample DepthStencilResolve test failure
+- xgl: Add Macro define for XCB_SURFACE and XLIB_SURFACE extension
+- xgl: Change if-statement to for loop for processing pNext structure in
+       GetImageFormatProperties2
+- xgl: Add XGL_BUILD_LIT option for lit test build
+- xgl: Update PAL Interface in Vulkan to 501
+- xgl: Remove Vulkan 1.0 build
+- xgl: Fix small surf size disable compression setting
+- pal: Remove ETC2 support from GFXIP 8.1
+- pal: Fix a bug where the last shader wouldn't get a "#endif" if its
+       defines were different from the second-to-last shader's defines
+- pal: Minor modification in generate settings code script to support
+       Vulkan Settings Refactor
+- pal: [RPM] More accurately detect FMask in CopyImageCompute
+- pal: Support UAV exports
+- pal: Enable cu soft group for VS by default in gfx9
+- pal: Late alloc GS limit clamp
+- pal: Makes the perf data buffer independent of the pipeline binary so
+       that accessing the perf data is easier irrespective of the
+       resident heap type of the pipeline binary
+- pal: Only restore Predication state once during GenericColorBlit
+- pal: Fix segfault in interfacelogger
+- pal: IGpuEvent objects do not need multiple slots when acquire\release
+       barriers are not active
+- pal: [GFX9]Update CB_DCC_CONTROL programming
+- pal: Make GfxCmdBufState a structure, not a union.
+- pal: Combine CE RAM Dump with Increment CE Counter
+- pal: Change cas.h/a.h include paths in rpmUtil to be rooted at src
+- pal: Fix hang with split-mode barriers and layers enabled
+- pal: Upload pipelines to local invis mem
+- pal: TA_GRAD_ADJ needs to be updated based on queue priority
+- pal: Report correct memory bandwidth for GDDR6 parts
+- pal: [GFX9] Rework PA_SC_GENERIC/SCREEN_SCISSOR writes
+- pal: [GFX9] Filter redundant target scissor writes in BindTargets
+- pal: Bump version number to 218
+- llpc: Fix DiRT Rally 2.0  hang in ultra settings
+- llpc: Support merge ELF binary for per stage cache and enable
+        per-stage-shader cache
+- llpc: Add support for MsgPack PAL metadata
+- llpc: Fix lit test errors that are hidden by typo "SHADERTEST :"
+- llpc: Implement memset/memcpy for buffer fat pointers using loops
+- llpc: If cmpxchg is strong, need to set the cmp bit
+
+* Sat May 11 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.85-0.20190511.git1dd300a
+
+- xgl: Update PAL Interface in Vulkan to 489
+- xgl: Update Vulkan header to 1.1.106
+- xgl: Add entry vkCmdDrawIndirectCountKHR and
+       vkCmdDrawIndexedIndirectCountKHR to sqtt layer to solve RGP crash issue
+- xgl: Add support for subgroup cluster instruction
+- xgl: Add setting to elevate priority of descriptor memory. Keep
+       descriptors from getting paged if localHeap is oversubscribed
+- xgl: Adds support for starting a  RGP trace based on a given frame
+       index (so that detailed trace data is available for that frame)
+- xgl: Implement extension VK_EXT_separate_stencil_usage,
+       AMD_DEVICE_COHERENT_MEMORY and EXT_BUFFER_DEVICE_ADDRESS
+- xgl: Make sure that MSAA depth/stencil images are treated as such by
+       PAL
+- xgl: Update the availability state for transform feedback query
+- xgl: Change shader log file dumping directory/filename to:
+       AMD_DEBUG_DIR+PipelineDumpDir+LogFileName<compileType>.txt
+- xgl: Enable disk cache for Dawn of War3
+- xgl: Performance tuning for game Thrones of Britannia
+- xgl: Fix wrong usage of pImmutableSamplers
+- pal: [GFX9]Trivial Draw function clean up
+- pal: Update the availability state even if the query is not ready
+- pal: Add option to use GpuHeapGartUswc for the pipeline uploader.
+- pal: Set availability state for the result of streamout query
+- pal: Changes to offline pipeline code gen script for more aggressive
+       duplicate detection, minor bug fix
+- pal: Indirect function support fixes
+- pal: Remove "wholePipelineOptimizations" from the settings.
+- pal: Fix PAL_ASSERT(pProps->gfx6.numMcdTiles <= MaxMcdTiles) is
+       triggered with debug driver
+- pal: Add option to force 64k padding for big page testing
+- pal: Change activeCuMask to CUs on all HW
+- pal: Add IL_OP_GET_ELEMENT_POINTER in ilp
+- pal: Add support flag for out of order primitives and removed
+       unnecessary variable
+- pal: Add format overriding for scaled copy
+- pal: Need precheck for bounded GPU memory's existence
+- pal: Supply the image pointer associated with the mask-rams in the
+       constructor so that the image and device objects don't have to get
+       passed around everywhere
+- pal: [AcqRelBarrier] GpuEventPool refactor to better meet PAL client
+       needs
+- pal: Adjust the amount of parameter cache we allow for a single binning
+       batch
+- pal: Remove unnecessary CpDma sync for Htile equation upload
+- pal: Use "HasEntry" to load the compute user accumlator registers
+       instead of "A
+- pal: Bump version number to 215
+- llpc: Update shaderdb tests
+- llpc: Refine LLPC hash code
+- llpc: Refine the lock time in pipeline dump
+- llpc: Optimize pipeline compile time
+- llpc: Optimize the buffer merge load/store functions for the tess shage
+- llpc: Rework buffers to support fat pointers
+
 * Mon Apr 22 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.85-0.20190421.git1dd300a
 
 - xgl: Fix MGPU: vkCmdNextSubpass and vkCmdEndRenderPass incorrectly use
