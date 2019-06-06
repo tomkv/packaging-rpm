@@ -1,8 +1,8 @@
-%global amdvlk_commit       8d085a79d46214a305e9f7750df0b3511c92ed0f
-%global llvm_commit         4305f776f1207189667a383e22661ccd1e99cd25
-%global llpc_commit         b153a902b0a574fb0ab2356c87c3446d9a9d80b2
-%global xgl_commit          4d91a4045078cf6884ee05007eac9eec2b881dbb
-%global pal_commit          9a1f99f049f3b417242dc7c09b86c52fd7d9ceaf
+%global amdvlk_commit       245f34b77a49b255d5e419d79fac178fa1c85989
+%global llvm_commit         b9910c8bfcccc63c07c959963fa567120d11f024
+%global llpc_commit         ddb909580e9996356c3bbe23bc1b14c44987eb4c
+%global xgl_commit          96d84068b622b2c3ce8cf9aa8ff597260aa5ad3f
+%global pal_commit          135258ac31901e1293fea5e2f599659ee438ba1f
 %global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
 %global spvgen_commit       64013f150c2d41965a3d36fa159b55fba52b727a
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -12,11 +12,11 @@
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
-%global commit_date         20190524
+%global commit_date         20190606
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.91
+Version:       2.93
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -138,6 +138,43 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Thu Jun 06 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.93.0.20190606.git245f34b
+
+- xgl: Enable Scratch Bounds Checking for GFX9 to fix F1 2018 hang issue
+- xgl: Update SDK headers to 1.1.109
+- xgl: Update PAL Interface in Vulkan to 502
+- xgl: VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD: add support for the
+       attachment image Vulkan memory type, which is very similar to the
+       default local/invisible memory type
+- pal: Make CPDMA query slot reset bypass L2 to avoid reading stale data
+       at ComputeResults time
+- pal: [GFX9] Trivial removal of unneeded DepthStencilState field
+- pal: [GFX6-8] Port rework PA_SC_GENERIC/SCREEN_SCISSOR writes
+- pal: Fix the override of SPI_CONFIG_CNTL
+- pal: Disable pipeline upload to local invis mem for null devices
+- pal: Update pipeline generation script to keep ifdefs in a consistent
+       order
+- pal: Implement HDR10 support
+- pal: Add option to zero srd in unbound descriptor table
+- pal: Transition to COPY_SOURCE does not decompress for copy to buffer
+- pal: Fix hangs in layers surrounding acq-rel barriers
+- pal: Fix acquire-release hanq on SE4
+- pal: Optimizations for Acq-Rel
+- pal: Implement blt optimizations for acquire-release barrier
+- pal: [RPM] Minor tweak to ResolveImageGraphics path.
+- pal: Add PipelineStageAllStages field in PipelineStageFlag enum
+- pal: Remove reference to IL_REGTYPE_SHADER_RATE
+- pal: Remove more redundant wait_reg_mem's in release-acquire
+- pal: Fix generation of size_t for use with settingsTool and RDP
+- pal: Deprecate ShaderCacheMode in PAL since it is no longer useful
+- pal: Rename Linux OS Back-end to "Amdgpu"
+- pal: Integrate latest Developer Driver Library
+- llpc: Remove cwpack in LLPC,  use llvm::msgpack::Document to decode PAL
+        metadata
+- llpc: Add option lower-dyn-index back to fix build error
+- llpc: Fix gfx9+ breakage from "Merge user data nodes"
+- llpc: Fix divergent load bug and remove waterfalls
+
 * Mon May 27 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.91-0.20190524.git8d085a7
 
 - xgl: Enable VK_EXT_host_query_reset extension
