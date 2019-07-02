@@ -1,22 +1,20 @@
-%global amdvlk_commit       245f34b77a49b255d5e419d79fac178fa1c85989
-%global llvm_commit         b9910c8bfcccc63c07c959963fa567120d11f024
-%global llpc_commit         ddb909580e9996356c3bbe23bc1b14c44987eb4c
-%global xgl_commit          96d84068b622b2c3ce8cf9aa8ff597260aa5ad3f
-%global pal_commit          135258ac31901e1293fea5e2f599659ee438ba1f
-%global wsa_commit          f558403d3292039de4d17334e562bda58abfc72c
-%global spvgen_commit       64013f150c2d41965a3d36fa159b55fba52b727a
+%global amdvlk_commit       474c74e31c3c2bdb0b81be529602a9ca693c6e22
+%global llvm_commit         8118692e8aefbd95f791ff49beddb8ce90e8927c
+%global llpc_commit         aa8a9d7f2b7ad7b81b70e7959e99e3f31f85c211
+%global xgl_commit          eee58c8e482ac4a6fdc40452cb4ad744395d0f74
+%global pal_commit          6c8eaa257e6216437fdfe3f17d418eccfe42e0bd
+%global spvgen_commit       53245b96b7a647743f50b9d841751f9755002661
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
-%global wsa_short_commit    %(c=%{wsa_commit}; echo ${c:0:7})
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
-%global commit_date         20190606
+%global commit_date         20190630
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.93
+Version:       2.97
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -26,8 +24,7 @@ Source1:       %url/llvm/archive/%{llvm_commit}.tar.gz#/llvm-%{llvm_short_commit
 Source2:       %url/llpc/archive/%{llpc_commit}.tar.gz#/llpc-%{llpc_short_commit}.tar.gz
 Source3:       %url/xgl/archive/%{xgl_commit}.tar.gz#/xgl-%{xgl_short_commit}.tar.gz
 Source4:       %url/pal/archive/%{pal_commit}.tar.gz#/pal-%{pal_short_commit}.tar.gz
-Source5:       %url/wsa/archive/%{wsa_commit}.tar.gz#/wsa-%{wsa_short_commit}.tar.gz
-Source6:       %url/spvgen/archive/%{spvgen_commit}.tar.gz#/spvgen-%{spvgen_short_commit}.tar.gz
+Source5:       %url/spvgen/archive/%{spvgen_commit}.tar.gz#/spvgen-%{spvgen_short_commit}.tar.gz
 
 Requires:      vulkan
 Requires:      vulkan-filesystem
@@ -64,14 +61,22 @@ following AMD GPUs:
     Radeon™ Pro 400/500 Series
 
 %prep
-%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5 -a 6
+%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5
 ln -s AMDVLK-%{amdvlk_commit} AMDVLK
 ln -s llvm-%{llvm_commit} llvm
 ln -s llpc-%{llpc_commit} llpc
 ln -s xgl-%{xgl_commit} xgl
 ln -s pal-%{pal_commit} pal
-ln -s wsa-%{wsa_commit} wsa
 ln -s spvgen-%{spvgen_commit} spvgen
+
+# workaround for AMDVLK#89
+for i in xgl/icd/CMakeLists.txt llpc/CMakeLists.txt llpc/imported/metrohash/CMakeLists.txt \
+  llvm/utils/benchmark/CMakeLists.txt llvm/utils/benchmark/test/CMakeLists.txt \
+  pal/src/core/imported/addrlib/CMakeLists.txt pal/src/core/imported/vam/CMakeLists.txt \
+  pal/shared/gpuopen/cmake/AMD.cmake
+do
+  sed -i "s/-Werror//g" "$srcdir"/$i
+done
 
 %build
 mkdir -p xgl/build && pushd xgl/build
@@ -106,6 +111,7 @@ cmake .. -DCMAKE_AR=`which gcc-ar` \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_SHARED_LIBS=OFF \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DBUILD_WAYLAND_SUPPORT=ON \
      -G Ninja
 ninja
 popd
@@ -138,6 +144,52 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
+* Tue Jul 02 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.97.0.20190630.git474c74e
+
+- xgl: Add HDR10 support for direct display mode, enable EXT_HDR_METADATA
+- xgl: Expose VK_EXT_display_surface_counter by default
+- xgl: Disable attachment image memory type
+- xgl: Hook up Vulkan panel setting to PAL public key
+       enableGpuEventMultiSlot
+- xgl: Implement GetPhysicalDevicePresentRectangles to fix a CTS test
+       dEQP-VK.wsi.*.surface.query_devgroup_present_modes
+- xgl: Remove unused IL internal shaders
+- xgl: Always write the timestamp query availability value if it was
+       requested at result copy time
+- xgl: Fix MGPU app crashes when disable panel setting
+       useSharedCmdAllocator
+- xgl: Handle vkGetEventStatus success return codes better
+- xgl: Enable scratch bounds checking as target feature
+- xgl: Update PAL Interface in Vulkan to 516
+- pal: Resolve asserts in VK CTS
+       VK.memory.pipeline_barrier.transfer_dst_storage*)
+- pal: Improve the way PAL handles HiStencil
+- pal: Split barrier performance
+- pal: Pipeline upload changes
+- pal: Settings JSON and auto-gen script QoL improvements
+- pal: Add maxFrameAverageLightLevel
+- pal: Restrict the drmSyncobjTransfer ioctl check
+- pal: Fix an access violation when destroying Image objects
+- pal: Fix an issue that the data written into the buffer is corrupt when
+       a copy is done from a render target to a buffer using
+       CopyTextureRegion and the render target is dcc compressed
+- pal: Handle Pipelines with Zero PS Interpolants
+- pal: Modify the settings script to eliminate some of the newline
+       characters
+- pal: Linux implementation of Util::HashContext
+- pal: Linux Implentation of Util::ArchiveFile
+- pal: HDR10 support
+- pal: Add a Util class for Loading DLL's & Shared Objects
+- pal: Implement acquire-release on DMA queues
+- pal: Add a debug option to make command stream memory read-only
+- pal: Fix reserved bit count to keep flags as uint32
+- pal: Fix reading wrong slice from mip 1 when a 2d array of 9 slices, 2
+       mips is viewed as cubemap
+- pal: Removal of IL_OP_DCL_UAV in pal
+- pal: Interface change move AllocGranularity size/alignment from clients
+       -> PAL
+- pal: Bump version number to 220
+
 * Thu Jun 06 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.93.0.20190606.git245f34b
 
 - xgl: Enable Scratch Bounds Checking for GFX9 to fix F1 2018 hang issue
