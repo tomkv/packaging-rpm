@@ -75,7 +75,7 @@ for i in xgl/icd/CMakeLists.txt llpc/CMakeLists.txt llpc/imported/metrohash/CMak
   pal/src/core/imported/addrlib/CMakeLists.txt pal/src/core/imported/vam/CMakeLists.txt \
   pal/shared/gpuopen/cmake/AMD.cmake
 do
-  sed -i "s/-Werror//g" "$srcdir"/$i
+  sed -i "s/-Werror//g" $i
 done
 
 %build
@@ -95,24 +95,9 @@ cmake .. -DCMAKE_AR=`which gcc-ar` \
     -DLIB_SUFFIX=64 \
     -DBUILD_SHARED_LIBS=OFF \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-     -G Ninja
-
-ninja
-popd
-
-mkdir -p wsa/build && pushd wsa/build
-
-cmake .. -DCMAKE_AR=`which gcc-ar` \
-    -DCMAKE_NM=`which gcc-nm` \
-    -DCMAKE_RANLIB=`which gcc-ranlib` \
-    -DCMAKE_C_FLAGS_RELEASE=-DNDEBUG \
-    -DCMAKE_CXX_FLAGS_RELEASE=-DNDEBUG \
-    -DCMAKE_VERBOSE_MAKEFILE=ON \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_SHARED_LIBS=OFF \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DBUILD_WAYLAND_SUPPORT=ON \
      -G Ninja
+
 ninja
 popd
 
@@ -133,7 +118,6 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
     install -m 644 AMDVLK/json/Redhat/amd_icd32.json %{buildroot}%{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
     install -m 755 xgl/build/icd/amdvlk32.so %{buildroot}%{_libdir}
 %endif
-install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 
 %files
 %doc AMDVLK/LICENSE.txt AMDVLK/README.md AMDVLK/topLevelArch.png
@@ -141,7 +125,6 @@ install -m 755 wsa/build/wayland/libamdgpu_wsa_wayland.so %{buildroot}%{_libdir}
 %config %{_sysconfdir}/amd/amdPalSettings.cfg
 %{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
 %{_libdir}/amdvlk*.so
-%{_libdir}/libamdgpu_wsa_*.so
 
 %changelog
 * Tue Jul 02 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.97.0.20190630.git474c74e
