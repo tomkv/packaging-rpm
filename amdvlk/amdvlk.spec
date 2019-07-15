@@ -1,20 +1,20 @@
-%global amdvlk_commit       474c74e31c3c2bdb0b81be529602a9ca693c6e22
-%global llvm_commit         8118692e8aefbd95f791ff49beddb8ce90e8927c
-%global llpc_commit         aa8a9d7f2b7ad7b81b70e7959e99e3f31f85c211
-%global xgl_commit          eee58c8e482ac4a6fdc40452cb4ad744395d0f74
-%global pal_commit          6c8eaa257e6216437fdfe3f17d418eccfe42e0bd
-%global spvgen_commit       53245b96b7a647743f50b9d841751f9755002661
+%global amdvlk_commit       e835c3bd7a15b7b52449f4280fe704e78346c565
+%global llvm_commit         d9e4934189845f30428cad6da16e8745540291db
+%global llpc_commit         252b93409b7cc92dacf48a421b9aac2a77629381
+%global xgl_commit          2315f2a4de4df53eaa54b56e96332687ed12269f
+%global pal_commit          ffb21e86238819817075e252ad9b49ea5284968d
+%global spvgen_commit       051aaa46272aae7808129b98fd9da49f3229eb78
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
-%global commit_date         20190630
+%global commit_date         20190715
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.97
+Version:       2.98
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -56,6 +56,7 @@ following AMD GPUs:
     Radeon™ RX 400/500 Series
     Radeon™ M200/M300/M400 Series
     Radeon™ RX Vega Series
+    Radeon™ RX 5700 Series
     AMD FirePro™ Workstation Wx000/Wx100/Wx300 Series
     Radeon™ Pro WX x100 Series
     Radeon™ Pro 400/500 Series
@@ -127,6 +128,29 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+
+* Tue Jul 15 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.98.0.20190715.gite835c3b
+
+- xgl: Add Navi10 support
+- xgl: Enable shader writes for alphaToCoverageEnable when attachment is
+       set to VK_ATTACHMENT_UNUSED
+- xgl: Change reported driver UUID from pal major/minor version (and
+       timestamp on Linux) to AMD-LINUX-DRV
+- pal: Add Navi10 support
+- pal: Indirect function support in ILP.
+- pal: Clear ops issued against external d/ds/s images trigger assertion
+       failures in PAL, followed by test failures
+- pal: Remove unneeded device pointer from DepthStencilState
+- pal: Pass timeline flag to palQueueSemaphore when import new one.
+- pal: Add support of LLVM IR section (.AMDGPU.comment.llvmir)   in PAL
+       ABI processor
+- pal: Bump version number to 222
+- llpc: Add Navi10 support
+- llpc: Add support for OpCopyLogical. glslang will generate it if 1_4
+        environment is specified
+- llpc: Enable 1_4 environment in SPVGEN
+- llpc: GPU workaround useOriginalVgtGsOnchipCntl
+
 * Tue Jul 02 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.97.0.20190630.git474c74e
 
 - xgl: Add HDR10 support for direct display mode, enable EXT_HDR_METADATA
