@@ -1,20 +1,20 @@
-%global amdvlk_commit       e835c3bd7a15b7b52449f4280fe704e78346c565
-%global llvm_commit         d9e4934189845f30428cad6da16e8745540291db
-%global llpc_commit         252b93409b7cc92dacf48a421b9aac2a77629381
-%global xgl_commit          2315f2a4de4df53eaa54b56e96332687ed12269f
-%global pal_commit          ffb21e86238819817075e252ad9b49ea5284968d
-%global spvgen_commit       051aaa46272aae7808129b98fd9da49f3229eb78
+%global amdvlk_commit       53d1a7c2970ac7a576d0118323d7b8b081e8c8ba
+%global llvm_commit         951ae36dc33d628235446a7abe87a1aebf6717e8
+%global llpc_commit         f60ebe48d60ef00e69b399a24e04d600cdcc1f0c
+%global xgl_commit          6b0fbc836e01be4b8fb1990b4e31846ec19305bc
+%global pal_commit          46251728a7137f399b564b0886bd9bf9888c48ef
+%global spvgen_commit       2f31d1170e8a12a66168b23235638c4bbc43ecdc
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
-%global commit_date         20190715
+%global commit_date         20190729
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.98
+Version:       2.101
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -128,6 +128,58 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+
+* Tue Jul 29 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.101.0.20190729.git53d1a7c
+
+- xgl: Support extension VK_KHR_imageless_framebuffer
+- xgl: Support extension VK_AMD_shader_core_properties2
+- xgl: Vulkan Settings Refactor to enable modification of vulkan settings
+       through developer tools (RDP
+- xgl: Call CmdBuffer::End() after CmdBuffer::Begin(), to ensure the
+       m_recordState in Pal is correct
+- xgl: Fix smoke flickering in game Three Kingdoms
+- xgl: Fix incorrect behavior with OpImageSampleExplicitLod + Lod|Offset
+- xgl: Vulkan Resource DCC Tuning
+- xgl: Navi10 performance tuning for Dirt4, Totalwar:WarhammerII, F1 2017
+- xgl: Fix PAL debug overlay with SW compositing
+- xgl: Update PAL Interface in Vulkan to 518
+- pal: [GFX6-10] - Minor simplifications to ColorBlendState objs.
+- pal: Resolve occlusion/pipeline stats query: always write availability
+       data
+- pal: Add missing support of IL_OP_SAMPLE_XXX_PO to ILP
+- pal: [GFX9/10] Reduce the size of Gfx9MaskRam class
+- pal: [GFX9-10] Minor tweak to Gfx9Fmask
+- pal: [GFX6-10] Remove unneed m_device ref from Gfx*MsaaState
+- pal: GFX6-8] Port some minor DepthStencilState space savings from GFX9
+       hwl
+- pal: [GFX6-10] Remove device pointer from several hw-independent state
+       object classes
+- pal: Optimize ACE offload for WaitRegMem
+- pal: Pal::Amdpg::Platform::ReQueryDevices() - Exiting this function
+       gracefully instead of segfault
+- pal: Fix bug in gfx9 perf experiment legacy SQ counter stop sequence
+- pal: Setting clock mode through driver ext should fill in the shader
+       and memory clock freq in RGP asic_info chunk
+- pal: Fix Vk.api.device_init.create_instance_device_intentional_alloc_fail
+       test failure
+- pal: Initialize the enableTcpBigPageTranslationCoalescing setting to a
+       default value
+- pal: [GFX6-10] Increase storage for debug only path AutoBuffer
+- pal: [GFX9/10] Remove device pointer member from MetaDataAddrEquation
+- pal: Bump version number to 225
+- llpc: Add a helper to get entry-point name from SPIR-V binary.
+- llpc: Set EntryTarget to empty string ("") for AMDLLPC. Thus, we could
+        check if the EntryTarget is specified and make follow-up decision.
+- llpc: Add IR builder to NGG primitive shader class. Use IR builder to
+        generate LLVM IR.
+- llpc: Support dynamic index in interpolate functions
+- llpc: Add LLPC support of VK_KHR_shader_clock
+- llpc: Implement VK_extension_string support
+- llpc: Set register SPI_SHADER_PGM_LO_GS to NggCullingData. This is
+        required by PAL
+- llpc: Remove PipelineOptions::autoLayoutDesc, also bump LLPC interface
+        version to 30
+- llpc: Add some spirv1.4 shaderdb test
 
 * Tue Jul 15 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.98.0.20190715.gite835c3b
 
