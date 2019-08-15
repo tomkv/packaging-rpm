@@ -1,8 +1,8 @@
-%global amdvlk_commit       53d1a7c2970ac7a576d0118323d7b8b081e8c8ba
-%global llvm_commit         951ae36dc33d628235446a7abe87a1aebf6717e8
-%global llpc_commit         f60ebe48d60ef00e69b399a24e04d600cdcc1f0c
-%global xgl_commit          6b0fbc836e01be4b8fb1990b4e31846ec19305bc
-%global pal_commit          46251728a7137f399b564b0886bd9bf9888c48ef
+%global amdvlk_commit       ddb9bc059a7f6898d0f915672ec4926a8640b0a6
+%global llvm_commit         9bc5dd4450a6361faf5c5661056a7ee494fad830
+%global llpc_commit         0da6ca8e09f41639636a106f9b9ca74df50321ce
+%global xgl_commit          9b632ef4f132bddc94769702ed8b49efbc39d89c
+%global pal_commit          66e78b997748d03d77e1d706c10f1f17e18e5654
 %global spvgen_commit       2f31d1170e8a12a66168b23235638c4bbc43ecdc
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -10,11 +10,11 @@
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
-%global commit_date         20190729
+%global commit_date         20190815
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.101
+Version:       2.104
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -128,6 +128,58 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu Aug 15 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.104.0.20190815.gitddb9bc0
+
+- xgl: Support VK_EXT_subgroup_size_control extension
+- xgl: Set allowExternalPipelineCacheObject to false by default
+- xgl: Enable Atomic Optimizations for all ASICs to fix ICD
+       initialization failure for system with a mix of GFX10 and other
+       GFX versions ASICs
+- xgl: Fix crash with AMD GPU disabled
+- xgl: Add system info into account for UUID
+- xgl: Return VK_SUBOPTIMAL_KHR from queuePresent and acquireNextImage if
+       surface resolution has changed.
+- xgl: Fix the getQueryPoolResults for not ready queries
+       VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT
+- xgl: Update reported CTS version in VK_KHR_driver_properties
+- xgl: Update Vulkan headers to 1.1.116
+- xgl: Update PAL Interface in Vulkan to 525
+- xgl: Use a higher unrolling threshold for two apps that lost
+       performance due to the previous unrolling changes.
+- pal:  Bump version number to 228
+- pal:  Update PAL_MINIMUM_INTERFACE_MAJOR_VERSION to 465
+- pal:  [Gfx10] Fix programming of mmSPI_SHADER_REQ_CTRL_VS
+- pal:  Fix SPM being missing for compute dispatches
+- pal:  Add locks around all gpaSession-shared state that timed queue
+        operations touch
+- pal:  Move disableAlphaToCoverageDither to flags bitfield
+- pal:  Fix signed vs. unsigned mismatches
+- pal:  [DbgOverlay] Display peak mem usage in PAL Debug overlay
+- pal:  Fix an issue that the setting DisableSyncObject failed to exclude
+        the kernel compatibility/support check when DisableSyncObject is
+        set to true.
+- pal:  Fix PAL_ASSERT bug in Pal::Amdgpu::GpuMemory::OpenSharedMemroy
+- pal:  Fix LlpcOptions not working with amdPalSettings.cfg file when
+        trying to set multiple options
+- pal:  Add new syncobj query interface v2
+- pal:  QueueSemaphore: add WaitBeforeSignal support v6
+- pal:  Restore pipeline registers state if nested command buffer have a
+        pipeline or set pipelineDirty flag
+- pal:  Add support for programing the PA_SC_LINE_STIPPLE register
+- pal:  Improve ScaledCopyImage() performance
+- pal:  First fix for resolve failures when FMASK disabled
+- pal:  Deprecate IDevice::ScpcGraphicsPipelineTuningOptions. We want to
+        move away from having PAL settings that directly control what the
+        compiler does, and move them into the compiler instead
+- llpc: Refine NGG implementation
+- llpc: Implement VK_KHR_spirv_1_4 support
+- llpc: Remove llpcPatchGroupOp files
+- llpc: Fix CTS test dEQP-VK.binding_model.descriptorset_random.* - tests
+        failing
+- llpc: Add !invariant.load to load descriptor sets
+- llpc: Set fast math flags on more FP ops in the SPIRV reader
+- llpc: Remove waterfall loop from Builder interface 
+- llpc: Rework image ops in SPIR-V reader to use Builder interface
 
 * Tue Jul 29 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.101.0.20190729.git53d1a7c
 
