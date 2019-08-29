@@ -1,20 +1,22 @@
-%global amdvlk_commit       ddb9bc059a7f6898d0f915672ec4926a8640b0a6
+%global amdvlk_commit       a14d42d0edeb7f83e10b261153a8ce657dc932af
 %global llvm_commit         9bc5dd4450a6361faf5c5661056a7ee494fad830
-%global llpc_commit         0da6ca8e09f41639636a106f9b9ca74df50321ce
-%global xgl_commit          9b632ef4f132bddc94769702ed8b49efbc39d89c
-%global pal_commit          66e78b997748d03d77e1d706c10f1f17e18e5654
+%global llpc_commit         4fa48ef1cf0f81eafdb56df91c2f2180d4865101
+%global xgl_commit          331558e93794068a786bf699d3fe23bb11bac021
+%global pal_commit          68b57dba33a4d922e8f1ef1b3781c2f659ffbd1c
 %global spvgen_commit       2f31d1170e8a12a66168b23235638c4bbc43ecdc
+%global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
 %global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
-%global commit_date         20190815
+%global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
+%global commit_date         20190829
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.104
+Version:       2.105
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -25,6 +27,7 @@ Source2:       %url/llpc/archive/%{llpc_commit}.tar.gz#/llpc-%{llpc_short_commit
 Source3:       %url/xgl/archive/%{xgl_commit}.tar.gz#/xgl-%{xgl_short_commit}.tar.gz
 Source4:       %url/pal/archive/%{pal_commit}.tar.gz#/pal-%{pal_short_commit}.tar.gz
 Source5:       %url/spvgen/archive/%{spvgen_commit}.tar.gz#/spvgen-%{spvgen_short_commit}.tar.gz
+Source6:       %url/MetroHash/archive/%{metrohash_commit}.tar.gz#/MetroHash-%{metrohash_short_commit}.tar.gz
 
 Requires:      vulkan
 Requires:      vulkan-filesystem
@@ -62,13 +65,15 @@ following AMD GPUs:
     Radeon™ Pro 400/500 Series
 
 %prep
-%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5
+%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5 -a 6
 ln -s AMDVLK-%{amdvlk_commit} AMDVLK
 ln -s llvm-%{llvm_commit} llvm
 ln -s llpc-%{llpc_commit} llpc
 ln -s xgl-%{xgl_commit} xgl
 ln -s pal-%{pal_commit} pal
 ln -s spvgen-%{spvgen_commit} spvgen
+mkdir third_party
+ln -s ../MetroHash-%{metrohash_commit} third_party/metrohash
 
 # workaround for AMDVLK#89
 for i in xgl/icd/CMakeLists.txt llpc/CMakeLists.txt llpc/imported/metrohash/CMakeLists.txt \
@@ -128,6 +133,45 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu Aug 29 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.105.0.20190829.gita14d42d
+
+- xgl: Update Vulkan headers to 1.1.119
+- xgl: Expose VK_EXT_subgroup_size_control version 2
+- xgl: Talos principle performance tuning
+- xgl: Back out the change that added system info into account for UUID
+- xgl: Pipeline cache UUID: move calculation to physicalDevice:Init
+- xgl: Switch to the new DivergenceAnalysis pass, re-enables atomic
+       optimizations for Three Kingdoms.
+- xgl: Fix Semaphore Handle Leak
+- xgl: Implementation for VK_EXT_calibrated_timestamps
+- xgl: Implementation  for VK_KHR_pipeline_executable_properties
+- xgl: Fix memory leak in memoryCache
+- xgl: Build driver with external single instance of Metrohash
+- xgl: Set entryStage in Device::CreateInternalComputePipeline
+- xgl: Update LLPC Interface in Vulkan to 31
+- pal: switchVgtOnDraw should 0 by default
+- pal: Re-enable SkipFceOptimization feature in PAL
+- pal: [AcqRelBarrier] Port SkipFceOptimization to acquire/release
+       barrier
+- pal: [AcqRelBarrier] Adjust layout transition info struct to apply
+       optimization
+- pal: Add support to build PAL with external single instance of
+       Metrohash
+- pal: Disable comp-to-single for 8bpp and 16bpp by default.
+- pal: Add Gfx10UseCompToSingle8bpp and Gfx10UseCompToSingle16bpp to
+       'UseCompToSingle' panel setting, so we can set panel to force
+       comp-to-single for 8bpp and 16bpp surface.
+- pal: [NGG] Fast Launch requires the index buffer address to be written
+       to different registers with the correct value
+- pal: Change the definition of HDMI_STATIC_METADATA_TYPE1 to 0
+- pal: Support FORMAT_A2B10G10R10_UNORM_PACK32 format for HDR
+- pal: Fix HDR test hang
+- pal: Fix segment fault in memoryCache
+- pal: Bump version number to 229
+- llpc: Implementation for VK_KHR_spirv_1_4
+- llpc: Clean up Metrohash dependency, add support to build llpc with
+        external single instance of Metrohash
+
 * Thu Aug 15 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.104.0.20190815.gitddb9bc0
 
 - xgl: Support VK_EXT_subgroup_size_control extension
@@ -181,7 +225,7 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 - llpc: Remove waterfall loop from Builder interface 
 - llpc: Rework image ops in SPIR-V reader to use Builder interface
 
-* Tue Jul 29 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.101.0.20190729.git53d1a7c
+* Mon Jul 29 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.101.0.20190729.git53d1a7c
 
 - xgl: Support extension VK_KHR_imageless_framebuffer
 - xgl: Support extension VK_AMD_shader_core_properties2
@@ -233,7 +277,7 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
         version to 30
 - llpc: Add some spirv1.4 shaderdb test
 
-* Tue Jul 15 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.98.0.20190715.gite835c3b
+* Mon Jul 15 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.98.0.20190715.gite835c3b
 
 - xgl: Add Navi10 support
 - xgl: Enable shader writes for alphaToCoverageEnable when attachment is
