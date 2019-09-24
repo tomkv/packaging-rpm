@@ -1,10 +1,11 @@
-%global amdvlk_commit       a14d42d0edeb7f83e10b261153a8ce657dc932af
-%global llvm_commit         9bc5dd4450a6361faf5c5661056a7ee494fad830
-%global llpc_commit         4fa48ef1cf0f81eafdb56df91c2f2180d4865101
-%global xgl_commit          331558e93794068a786bf699d3fe23bb11bac021
-%global pal_commit          68b57dba33a4d922e8f1ef1b3781c2f659ffbd1c
+%global amdvlk_commit       8a1733a97f145012885262b7949f1a05cca9a761
+%global llvm_commit         1fc1a7d4248b4749c3df21eb48f7ae97b6cddf74
+%global llpc_commit         ec210a78b6a280b00fb1765dd588c3970b6dc818
+%global xgl_commit          2cb5558b94c5dc839e093cb439057a1802426c8e
+%global pal_commit          88d997710b4e405f3a8e3fd60a38afee9e3e77e2
 %global spvgen_commit       2f31d1170e8a12a66168b23235638c4bbc43ecdc
-%global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
+%global metrohash_commit    690a521d9beb2e1050cc8f273fdabc13b31bf8f6
+%global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
@@ -12,11 +13,12 @@
 %global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
-%global commit_date         20190829
+%global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
+%global commit_date         20190923
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.105
+Version:       2.109
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -28,6 +30,7 @@ Source3:       %url/xgl/archive/%{xgl_commit}.tar.gz#/xgl-%{xgl_short_commit}.ta
 Source4:       %url/pal/archive/%{pal_commit}.tar.gz#/pal-%{pal_short_commit}.tar.gz
 Source5:       %url/spvgen/archive/%{spvgen_commit}.tar.gz#/spvgen-%{spvgen_short_commit}.tar.gz
 Source6:       %url/MetroHash/archive/%{metrohash_commit}.tar.gz#/MetroHash-%{metrohash_short_commit}.tar.gz
+Source7:       %url/CWPack/archive/%{cwpack_commit}.tar.gz#/CWPack-%{cwpack_short_commit}.tar.gz
 
 Requires:      vulkan
 Requires:      vulkan-filesystem
@@ -65,7 +68,7 @@ following AMD GPUs:
     Radeon™ Pro 400/500 Series
 
 %prep
-%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5 -a 6
+%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5 -a 6 -a 7
 ln -s AMDVLK-%{amdvlk_commit} AMDVLK
 ln -s llvm-%{llvm_commit} llvm
 ln -s llpc-%{llpc_commit} llpc
@@ -74,6 +77,7 @@ ln -s pal-%{pal_commit} pal
 ln -s spvgen-%{spvgen_commit} spvgen
 mkdir third_party
 ln -s ../MetroHash-%{metrohash_commit} third_party/metrohash
+ln -s ../CWPack-%{metrohash_commit} third_party/cwpack
 
 # workaround for AMDVLK#89
 for i in xgl/icd/CMakeLists.txt llpc/CMakeLists.txt llpc/imported/metrohash/CMakeLists.txt \
@@ -133,6 +137,86 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu Sep 23 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.109.0.20190923.git8a1733a
+
+- xgl: Modify the NGG culling settings to be specified on a pipeline type
+       basis instead of globally,
+- xgl: Enable VK_AMD_device_coherent_memory extension
+- xgl: VK_EXT_calibrated_timestamps: Enhance error handling when an
+       invalid time domain is specified
+- xgl: [mGPU] vkEnumeratePhysicalDevices will always rank Navi after
+       Vega/Polaris
+- xgl: Implement pipeline elf cache
+- xgl: Expose VK_EXT_line_rasterization extension
+- xgl: Enable VK_EXT_calibrated_timestamps extension
+- xgl: Tune shader performance for Serious Sam Fusion 2017
+- xgl: Tune shader performance for DawnOfWar3
+- xgl: Implement VK_KHR_pipeline_executable_properties
+- xgl: Fix Memory Leak in VK_Semaphore
+- xgl: Implement shader module async compile
+- xgl: App detect Elite Dangerous to avoid corruption
+- xgl: Bump up LLPC version to enable interface 32 “Add
+       ShdaderModuleOptions in ShaderModuleBuildInfo”
+- xgl: Update PAL Interface in Vulkan to 527
+- xgl: Update Vulkan headers to 1.1.121
+- xgl: Build cwpack from external third_party/cwpack path
+- xgl: Fix  crash when calling vk_EXT_debug_utils extension when using
+       DevDriver
+- xgl: Add  lots of missing enabled feature verification for device
+       create
+- pal: Fix potential bug with max_size programming in indexed draw
+       packets
+- pal: [GFX10] Drop Z/Stencil base writes for the NULL DSV case
+- pal: Fix an interface logger formatting bug in SubmitInfo
+- pal: [GFX9/10] Merge three sequential ranges into one in GS pipeline
+       chunk context regs
+- pal: [mGPU] vkEnumeratePhysicalDevices will always rank Navi after
+       Vega/Polaris
+- pal: Disable PAL Internal CE Usage By Default
+- pal: Fix internal state tracking that depends on AddGpuMemoryReferences
+       and RemoveGpuMemoryReferences
+- pal: Initialize HiZ to expanded instead of "equal to zero", Htile inits
+       are now the same as resummarizes
+- pal: GFX10: Add CalcMetaEquation support for DCC/Cmask/hTile
+- pal: Prevent busy chunk tracking from reusing chunks while shaders are
+       reading from them
+- pal: CB fixed function resolve cannot be performed if the src and dst
+       array slice is different
+- pal: Change to GetShaderStats to return ApiShaderStageGeometry when
+       IsGsEnabled() is enabled
+- pal: [AcqRelBarrier] CmdBufferLogger missing image transition dump
+- pal: [AcqRelBarrier] Don't request RB sync if FastClearEliminate is not
+       submitted
+- pal: Remove duplicate CAS shader binaries from our DLLs and add
+       "#pragma once" to some pipeline headers
+- pal: Add finer grained MALL control for CBs, DBs, and SRDs. Some blocks
+       provide fine grained disabling of MALL usage
+- pal: Implement pipeline elf cache
+- pal: Clean up cwpack dependency, support build with external cwpack
+- pal: Skip programming scratch related registers for the AQL dispatch
+       when they're not required.
+- pal: [GFX6-10] Minor CPU opt to convert pass by ref to pass by value
+- pal: Fix IL_OP_LDS_STORE_B64 instruction definition
+- pal: Skip programming scratch related registers for the AQL dispatch
+       when they're not required
+- pal: [GFX9/10] - Rework DB_DFSM_CONTROL programming
+- pal: [AcqRelBarrier] New barrier path the acquire doesn't need to
+       invalidate RB
+- pal: Fix bad free's in pipeline upload
+- pal: Clean up the PAL NGG settings
+- pal: Load alwaysOnCuMask from deviceInfo
+- pal: GFX10: Fix (hide...) a potential access violation with generating
+       the (unneeded) cMask addressing equation
+- pal: Add CmdGenerateMipmaps to automatically and efficiently generate
+       mipmap levels
+- llpc: Refine NGG implementation
+- llpc: Port [PR218] Revert "[PR156] Builder trigonometric, exp, log,
+        inverse sqrt"
+- llpc: Port [PR202] Revert PR162 "PatchDescriptorLoad: extract
+        buildBufferDescriptor"
+- llpc: Port Fix gfx10 smod compile bug
+- llpc: Port [PR191] Reinstated CapabilityImageGatherBiasLodAMD
+
 * Thu Aug 29 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.105.0.20190829.gita14d42d
 
 - xgl: Update Vulkan headers to 1.1.119
