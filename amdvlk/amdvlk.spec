@@ -4,7 +4,7 @@
 %global xgl_commit          2cb5558b94c5dc839e093cb439057a1802426c8e
 %global pal_commit          88d997710b4e405f3a8e3fd60a38afee9e3e77e2
 %global spvgen_commit       2f31d1170e8a12a66168b23235638c4bbc43ecdc
-%global metrohash_commit    690a521d9beb2e1050cc8f273fdabc13b31bf8f6
+%global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
@@ -50,6 +50,8 @@ BuildRequires: libxshmfence-devel
 BuildRequires: libXrandr-devel
 BuildRequires: gtest-devel
 BuildRequires: wayland-devel
+BuildRequires: zlib-devel
+BuildRequires: openssl-devel
 
 %description
 The AMD Open Source Driver for Vulkan® is an open-source Vulkan driver
@@ -77,7 +79,7 @@ ln -s pal-%{pal_commit} pal
 ln -s spvgen-%{spvgen_commit} spvgen
 mkdir third_party
 ln -s ../MetroHash-%{metrohash_commit} third_party/metrohash
-ln -s ../CWPack-%{metrohash_commit} third_party/cwpack
+ln -s ../CWPack-%{cwpack_commit} third_party/cwpack
 
 # workaround for AMDVLK#89
 for i in xgl/icd/CMakeLists.txt llpc/CMakeLists.txt llpc/imported/metrohash/CMakeLists.txt \
@@ -137,7 +139,7 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
-* Thu Sep 23 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.109.0.20190923.git8a1733a
+* Mon Sep 23 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.109.0.20190923.git8a1733a
 
 - xgl: Modify the NGG culling settings to be specified on a pipeline type
        basis instead of globally,
