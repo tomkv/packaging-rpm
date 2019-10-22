@@ -1,9 +1,9 @@
-%global amdvlk_commit       8a1733a97f145012885262b7949f1a05cca9a761
-%global llvm_commit         1fc1a7d4248b4749c3df21eb48f7ae97b6cddf74
-%global llpc_commit         ec210a78b6a280b00fb1765dd588c3970b6dc818
-%global xgl_commit          2cb5558b94c5dc839e093cb439057a1802426c8e
-%global pal_commit          88d997710b4e405f3a8e3fd60a38afee9e3e77e2
-%global spvgen_commit       2f31d1170e8a12a66168b23235638c4bbc43ecdc
+%global amdvlk_commit       aab8cd039363b65df6a3919bf9ba90b7bd0701cc
+%global llvm_commit         40fbaf4c5446a361269c241d9112fff26575b5d0
+%global llpc_commit         3f15347d38da804814fdd9e24e2875ee0b2b9245
+%global xgl_commit          19a031d9f73b95101fd4d3d594aca27c00feb180
+%global pal_commit          39abe2297ca58a2b84dcd9bc5e238fbc399bd6e0
+%global spvgen_commit       f1bc2ba988273c3724afffe72fe9cd933a022ce7
 %global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -14,17 +14,17 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20190923
+%global commit_date         20191022
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.109
+Version:       2.115
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
 Url:           https://github.com/GPUOpen-Drivers
 Source0:       %url/AMDVLK/archive/%{amdvlk_commit}.tar.gz#/AMDVLK-%{amdvlk_short_commit}.tar.gz
-Source1:       %url/llvm/archive/%{llvm_commit}.tar.gz#/llvm-%{llvm_short_commit}.tar.gz
+Source1:       %url/llvm-project/archive/%{llvm_commit}.tar.gz#/llvm-project-%{llvm_short_commit}.tar.gz
 Source2:       %url/llpc/archive/%{llpc_commit}.tar.gz#/llpc-%{llpc_short_commit}.tar.gz
 Source3:       %url/xgl/archive/%{xgl_commit}.tar.gz#/xgl-%{xgl_short_commit}.tar.gz
 Source4:       %url/pal/archive/%{pal_commit}.tar.gz#/pal-%{pal_short_commit}.tar.gz
@@ -72,7 +72,7 @@ following AMD GPUs:
 %prep
 %setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5 -a 6 -a 7
 ln -s AMDVLK-%{amdvlk_commit} AMDVLK
-ln -s llvm-%{llvm_commit} llvm
+ln -s llvm-project-%{llvm_commit} llvm-project
 ln -s llpc-%{llpc_commit} llpc
 ln -s xgl-%{xgl_commit} xgl
 ln -s pal-%{pal_commit} pal
@@ -139,6 +139,58 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Tue Oct 22 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.115.0.20191022.gitaab8cd0
+
+- xgl: Add VKI_EXT_HOST_MAPPED_FOREIGN_MEMORY support
+- xgl: Fix build error when LTO is disabled
+- xgl: Update SPIR-V headers
+- xgl: Remove static asserts for ABI shader types
+- xgl: VertBufBindingMgr::GraphicsPipelineChanged should use device mask
+- xgl: Fix numSlices in Pal::ImageScaledCopyRegion
+- xgl: Memset driver name and info strings
+- xgl: Preserve the default values for runtime settings that are not
+       overwritten with an app profile
+- xgl: Update PAL Interface in Vulkan to 543
+- xgl: Implement VK_EXT_post_depth_coverage
+- xgl: Re-work vkPipelineCache
+- xgl: Add "enableLoadScalarizer" option to app_shader_optimizer
+- xgl: Tune shader performance for F1 2017 and the Talos principle
+- xgl: EXT_vertex_attribute_divisor: Add missing features query and
+       support verification
+- xgl: Fix a case fallthrough bug with
+       VK_AMD_memory_overallocation_behavior at device creation
+- xgl: Move platformKey to physical device
+- xgl: Make InitializePlatformKey() as a void function
+- xgl: Add ShaderDbg to LLPC
+- xgl: Bump LLPC client interface version to 34
+- pal: Ensure that the two resources have identical layouts before
+       enabling an alignment optimization during a subresource copy
+- pal: [AcqRelBarrier] Fix a hole that may cause missing a
+       MsaaColorDecompress.
+- pal: GFX10: Fix an assert related to a zero max-event-ID by using the
+       correct enum for the GE1 block
+- pal: Remove "using namespace" from gpuUtil headers
+- pal: Add 32 bit Streamout Query support
+- pal: Add setting for ASTC format
+- pal: Allows clients/layers to embed a binary payload directly into the
+       command stream for better tooling
+- pal: Fix IFH mode back-compatibility issue
+- pal: Add a condition to mark MSAA images with samples>1 and with
+       DepthStencil and ShaderWrite aspect to be Unsupported
+- pal: Fix null pointer in cmdBufferLogger
+- pal: [AcqRelBarrier] Maintain an auto-release info hashmap for acquires
+       to clear CmdBufState flags
+- pal: Add shaderClock features to gfxipProperties.flags
+- pal: DrawDispatchInfo Addition to Cmd-Stream
+- pal: [Sqtt] Modify SQTT size and base reg write order + Change thread
+       trace token config reg mask enumeration
+- pal: Shader functions regCOMPUTE_PGM_RSRC1 gfx10 registers need to be
+       taken into account for the pipeline
+- pal: Extend list of supported keys
+- pal: Fix image corruption presented on screen with multiGPU
+- pal: Add the global sync flags to the command buffer logger output
+- pal: Bump version number to 235
+
 * Mon Sep 23 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.109.0.20190923.git8a1733a
 
 - xgl: Modify the NGG culling settings to be specified on a pipeline type
