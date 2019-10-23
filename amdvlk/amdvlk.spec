@@ -83,7 +83,7 @@ ln -s ../CWPack-%{cwpack_commit} third_party/cwpack
 
 # workaround for AMDVLK#89
 for i in xgl/icd/CMakeLists.txt llpc/CMakeLists.txt llpc/imported/metrohash/CMakeLists.txt \
-  llvm/utils/benchmark/CMakeLists.txt llvm/utils/benchmark/test/CMakeLists.txt \
+  llvm-project/llvm/utils/benchmark/CMakeLists.txt llvm-project/llvm/utils/benchmark/test/CMakeLists.txt \
   pal/src/core/imported/addrlib/CMakeLists.txt pal/src/core/imported/vam/CMakeLists.txt \
   pal/shared/gpuopen/cmake/AMD.cmake
 do
