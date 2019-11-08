@@ -1,8 +1,8 @@
-%global amdvlk_commit       aab8cd039363b65df6a3919bf9ba90b7bd0701cc
-%global llvm_commit         40fbaf4c5446a361269c241d9112fff26575b5d0
-%global llpc_commit         3f15347d38da804814fdd9e24e2875ee0b2b9245
-%global xgl_commit          19a031d9f73b95101fd4d3d594aca27c00feb180
-%global pal_commit          39abe2297ca58a2b84dcd9bc5e238fbc399bd6e0
+%global amdvlk_commit       ff4e60402dc4528fbb7a9aa9f7cde1fd867c724c
+%global llvm_commit         2c15e55bc4b7171d6fa4bbb0cd9265bb8ad999b8
+%global llpc_commit         2ba438ad4c592229a4ae14bd4368e318ac4f81eb
+%global xgl_commit          ef2f9c22455a79eea10c14e44fe371c003322ba1
+%global pal_commit          76c5b997630e558158dbdd8ca24a120071068631
 %global spvgen_commit       f1bc2ba988273c3724afffe72fe9cd933a022ce7
 %global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20191022
+%global commit_date         20191108
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.115
+Version:       2.117
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -139,6 +139,49 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Tue Nov 08 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.117.0.20191108.gitff4e604
+
+- xgl: Support VK_KHR_shader_subgroup_extended_types extension
+- xgl: Support VK_KHR_pipeline_executable_properties extension
+- xgl: Support VK_KHR_TIMELINE_SEMAPHORE extension
+- xgl: Support VK_KHR_SHADER_CLOCK extension
+- xgl: Support VK_KHR_SPIRV_1_4 extension
+- xgl: Enable computeFullSubgroups support
+- xgl: Switch vk pipeline cache to PAL pipeline binary cache
+- xgl: Shader tuning for game Rise of Tomb Raider
+- xgl: Remove use of dynamic loop unrolling
+- xgl: Use the correct engineIndex when substituting Compute for Transfer
+       engine
+- xgl: Update Vulkan headers to version 125
+- xgl: Update PAL Interface in Vulkan to 547
+- pal: Enable DB-CB fix function resolve in PA
+- pal: AcqRelBarrier] Narrow down the scenario that release at BOP due to
+       no VS_DONE.
+- pal: Remove texture quilting support as no future HW will support this
+- pal: Fix a DMA bug uncovered by the PCIe copy optimization
+- pal: Enable tile-mode when present gpu is rendering gpu
+- pal: Disable use of CE IB2's in gfx10
+- pal: Remove copyFormatsMatch and replace the "CopyDst is compressed"
+       logic with settings
+- pal: Ignore the "useCpuPathForTableUpdates" flag and the
+       "cmdBufForceCpuUpdatePath" setting on products that don't support
+       a constant engine
+- pal: Provide a CPU-based version of the UpdateNggCullingDataBuffer
+       function for use with products that don't have a constant engine
+- pal: Fixed some gcc unused variable errors
+- pal: Remove the remaining CE ram reference, used with inherited command
+       buffers
+- pal: Don't use doubles in any RPM shaders
+- pal: Fix possible null dereference when deallocating memory
+- pal: Disable vertex grouping except in cases where necessary (NGG Fast
+       Launch)
+- pal: Account for the sdl address user data registers when calculating
+       the available ones
+- pal: [GFX9/10] expose settings for CB/DB policy change
+- pal: Fix the order of the tags for this setting so that it will
+       actually show up in the panel
+- pal: Bump version number to 237
+
 * Tue Oct 22 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.115.0.20191022.gitaab8cd0
 
 - xgl: Add VKI_EXT_HOST_MAPPED_FOREIGN_MEMORY support
