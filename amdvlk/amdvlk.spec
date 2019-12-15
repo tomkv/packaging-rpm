@@ -1,8 +1,8 @@
-%global amdvlk_commit       ff4e60402dc4528fbb7a9aa9f7cde1fd867c724c
-%global llvm_commit         2c15e55bc4b7171d6fa4bbb0cd9265bb8ad999b8
-%global llpc_commit         2ba438ad4c592229a4ae14bd4368e318ac4f81eb
-%global xgl_commit          ef2f9c22455a79eea10c14e44fe371c003322ba1
-%global pal_commit          76c5b997630e558158dbdd8ca24a120071068631
+%global amdvlk_commit       887460b07b85a2db434f169e6d02e693cd3d216d
+%global llvm_commit         a62a00e933c3dc76053d7e9aa2efecb82d473d24
+%global llpc_commit         dffcaf4565b4153c8cbff64847efbc0f9fb835f9
+%global xgl_commit          83c89cd727653c4514e2abe30e1633220fdb666e
+%global pal_commit          5d72cf9890fe2fbb1b87eecc497114e04afaa277
 %global spvgen_commit       f1bc2ba988273c3724afffe72fe9cd933a022ce7
 %global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20191108
+%global commit_date         20191212
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.117
+Version:       2.121
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -38,7 +38,7 @@ Requires:      vulkan-filesystem
 BuildRequires: gcc
 BuildRequires: gcc-c++
 BuildRequires: cmake >= 3
-BuildRequires: ninja-build
+BuildRequires: make
 BuildRequires: python3
 BuildRequires: perl
 BuildRequires: curl
@@ -81,13 +81,13 @@ mkdir third_party
 ln -s ../MetroHash-%{metrohash_commit} third_party/metrohash
 ln -s ../CWPack-%{cwpack_commit} third_party/cwpack
 
-# workaround for AMDVLK#89
+# workaround for AMDVLK#89, AMDVLK#117
 for i in xgl/icd/CMakeLists.txt llpc/CMakeLists.txt llpc/imported/metrohash/CMakeLists.txt \
   llvm-project/llvm/utils/benchmark/CMakeLists.txt llvm-project/llvm/utils/benchmark/test/CMakeLists.txt \
   pal/src/core/imported/addrlib/CMakeLists.txt pal/src/core/imported/vam/CMakeLists.txt \
   pal/shared/gpuopen/cmake/AMD.cmake
 do
-  sed -i "s/-Werror//g" $i
+  sed -i "s/-Werror/-Wno-error=deprecated -Wno-error=deprecated-copy -Wno-redundant-move/g" $i
 done
 
 %build
@@ -96,21 +96,17 @@ mkdir -p xgl/build && pushd xgl/build
 cmake .. -DCMAKE_AR=`which gcc-ar` \
     -DCMAKE_NM=`which gcc-nm` \
     -DCMAKE_RANLIB=`which gcc-ranlib` \
+    -DCMAKE_VERBOSE_MAKEFILE=ON \
     -DCMAKE_C_FLAGS_RELEASE=-DNDEBUG \
     -DCMAKE_CXX_FLAGS_RELEASE=-DNDEBUG \
     -DCMAKE_VERBOSE_MAKEFILE=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DINCLUDE_INSTALL_DIR=/usr/include \
-    -DLIB_INSTALL_DIR=/usr/lib64 \
-    -DSYSCONF_INSTALL_DIR=/etc \
-    -DSHARE_INSTALL_PREFIX=/usr/share \
-    -DLIB_SUFFIX=64 \
     -DBUILD_SHARED_LIBS=OFF \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DBUILD_WAYLAND_SUPPORT=ON \
-     -G Ninja
+    -DLLVM_ENABLE_WARNINGS=OFF
 
-ninja
+%make_build
 popd
 
 %clean
@@ -139,7 +135,79 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
-* Tue Nov 08 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.117.0.20191108.gitff4e604
+
+* Fri Dec 13 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.121.0.20191212.git887460b
+
+- xgl: Enable VK_EXT_pipeline_creation_feedback extension
+- xgl: Enable SUBGROUP_CLUSTER_SUPPORT
+- xgl: Increase app specific unrolling threshold value as other changes
+       meant that the value was not sufficient to ensure loops were
+       unrolled for the app
+- xgl: Consolidate code to look up pipeline binary in caches
+- xgl: Changes for GPU memory event logging
+- xgl: Update the shader optimizer for Dawn of War 3
+- pal: Enable waUtcL0InconsistentBigPage for GFX10
+- pal: Add Util::Gcd() and Util::Lcm() functions
+- pal: Fix typo drity -> dirty
+- pal: enable iterate256 in cases where the vram bus size is not a power
+       of 2.
+- pal: Fix few CTS failures for Navi14, that does not handle cmask enable
+       and DCC disabled situation during checking the first mipmap level
+       for a single aspect when suffers the pipe-misaligned metadata
+       issue on GFX10
+- pal: Updates the block enum in the file format spec.
+- pal: Adds a static assert to ensure updating this enum for any future
+       block additions in PA
+- pal: Store UserData dirty bits as size_t instead of 16b
+- pal: Cleaning up warnings in PAL/mmPipelines
+- pal: Correct the behaviour of Amdgpu::Device::ReserveGpuVirtualAddress()
+- pal: Add "PAL_CLIENT_INTERFACE_MINOR_VERSION" definition in cmake
+- pal: Remove GDS
+- pal: Fix HiStencil (and all of RPM) by always using the compiled spill
+       threshold
+- pal: Bump version number to 242
+- llpc: Revert [PR273] Group BuiltInTessLevel* stores together
+
+* Wed Nov 27 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.119.0.20191125.gitb2600e0
+
+- xgl: Add Navi14 support
+- xgl: Support VK_EXT_pipeline_creation_feedback extension
+- xgl: Support VK_EXT_shader_demote_to_helper_invocation extension
+- xgl: Shader performance tuning for TOTALWAR WARHAMMER II and DiRT4
+- xgl: Fix spirv_assembly.instruction.compute.float_controls
+       .independence_settings.independence_settings test failures
+- xgl: Remove implementation for vkFlush/InvalidateMappedMemoryRanges
+- xgl: Implement VK_KHR_sampler_ycbcr_conversion
+- xgl: Implement VKI_KHR_SEPARATE_DEPTH_STENCIL_LAYOUTS
+- xgl: Update Vulkan headers to 1.1.127
+- xgl: Bump up LLPC version to 38 to remove app shader cache interface
+- xgl: Bump PAL interface version to major=548, minor=1
+- pal: Add Navi14 support
+- pal: GFX10: Setting SX_PS_DOWNCONVERT_CONTROL to cause HW to obey the
+       driver's programmed value of SX_PS_DOWNCONVERT
+- pal: Reenable vertex grouping
+- pal: Enable single thread for immediate mode.
+- pal: Discard the reply for presentPixmap request since it should never
+       be failed. Just flush the xcb requests
+- pal: GFX10: Modify default of VGT_TF_RING_SIZE based on HW feeback
+- pal: Fix an issue where the stencil hTile aspect would remain
+       uninitialized for surfaces that had perSubResInit==0
+- pal: Fix for dEQP-VK.pipeline.depth_range_unrestricted.*d32_sfloat* -
+       tests failure
+- pal: Fix an issue where compute based depth expands would push the
+       compute state twice without popping it
+- pal: Add atomic OR functions
+- pal: Support 32-bit predication
+- pal: SwapChainMode::Immediate can be inline
+- pal: [GFX9/10] Correct CB fixed function resolve condition checking
+       logic
+- pal: Add isMergedShader to RelocatableShaderFlags. Always use this flag
+       to check if this is a merged shader
+- pal: Correct shader dump in DisassembleShader
+- pal: Remove duplicated codes in SetupPreCompileRegisters
+- pal: Bump version number to 241
+
+* Fri Nov 08 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.117.0.20191108.gitff4e604
 
 - xgl: Support VK_KHR_shader_subgroup_extended_types extension
 - xgl: Support VK_KHR_pipeline_executable_properties extension
