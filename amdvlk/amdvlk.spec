@@ -1,9 +1,9 @@
-%global amdvlk_commit       887460b07b85a2db434f169e6d02e693cd3d216d
-%global llvm_commit         a62a00e933c3dc76053d7e9aa2efecb82d473d24
-%global llpc_commit         dffcaf4565b4153c8cbff64847efbc0f9fb835f9
-%global xgl_commit          83c89cd727653c4514e2abe30e1633220fdb666e
-%global pal_commit          5d72cf9890fe2fbb1b87eecc497114e04afaa277
-%global spvgen_commit       f1bc2ba988273c3724afffe72fe9cd933a022ce7
+%global amdvlk_commit       e6d1928269b75ee6b31c69bef185be104f39ca88
+%global llvm_commit         cc0df5ace776584f5f7c0c20704d28f445f0e074
+%global llpc_commit         2efe41812964c88aa38a80c66939ce44ae493fd4
+%global xgl_commit          7e13a8bd0bb57d3cfb3bc014f6b26a8c9bb8bfd9
+%global pal_commit          40af910391fb8c287cb37bf520c41310bf88d405
+%global spvgen_commit       ce06cb5e3116ba77a22c3278dfeadfd865a8977c
 %global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20191212
+%global commit_date         20191219
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.121
+Version:       2.123
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -135,6 +135,38 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Mon Dec 23 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.123.0.20191219.gite6d1928
+
+- xgl: Enable VK_KHR_shader_float_controls extension
+- xgl: Enable  VK_KHR_separate_depth_stencil_layouts extension
+- xgl: Implement VK_KHR_buffer_device_address extension
+- xgl: Add disableLicm tuning option
+- xgl: Enable VertexAttributeInstanceRateZeroDivisor
+- xgl: Add Query Pool support for Acceleration Structures
+- xgl: Remove a workaround for the issue that Elite Dangerous game is too
+       bright as the defect in SkipFceOptimization is fixed in PAL
+- xgl: Fix crash triggered by Sparse bind + timeline semaphores
+- xgl: Don't disable depth clamping unless
+       VK_EXT_depth_range_unrestricted is requested.
+- xgl: Update vulkan_core.h to Vulkan 1.1.129
+- xgl: Update PAL Interface in Vulkan to 552
+- pal: Track the presentable memory and do not add window system owned
+       presentable memory into resource list.
+- pal: Correct SDMA Predication logic
+- pal: Fix a mismatch between GetFastClearCode's pNeedFastClearElim and
+       IsFastClearColorMetaFetchable
+- pal: Correctly set the bits for the ACQUIRE_MEM packet
+- pal: Update libdrm header files
+- pal: Fix assertion failure triggers at Vulkan device creation time &
+       during cmd buf recording
+- pal: Fix performance drop issue of vkmark and vkcube when flip is
+       enabled
+- pal: Optimize CmdGenerateMipmaps
+- pal: Don't supply the KMD with allocation requests involving heaps that
+       don't exist.
+- pal: Initial implementation of the new command buffer dumping path
+- pal: Remove WritePm4Image, Part #1 and 2
+- pal: Bump version number to 244
 
 * Fri Dec 13 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.121.0.20191212.git887460b
 
