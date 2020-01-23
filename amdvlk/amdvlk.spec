@@ -1,8 +1,8 @@
-%global amdvlk_commit       e6d1928269b75ee6b31c69bef185be104f39ca88
-%global llvm_commit         cc0df5ace776584f5f7c0c20704d28f445f0e074
-%global llpc_commit         2efe41812964c88aa38a80c66939ce44ae493fd4
-%global xgl_commit          7e13a8bd0bb57d3cfb3bc014f6b26a8c9bb8bfd9
-%global pal_commit          40af910391fb8c287cb37bf520c41310bf88d405
+%global amdvlk_commit       813f090efbac744b56bbc96c3c0cc6e70f06ca50
+%global llvm_commit         08268e9955d48ca075b239ae46328694ddff2413
+%global llpc_commit         93f91d8e6258aec02369b63c3248c9fab15c6956
+%global xgl_commit          5ee2a33520138966eb5e2745dd3f2e5401d2f3b6
+%global pal_commit          9fab16015e522fff05890a045a1e9d8d3c23a636
 %global spvgen_commit       ce06cb5e3116ba77a22c3278dfeadfd865a8977c
 %global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20191219
+%global commit_date         20200121
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.123
+Version:       2.127
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -135,6 +135,67 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu Jan 23 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.127.0.20200121.git813f090
+
+- xgl: Implementation of partial pipeline compile
+- xgl: Initial implementation of VK_EXT_conditional_rendering
+- xgl: Update Vulkan headers to 1.1.130/1.2.131
+- xgl: Implementation of VK 1.2 support (could be enabled by
+       USE_NEXT_SDK)
+- xgl: Some APU/GPU doesn't have invisible heap, we shouldn't initialize
+       a none-existent memory heap.
+- xgl: Fix bugs in CmdBuffer::BindTransformFeedbackBuffers()
+- xgl: Shader tuning for Rise of Tomb Raider
+- xgl: Shader tuning for DiRT4
+- xgl: Add support for the inherited occlusion query for secondary
+       command buffer
+- xgl: Fix corruption observed while running vkmark
+- xgl: Add a shader tuning option "unrollThreshold" to allow the default
+       loop unroll threshold used by LLVM to be initialised to the
+       specified value
+- xgl: Hook up alphaToOne support
+- xgl: Fix build link error while using Clang
+- xgl: Add Capture/Replay support for VK_KHR_buffer_device_address
+       extension
+- xgl: Make sure pBufferDeviceAddressCaptureReplay is FALSE until we
+       fully support pBufferDeviceAddress
+- xgl: Update PAL Interface in Vulkan to 556
+- pal: Add ClearColorType::Yuv and handle both packed and planar clear
+       color when this ClearColorType is specified.
+- pal: Remove WritePm4Image
+- pal: Add color to depth and 1xAA depth to depth gfx compressed copy
+       support
+- pal: Make sure client overrides of DCC modes don't override internal
+       debug work
+- pal: Add PresentMode to CmdPostProcessFrameInfo so that it can be
+       printed in the PAL debug overlay
+- pal: Modify Pal::MaxUserDataEntries to 128
+- pal: Remove the redundant empty submission which has already been
+       handled by xgl for the wait semaphore
+- pal: Add a new image creation flag "fullCopyDstOnly"
+- pal: Fix the link error for Clang build
+- pal: Hardcode PA_SC_BINNER_CNTL_0.FLUSH_ON_BINNING_TRANSITION = 1
+- pal: Give a chance for clients to force enabling DCC for RT+UAV
+       resources
+- pal: Don't call IsHtileDepthOnly on an image unless that image actually
+       has hTile data
+- pal: Use deallocate2Cb instead of deallocateCb
+- pal: When GS instancing is enabled with the use of API GS, the GS-VS
+       ring allocated on on-chip LDS requires more space
+- pal: timingReport: Don't print the directory walk status if the output
+       is being piped to a file
+- pal: Clean up VAM on failed initialization
+- pal: Internal memories are possibly allocated before queue creation,
+       need to add them into the queue memory reference list while
+       creating queue
+- pal: Fix NGG GS issue for CTS failure in
+       dEQP-VK.geometry.basic.output_vary_by_attribute_instancing
+- pal: When GS instancing is enabled with the use of API GS, the GS-VS
+       ring allocated on on-chip LDS requires more space
+- pal: Set m_pCurrentExperiment dangling pointer to nullptr in
+       GfxCmdBuffer::CmdEndPerfExperiment()
+- pal: Bump version number to 246
+
 * Mon Dec 23 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.123.0.20191219.gite6d1928
 
 - xgl: Enable VK_KHR_shader_float_controls extension
