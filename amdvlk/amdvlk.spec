@@ -135,7 +135,7 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
-* Thu Jan 23 2019 Tomas Kovar <tkov_fedoraproject.org> - 2.127.0.20200121.git813f090
+* Thu Jan 23 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.127.0.20200121.git813f090
 
 - xgl: Implementation of partial pipeline compile
 - xgl: Initial implementation of VK_EXT_conditional_rendering
