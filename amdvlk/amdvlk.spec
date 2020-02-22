@@ -1,9 +1,9 @@
-%global amdvlk_commit       813f090efbac744b56bbc96c3c0cc6e70f06ca50
-%global llvm_commit         08268e9955d48ca075b239ae46328694ddff2413
-%global llpc_commit         93f91d8e6258aec02369b63c3248c9fab15c6956
-%global xgl_commit          5ee2a33520138966eb5e2745dd3f2e5401d2f3b6
-%global pal_commit          9fab16015e522fff05890a045a1e9d8d3c23a636
-%global spvgen_commit       ce06cb5e3116ba77a22c3278dfeadfd865a8977c
+%global amdvlk_commit       b81c3a09c91bb49e287ea163a7527ed914638eb8
+%global llvm_commit         a163b38723cbc05f3014d4eaa1936c82bbfbf3ea
+%global llpc_commit         f5268c3f6f906a3ae430a1aada7f54f70df091e8
+%global xgl_commit          8024f27f9457e3235bf4fcde0d2879bbaae7b0f2
+%global pal_commit          45f531beaf2c2b0bc2272e63a2da0022f1b07ccf
+%global spvgen_commit       e9b2bc3a889ed6ac4f5a47b6c4c58460988e352e
 %global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200121
+%global commit_date         20200221
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.127
+Version:       2.134
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -135,6 +135,81 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Sat Feb 22 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.134.0.20200221.gitb81c3a0
+
+- xgl: Enable VK 1.2 build by default
+- xgl: Support barrier for streamout buffer
+- xgl: Fix compilation with cmake and clang
+- xgl: Fix Vk GPA extension not returning correct return code
+- xgl: Adjust parameter setting after Pal FenceOpenInfo change
+- xgl: Disable VK_IMAGE_CREATE_SPARSE_BINDING_BIT for images with YUV format
+- xgl: Fix a potential stack overflow issue
+- xgl: Change the command line unrolling threshold and partial-unrolling
+       threshold options passed to LLVM so that they are only passed for
+       apps that actually need non-default values to be used
+- xgl: Fix the issue that clearing 3D image views (created from 3D PRT
+       images) via clear load ops does not work as expected
+- xgl: Wait for a per swap chain image fence before generating post
+       processing commands
+- xgl: Fix GetMemoryRequirements for buffer size MAX_UINT64
+- xgl: Replace use of unroll threshold option by shader tuning
+- xgl: Update PAL Interface in Vulkan to 567
+- pal: Image corruption during memory defrag copy (Corrupt non power of 2
+       textures)
+- pal: Fix random failure with XFBCaptureAndVerifyOnHost test cases when
+       using vkDrawIndirectByteCountEXT() draw calls
+- pal: Fix extra DccDecompress just before present if fullResolveDstOnly
+       is set
+- pal: Add a developer mode event service for forwarding events out the
+       message bus in a lightweight way
+- pal: Add a new type FmaskOnly for Image MetadataMode which makes color
+       msaa Image only have Cmask/Fmask metadata
+- pal: Avoid issue TCC metadata cache invalidation for image without
+       metadata
+- pal: Allow compressed copySrc layout for color msaa image that supports
+       MetaDataTexFetch
+- pal: Fix a minor logic error causing a whole bunch of extra updates to
+       DCC state metadata inside PAL barriers
+- pal: [GFX9/10] Remove need for RMW of CB_COLORx_INFO registers in most
+       cases
+- pal: Add PAL panel setting DisableSdmaEngine for debug purpose, the
+       default value is false
+- pal: Fix a bug of DCC constant encoding
+- pal: Fix a memory corruption bug
+- pal: Remove hardcoded timestampResetOnIdle value for Vega 20
+- pal: Fix a nullptr dereference due to an earlier OOM error.
+- pal: Prevent the GPU profiler from turning every barrier's cache masks
+       into garbage
+- pal: Change CB_COLOR_INFO programming on Nested CmdBuf to be more like
+       the old path
+- pal: Mute the assertion for shaderWrite==0 for GFX9 when metadataMode
+       is ForceEnabled
+- pal: Fix excessive context rolls from waLqoHangWithRbPlus
+- pal: [AcqRelBarrier] Optimizations on the use of WAIT_REG_MEM and
+       WRITE_DATA packets
+- pal: Work-around CTS 1.2 api.image_clearing.*.clear_depth_stencil_*
+       random failures on Linux for asics before gfx10
+- pal: Don't do a fast compute depth clear outside of [0, 1] range, fixes
+       dEQP-VK.pipeline.depth_range_unrestricted.*d32_sfloat_* by
+       avoiding the compute path
+- pal: Implement writing scaled copy regions in CmdBufferLogger
+- pal: Notify tools of errors via Developer Callback
+- pal: Add wave32 support for indirect command generator dispatches
+- pal: Move graphics pipeline DB_RENDER_OVERRIDE RMW to the command
+       buffer and add a DISABLE_VIEWPORT_CLAMP override
+- pal: Disable DCC on mipmap array resource by default and adjust the
+       UseDCC validation logic
+- pal: Optimize Gfx10CreateUntypedBufferViewSrds to match GFX9 version
+- pal: Mute assert to allow fixed 0 tileSwizzle value for
+       non-single-sampled-color image
+- pal: Fix ODR warnings from SDMA under GCC
+- pal: Fix number of available VGPRs being reported
+- pal: Percolate errors from Profiler up to the client
+- pal: Fix PageFault in RenderDoc replay related to CB_COLOR_INFO dirty
+       logic
+- pal: Removal of Gfx10 specific builds of PAL
+- pal: Bump version number to 248
+
 * Thu Jan 23 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.127.0.20200121.git813f090
 
 - xgl: Implementation of partial pipeline compile
