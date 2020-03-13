@@ -1,9 +1,9 @@
-%global amdvlk_commit       b81c3a09c91bb49e287ea163a7527ed914638eb8
-%global llvm_commit         a163b38723cbc05f3014d4eaa1936c82bbfbf3ea
-%global llpc_commit         f5268c3f6f906a3ae430a1aada7f54f70df091e8
-%global xgl_commit          8024f27f9457e3235bf4fcde0d2879bbaae7b0f2
-%global pal_commit          45f531beaf2c2b0bc2272e63a2da0022f1b07ccf
-%global spvgen_commit       e9b2bc3a889ed6ac4f5a47b6c4c58460988e352e
+%global amdvlk_commit       12df867cd3eed501f1ae9874b7aeddffcffe0df9
+%global llvm_commit         e404e4b2db325184dbc2d14f31ef891d938f3835
+%global llpc_commit         fc21c950b629753f9cc7d0941937c57262ceadcf
+%global xgl_commit          80e5a4b11ad2058097e77746772ddc9ab2118e07
+%global pal_commit          e642f608a62887d40d1f25509d2951a4a3576985
+%global spvgen_commit       843c6b95f731589bf497fad29dadf7fda4934aad
 %global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200221
+%global commit_date         20200312
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.134
+Version:       2.137
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -82,7 +82,7 @@ ln -s ../MetroHash-%{metrohash_commit} third_party/metrohash
 ln -s ../CWPack-%{cwpack_commit} third_party/cwpack
 
 # workaround for AMDVLK#89, AMDVLK#117
-for i in xgl/icd/CMakeLists.txt llpc/llpc/CMakeLists.txt llpc/llpc/imported/metrohash/CMakeLists.txt \
+for i in xgl/icd/CMakeLists.txt llpc/llpc/CMakeLists.txt third_party/metrohash/CMakeLists.txt \
   llvm-project/llvm/utils/benchmark/CMakeLists.txt llvm-project/llvm/utils/benchmark/test/CMakeLists.txt \
   pal/src/core/imported/addrlib/CMakeLists.txt pal/src/core/imported/vam/CMakeLists.txt \
   pal/shared/gpuopen/cmake/AMD.cmake
@@ -135,6 +135,57 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Fri Mar 13 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.137.0.20200312.git12df867
+
+- xgl: Enable flip by default
+- xgl: Expose VK_EXT_post_depth_coverage extension
+- xgl: Expose VK_EXT_texel_buffer_alignment extension
+- xgl: Expose VK_KHR_non_semantic_info extension
+- xgl: Enable fullCopyDstOnly for MSAA color image for Thrones of
+       Britannia
+- xgl: Amend shader tuning for some games (Talos principle, Serious sam…)
+- xgl: Map VkComponentSwizzle to LLPC YCbCr Sampler Enum
+- xgl: Add Vulkan ApiType in GpaSession constructor as in new, 575 PAL
+       version.
+- xgl: Call Pal::Screen::SetColorConfiguration in
+       FullScreenMgr::SetHdrMetaData
+- xgl: Update VkToPalGlobalPriority
+- xgl: Update Vulkan headers to 1.2.133
+- xgl: Update PAL Interface in Vulkan to 570
+- pal: Add SPM VCOPs only when SPM trace is enabled.
+- pal: [GFX9/10] Add panel setting to force all CUs/WGPs for NGG
+- pal: Use ReclaimAllocations3Cb for PAL
+- pal: Define ReclaimResult enum interfaceLogger
+- pal: Include padding to avoid corruption in non power of two compressed
+       textures on Gfx9 and Gfx10 when using the CopyImage2DMipLevel
+       shader
+- pal: ValidateDraw is getting too long to fit into one chunk. Split it
+       around the center.
+- pal: [Gfx10] Fix scratch sizes when Wave64
+- pal: Only set GE_CNTL.BREAK_WAVE_AT_EOI for Tessellation shaders
+- pal: Allow clients to specify ApiType in RGP files saved through
+       GpaSession
+- pal: Rewrite parse barriers to work with the latest GPU profiler logs
+- pal: Disable SDMA for Linux while it's set in Setting
+- pal: [ShaderDbg] Add mode to avoid dumping to disk
+- pal: Remap QueuePriority to AmdgpuPriority
+- pal: Fix the UnmapVirtualPages for deleted memory
+- pal: Fix compiling error when enabling PAL_DEBUG_PRINTS
+- pal: Support programming GE_CNTL properly for single-wave subgroups
+- pal: Add a new HwPipePreColorTarget in HwPipePoint enum.
+- pal: Enable additional VK_KHR_buffer_device_address feature flags
+- pal: Remove some redundant context rolls and fix late alloc VS when the
+       PM4 optimizer is enabled
+- pal: VK_KHR_incremental_present implementation for Wayland
+- pal: Add override to functions
+- pal: Add PFP_SYNC_ME when stopping perf experiment
+- pal: Move SPI_SHADER_REQ_CNTL_VS/PS to the graphics queue context
+- pal: Disable the SPI user accumulators in the preamble streams instead
+       of doing it every time we bind a pipeline
+- pal: Set VAR swizzle to disable by default. Investigating some perf
+       drops with it enabled
+- pal: Bump version number to 249
+
 * Sat Feb 22 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.134.0.20200221.gitb81c3a0
 
 - xgl: Enable VK 1.2 build by default
