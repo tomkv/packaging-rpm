@@ -1,9 +1,9 @@
-%global amdvlk_commit       12df867cd3eed501f1ae9874b7aeddffcffe0df9
-%global llvm_commit         e404e4b2db325184dbc2d14f31ef891d938f3835
-%global llpc_commit         fc21c950b629753f9cc7d0941937c57262ceadcf
-%global xgl_commit          80e5a4b11ad2058097e77746772ddc9ab2118e07
-%global pal_commit          e642f608a62887d40d1f25509d2951a4a3576985
-%global spvgen_commit       843c6b95f731589bf497fad29dadf7fda4934aad
+%global amdvlk_commit       d5ddc3fb6fb791dc373d7dfea9827aefbfd3df72
+%global llvm_commit         5c958c70bc6366298296dc778e903f65528c3b0f
+%global llpc_commit         7686a2ddba683f7a361460f3806b0d45e615ca76
+%global xgl_commit          2db4177e78133c868e2c6b4dcc46aeb2f512163a
+%global pal_commit          bb7398b1c7509a30ba4f7d947b5ad5549a4d58db
+%global spvgen_commit       d16fddddf22a1eb3a3f4ce05cbcb95a337f708b1
 %global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200312
+%global commit_date         20200326
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.137
+Version:       2.139
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -135,6 +135,36 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Sat Mar 28 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.139.0.20200326.gitd5ddc3f
+
+- xgl: Shader tuning:  add options in app shader profile to set waveSize
+       to 64 for some compute shaders
+- xgl: Make compatible change for moving non-LLPC declarations and code
+       out of llpc directory
+- xgl: Spec behaviour change for vkGetDeviceProcAddr
+- xgl: Update PAL Interface in Vulkan to 575
+- pal: Add more choices to the VAR swizzle panel option for performance
+       runs
+- pal: Implement DevDriver::BaseEventProvider on the EventProvider
+- pal: [GPUProfiler] Improve parsing of config EventId field values
+- pal: [GFX9/10] Add a UseDcc setting bit for DCC on Array+MipMap Images.
+- pal: Adding AtomicWriteRelaxed64 and AtomicReadRelaxed64. These are
+       needed to handle 64-bit atomics on 32-bit CPUs
+- pal: Define NOP-embedded signatures in the interface so that more
+       client drivers can utilize them through the ICmdBuffer::CmdNop()
+       function
+- pal: Turn 451 context RMWs into 57 sets (as measured in the Skyros
+       benchmark) by making SC_PA_AA_CONFIG draw-time sta
+- pal: Fix SPM block instance programming for the TA, TD, and TCP on
+       gfx10
+- pal: Flush CB metadata for images with metadata only
+- pal: Enable Immediate and Mailbox mode for direct display
+- pal: [GFX9/10] Minor CPU opt to use cached pipeline flags
+- pal: Remove dead param/template param and trivial UpperCamelCase fixes
+- pal: Add ability to use stack frame size to determine scratch memory
+       usage of pipelines with indirect shader functions
+- pal: Fix conversion from 'size_t' to 'type' issue
+
 * Fri Mar 13 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.137.0.20200312.git12df867
 
 - xgl: Enable flip by default
