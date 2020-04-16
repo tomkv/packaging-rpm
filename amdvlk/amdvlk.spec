@@ -1,9 +1,9 @@
-%global amdvlk_commit       d5ddc3fb6fb791dc373d7dfea9827aefbfd3df72
-%global llvm_commit         5c958c70bc6366298296dc778e903f65528c3b0f
-%global llpc_commit         7686a2ddba683f7a361460f3806b0d45e615ca76
-%global xgl_commit          2db4177e78133c868e2c6b4dcc46aeb2f512163a
-%global pal_commit          bb7398b1c7509a30ba4f7d947b5ad5549a4d58db
-%global spvgen_commit       d16fddddf22a1eb3a3f4ce05cbcb95a337f708b1
+%global amdvlk_commit       c59322aa302c4378fbca62f0a2f06553d4c01cab
+%global llvm_commit         50077fcc15e5844dacd820dcdb02edb23fc00330
+%global llpc_commit         9889f54c9a31743b48f3dafcb8ca0c106ed15da4
+%global xgl_commit          1f6143fb951622e06fe7b9396957976fc9feddc7
+%global pal_commit          8b2381a1d05cd2c9c4e7cc2eeda053e76d8c9a4a
+%global spvgen_commit       a223c8636f8306697f6fdc86f742b99fbd8c5dbd
 %global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200326
+%global commit_date         20200416
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.139
+Version:       2.140
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -68,6 +68,7 @@ following AMD GPUs:
     AMD FirePro™ Workstation Wx000/Wx100/Wx300 Series
     Radeon™ Pro WX x100 Series
     Radeon™ Pro 400/500 Series
+    Radeon™ W5700/W5500 Series
 
 %prep
 %setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5 -a 6 -a 7
@@ -135,6 +136,49 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu Apr 16 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.140.0.20200416.gitc59322a
+
+- xgl: Enable Renoir support
+- xgl: Update the code to source the max compute shared memory size from
+       PAL rather than using a hardcoded constant
+- xgl: Implement VK_KHR_incremental_present
+- xgl: Add panel setting to disable AMD Vendor extensions. Enabling this
+       panel setting will remove AMD extensions from the list of enabled
+       and supported extensions
+- xgl: HDR support without the need for
+       VkSurfaceFullScreenExclusiveWin32InfoEXT
+- xgl: Properly report MSAA support
+- xgl: Add limitation on cache directory size
+- xgl: Add mandatory execution of CmdSetGlobalScissor
+- xgl: Clean up promoted KHR/EXT suffixes
+- xgl: Update Vulkan Headers to 1.2.135 + BETA
+- xgl: Remove 1.1 build and headers
+- xgl: Update PAL Interface in Vulkan to 582
+- pal: Add Renoir support
+- pal: Alert when default hash function is used for non-pointer keys
+- pal: Add -Wconversion -Wno-sign-conversion to gcc flags
+- pal: Add  adaptive sync support which could be enabled with PAL setting
+       “EnableAdaptiveSync”
+- pal: Convert Gfx6 chip headers to use constexpr
+- pal: Add support for DCC compression on planar YUV surfaces
+- pal: Remove ALLOC flag from some ELF sections
+- pal: Fix an issue where scratch allocations, once multipled for wave
+       size, could be under the WaveSize granularity
+- pal: Add support for fast clears of YUV surfaces
+- pal: Add two debug options for memory tuning.
+- pal: Introduce `$<COMPILE_LANGUAGE:CXX>` for some flags, specifically
+       -std=c++11, -fno-rtti and -fno-threadsafe-statics
+- pal: Add RemoveFilesOfDir and GetStatusOfDir in Pal Util
+- pal: Polyphase filter bug fix
+- pal: Add Cmake helper modules to encapsulate pal's compiler options
+- pal: Cmake helper modules to encapsulate pal's compiler options
+- pal: Add PipeUnaligned path for Gfx9MaskRam::CalcMetaEquationGfx10()
+- pal: Fix CmdSetGlobalScissor states
+- pal: Add predication suspend/resume and command buffer inheritance
+       option
+- pal: Bump version number to 250
+- llpc: Enable Renoir support
+
 * Sat Mar 28 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.139.0.20200326.gitd5ddc3f
 
 - xgl: Shader tuning:  add options in app shader profile to set waveSize
