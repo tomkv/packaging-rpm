@@ -1,9 +1,9 @@
-%global amdvlk_commit       c59322aa302c4378fbca62f0a2f06553d4c01cab
-%global llvm_commit         50077fcc15e5844dacd820dcdb02edb23fc00330
-%global llpc_commit         9889f54c9a31743b48f3dafcb8ca0c106ed15da4
-%global xgl_commit          1f6143fb951622e06fe7b9396957976fc9feddc7
-%global pal_commit          8b2381a1d05cd2c9c4e7cc2eeda053e76d8c9a4a
-%global spvgen_commit       a223c8636f8306697f6fdc86f742b99fbd8c5dbd
+%global amdvlk_commit       7b51aa70348b3e4f2982c9a98a012d680d027e60
+%global llvm_commit         a1299ba9c8e2337f00bdec73e2031144d9811ed7
+%global llpc_commit         3864fc733e437a6e6ae729c6858b92b39194eada
+%global xgl_commit          d8c926b86b1245badc67e5d55b0eaa45d4a910a0
+%global pal_commit          e1b2dde021a2efd34da6593994f87317a803b065
+%global spvgen_commit       d4817ab957f79762da83b7fc1d3f2816dbdc13fd
 %global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200416
+%global commit_date         20200430
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.140
+Version:       2.143
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -136,6 +136,64 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu Apr 30 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.143.0.20200430.git7b51aa7
+
+- xgl: Add framebuffer dimensions to ensure that we are not render
+       outside the framebuffer
+- xgl: Fixes for VK_EXT_conditional_rendering
+- xgl: Automate shader tuning result code check-ins
+- xgl: Fix ANGLE conformance test functional_transform_feedback crash
+- xgl: Use pipeline options for shadow descriptor settings
+- xgl: Enable pipeline binary cache by default
+- xgl: Change the Catch-all Error to VK_ERROR_UNKNOWN
+- xgl: [RGP] Fix incorrect start/stop frame/tag values reported back to
+       SQTT file
+- xgl: Fix the wrong VK_SAMPLE_COUNT_1_BIT setup
+- xgl: Vulkan change to add YUV P210 format and MM formats for DCC for
+       YUV.
+- xgl: Remove "base_" from entry_points.txt and extensions.txt filenames
+- xgl: Support VK_MEMORY_PROPERTY_PROTECTED_BIT
+- xgl: Print compile time to log file
+- xgl: Decouple the CMake of XGL and LLPC
+- xgl: Update PAL Interface in Vulkan to 590
+- pal: Add ElfReader and PipelineAbiReader
+- pal: Use PipelineAbiReader instead of PipelineAbiProcessor
+- pal: Add supportFp16Dot2 to DeviceProperties.
+- pal: Improve CmdCloneImageData()
+- pal:  [Wayland] Fix type mismatch issue
+- pal: Update NGG culling buffer for viewports
+- pal: Shadow of Tomb Raider benchmark performance tuning: remove GTT
+       from the preferred heap for high priority GPU memory
+- pal: Fix predication inheritance on compute command buffers
+- pal: Add image usage flag to support view 3d as 2d array
+- pal: [gfx10] Expand UMC(UMCCH) perf counter support
+- pal: Add formats for DCC for YUV
+- pal: Fix DescribeBarrier() assert
+- pal: Fix an issue with fast clears of 3D images on GFX9. Use
+       dccMipInfo.startZ as the starting slice for 3D images
+- pal: Rewrite some PipelineUploader code
+- pal: Update ComputeMaxSampleDistance to check all 4 pixels instead of
+       just the topLeft pixel
+- pal: Add support in PAL for YUV P210 format and MM formats for DCC for
+       YUV.
+- pal: [Gfx10] Add write to PA_SC_NGG_MODE_CNTL
+- pal: Revert programming of cmask pipe-align bit when no cmask is
+       present
+- pal: Don't allocate fast clear eliminate metadata for image with
+       comp-to-single (and disable comp-to-reg) support
+- pal: [GFX9/10] Switch Workaround class to reference CachedSettings
+- pal: Use gfx engine instead of compute engine for CmdCopyImage to sRGB
+       image without format conversion
+- pal: [GFX9/10] Fix a bug in Workaround PreDraw
+- pal: Rename CommonShaderStats.stackFrameSizeInBytes to be
+       CommonShaderStats.maxStackFrameSizeInBytes.
+- pal: Add PFP_SYNC_ME before LOAD_CONTEXT_REG_INDEX loading memory into
+       mmVGT_STRMOUT_DRAW_OPAQUE_BUFFER_FILLED_SIZE
+- pal: Add DbgPrintCatMsgFile
+- pal: Update ILP opcode table and asserts
+- pal: Fix off by one size check issue in PAL settings code
+- pal: Bump version number to 253
+
 * Thu Apr 16 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.140.0.20200416.gitc59322a
 
 - xgl: Enable Renoir support
