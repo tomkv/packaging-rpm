@@ -1,8 +1,8 @@
-%global amdvlk_commit       7b51aa70348b3e4f2982c9a98a012d680d027e60
-%global llvm_commit         a1299ba9c8e2337f00bdec73e2031144d9811ed7
-%global llpc_commit         3864fc733e437a6e6ae729c6858b92b39194eada
-%global xgl_commit          d8c926b86b1245badc67e5d55b0eaa45d4a910a0
-%global pal_commit          e1b2dde021a2efd34da6593994f87317a803b065
+%global amdvlk_commit       f98a1b7628e8827868ad42cba0a8bd2faf3daed4
+%global llvm_commit         53692d985a53a336e07907c2d4b86bf2deb66908
+%global llpc_commit         61b5d58e8891dc37e473064d429f0496d5254e52
+%global xgl_commit          877b773000248dffa025c42d9c4074d1a07b9e47
+%global pal_commit          a83f67db9f0d2f16bbc698aeefa9c5e9476c993a
 %global spvgen_commit       d4817ab957f79762da83b7fc1d3f2816dbdc13fd
 %global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 %global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200430
+%global commit_date         20200514
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.143
+Version:       2.145
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -136,6 +136,45 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu May 14 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.145.0.20200514.gitf98a1b7
+
+- xgl: Enable VK_EXT_pipeline_creation_cache_control extension
+- xgl: Implement VK_EXT_robustness_2 extension
+- xgl: Use new FMask only image metadata mode when appropriate
+- xgl: Remove CmdBufGpuEventMinAllocCount setting from settings_xgl.json
+- xgl: Fix external memory CTS tests on platform that doesn't have local
+       invisible heap
+- xgl: Enable BUILD_WAYLAND_SUPPORT by default
+- xgl: GraphicsPipeline constructor takes non-const reference
+- xgl: Modify CmdBuffer::EndTransformFeedback to handle
+       firstCounterBuffer correctly
+- xgl: Fix GetSurfaceCapabilities2KHR for situation when pPalScreen is
+       null
+- xgl: Update Vulkan headers to 1.2.139
+- xgl: Update PAL Interface in Vulkan to 595
+- pal: Set AMDGPU_IB_FLAG_EMIT_MEM_SYNC flag
+- pal: Add support for TMZ(trusted memory zone) feature
+- pal: Update ilInstructionSet.cpp with new IL opcodes, and attempt to
+       update existing opcodes with correct data for 'noModifiers'
+- pal: Fix NGG small prim filter culling with custom sample positions
+- pal: Fix app hang / crash related to shader ring change
+- pal: Fix  Trackmania 2 glitchy graphical issue
+- pal: Make pal separately reads Pal settings files for different PAL
+       clients. For Vulkan, Pal will read amdVulkanSettings.cfg. If
+       amdVulkanSettings.cfg does not exist, read amdPalSettings,cfg
+- pal: Fix assertion failure triggering in  PAL + >=GFX9 when importing
+       memory allocation into a 2D D32_S8 image
+- pal: Fix vkGetRandROutputDisplayEXT on repeated calls
+- pal: Query perf experiment Properties
+- pal: Fix PAL_ASSERT bug in
+       Pal::Amdgpu::Device::CreateGpuMemoryFromExternalShare
+- pal: Fix typo for QueryProfiling memory clock
+- pal: Correct a few errors in PAL's subgroup size calculation for NGG GS
+- pal: Pack DepthStencilStateCreateInfo better to reduce the size
+- pal: Remove the numScratchWavesPerCu public setting
+- pal: [cmake]Create pal_include_guard helper function
+- pal: Bump version number to 255
+
 * Thu Apr 30 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.143.0.20200430.git7b51aa7
 
 - xgl: Add framebuffer dimensions to ensure that we are not render
