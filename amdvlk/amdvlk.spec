@@ -1,11 +1,11 @@
-%global amdvlk_commit       f98a1b7628e8827868ad42cba0a8bd2faf3daed4
-%global llvm_commit         53692d985a53a336e07907c2d4b86bf2deb66908
-%global llpc_commit         61b5d58e8891dc37e473064d429f0496d5254e52
-%global xgl_commit          877b773000248dffa025c42d9c4074d1a07b9e47
-%global pal_commit          a83f67db9f0d2f16bbc698aeefa9c5e9476c993a
-%global spvgen_commit       d4817ab957f79762da83b7fc1d3f2816dbdc13fd
-%global metrohash_commit    2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
-%global cwpack_commit       b601c88aeca7a7b08becb3d32709de383c8ee428
+%global amdvlk_commit       fc576d9b331e8b86c1881f4b2385af8a093baef0
+%global llvm_commit         c57487b76215ee74b1038039f47b210a28cad65e
+%global llpc_commit         9b4d0a4c3e146ea898d4bb3e86fb4170f75c3daa
+%global xgl_commit          116d28a446eba3a9f8e6f577bab34fc07e090993
+%global pal_commit          13b6271de2f72f62adf098e681c5000f47db2a6c
+%global spvgen_commit       2f679769a8491f423f5cf2f06adfa2870a82935d
+%global metrohash_commit    712f76fee75d69b23a1ea8f6465752c3ccaaf9a2
+%global cwpack_commit       7387247eb9889ddcabbc1053b9c2052e253b088e
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
 %global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200514
+%global commit_date         20200528
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.145
+Version:       2.147
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -136,6 +136,77 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu May 28 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.147.0.20200528.gitfc576d9
+
+- xgl: Fix Vulkan RGP instruction tracing is not working
+- xgl: Add wavesize tuning option for Doom Eternal for LLPC.
+- xgl: Fix assertion failures with ShaderImageLoadStoreLod tests
+- xgl: Allow building with LLVM_USE_SANITIZER
+- xgl: Don't set threadSafe if useSharedCmdAllocator is false
+- xgl: Turn off command buffer prefetch for local memory
+- xgl: Add setting for cpDmaCmdCopyMemoryMaxBytes
+- xgl: Add back the support for non local externally shared memory
+- xgl: Fix CTS crash with Hybrid Graphics enabled on GFX10
+- xgl: Add requireMrtForNggCulling to VK Panel Setting
+- xgl: Add alignment for Attachments after Framebuffer
+- xgl: Fix unaligned stencil load and store
+- xgl: Add call to pScreen->GetColorCapabilities() back to Linux path in
+       vkGetPhysicalDeviceSurfaceFormats()
+- xgl: Enable TMZ feature
+- xgl: Fix CLANG build
+- xgl: Convert existing shader opt app profiles to json
+- xgl: Fix LlpcOptions doesn't work when pipeline cache is enabled
+- xgl: Fix OpAtomicIDecrement and OpAtomicIIncrement for
+       shader_image_atomic_int64 extension
+- xgl: Update PAL Interface in Vulkan to 604
+
+
+- pal: Allow debug builds without assertions
+- pal: Expand the SharedMetadataInfo structure to accomodate DCC on
+       multiple aspect
+- pal: Add forcedShadingRate to replace forceSampleRateShading in
+       GraphicsPipelineCreateInfo
+- pal: The max scratch ring size can now scale up based on the GPU's
+       local invisible heap size
+- pal: [GpuProfiler] Expand multiple instance config selection beyond
+       just "ALL"
+- pal: Resolve cs shaders dcl_literal minor bug
+- pal: Use memcpy to allow unaligned footers
+- pal: [NGG] allow to specify the constant buffer layout via a lookup
+       table (LUT)
+- pal: Remove "isNgg == false" from Tess control point for patches. This
+       code was added in Gfx9 to handle the annoyance that was Gfx9 NGG
+       and should no longer be necessary
+- pal: Support scissor enabled image blit
+- pal: Change maxWavesPerCu (in DynamicComputeShaderInfo and
+       DynamicGraphicsShaderInfo) from uint32 to float, so clients are
+       able to specify less waves. i.e. less number of waves than number
+       of CUs per shader array.
+- pal: Fix interface logger build when the client bump the version to 603
+- pal: Fall back the pipeline upload memory to heap[0] = GpuHeapLocal  
+       if there is no invisible heap
+- pal: Fix pointer alignment check
+- pal: Update merged PM4 header output
+- pal: Replace some setting refs with cached settings
+- pal: Replace some gfxip level checks with versions using m_gfxIpLevel
+- pal: [RGA][PAL] Support retrieve isa dissembly per shader function for
+       pipeline indirect mode
+- pal: Move isResummarize from internal use to public and rename it to
+       resummarizeHiZ, so clients are able to enable it
+- pal: Support float type copy region in
+       palCmdBuffer::CmdScaledCopyImage()
+- pal: Remove 'adjacency' from the input assembler info when creating a
+       pipeline
+- pal: Batch RemapVirtualMemoryPages when queue is stalled to fix issue
+       in some timeline waitBeforeSignal testing cases
+- pal: Allow PAL's cmdAllocator to fall back to the visible heap if
+       invisible is full (or doesn't exist at all)
+- pal: Remove workaround for NGG as it is no longer required
+- pal: Add tmzSupportLevel to indicate which queue supports per-command,
+       per-submit, or per-queue TMZ based on the queue type
+- pal: Properly align hash structs
+- pal: Bump version number to 257
+
 * Thu May 14 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.145.0.20200514.gitf98a1b7
 
 - xgl: Enable VK_EXT_pipeline_creation_cache_control extension
