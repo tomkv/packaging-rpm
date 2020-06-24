@@ -1,9 +1,9 @@
-%global amdvlk_commit       fc576d9b331e8b86c1881f4b2385af8a093baef0
-%global llvm_commit         c57487b76215ee74b1038039f47b210a28cad65e
-%global llpc_commit         9b4d0a4c3e146ea898d4bb3e86fb4170f75c3daa
-%global xgl_commit          116d28a446eba3a9f8e6f577bab34fc07e090993
-%global pal_commit          13b6271de2f72f62adf098e681c5000f47db2a6c
-%global spvgen_commit       2f679769a8491f423f5cf2f06adfa2870a82935d
+%global amdvlk_commit       fe996fc7a460c58a59153480325055c8f747a9cd
+%global llvm_commit         da64bde85194f895002dbca05ec66e016f1a5a5d
+%global llpc_commit         48fff0a75bb413b55a5e89647cdb37e109aa9eb8
+%global xgl_commit          6e79dcb897452121463e79d8c4e21c6fc668a6fe
+%global pal_commit          b687ca1828258076ac79f08738f6fce3fa688d4a
+%global spvgen_commit       0179fdb99e3d4b51e50d1a4c6ef65f065b0df967
 %global metrohash_commit    712f76fee75d69b23a1ea8f6465752c3ccaaf9a2
 %global cwpack_commit       7387247eb9889ddcabbc1053b9c2052e253b088e
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200528
+%global commit_date         20200624
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.147
+Version:       2.149
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -136,6 +136,71 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu Jun 24 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.149.0.20200624.gitfe996fc
+
+- xgl: Fix Randr lease display is broken: find_package(XCB) is missed in
+       cmake
+- xgl: Update PAL Interface in Vulkan to 610
+- xgl: Add a setting to return extra memory requirement via
+       GetMemoryRequirements
+- xgl: Add colors to cmake build
+- xgl: Implement multigpu capture replay flag
+- xgl: Fix driver crashes when setting basePipelineHandle to an invalid
+       value
+- xgl: Enable -Werror in dependencies if required
+- xgl: Enable vkGetDeviceQueue2
+- xgl: Fix Vulkan's debug_utils markers are not shown without a
+       validation layer
+- xgl: [metrohash][cwpack] Clean up dependency
+- xgl: Add VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR in
+       supportedCompositeAlpha
+- pal: Handle a case where the CmdAllocator last paging fence can be
+       zeroed
+- pal: [cmake] Clean up the cmake override code
+- pal: Improve some of our chip properties logic (physical WGP/CU counts,
+       TCP counts)
+- pal: Calculate Scratch ring maxScaledSize based on all availble video
+       memory
+- pal: Fix bit count so the union is 32b.
+- pal: [cmake] Fixup installation logic
+- pal: [cmake] Delete python/perl packages code
+- pal: PAL interface bump 595 bug
+- pal: [Vega10/Raven] Update DFSM/POPS related Workaround.
+- pal: Updates settings gen script to correct number of setting hashes
+       and regenerates all of the settings files
+- pal: Make CmdCopyImageGraphics faster
+- pal: Fix GpuProfiler memory leak regression
+- pal: Put null backend code behind a compile flag. Enabled by default,
+       but can be overriden by client drivers if they do not need or want
+       this feature
+- pal: Remove unneeded workaround code
+- pal: Delete secure flag from amdgpu_cs_submit_raw2
+- pal: [GFX9/10] Remove DFSM support.
+- pal: Improve error messages in merge header script
+- pal: [RGP] Provide a function to validate a list of perfCounters given
+       a device
+- pal: Bump version number to 260
+- pal: [NGG] Phase 1 - Change the NGG culling constant buffer layout
+- pal: [NGG] Remove some NGG culling constant buffer validation
+- pal: [NGG] Workaround should only be considered when NGG is enabled
+- pal: Use big page and iterate256 alignments from kmd. Part 2: Aligning
+       unbound memory
+- pal: [cmake] Fixup PAL options/overrides
+- pal: [NGG] Make templated shaders NGG
+- pal: Don't overwrite timezone to fix GPUOpen-Drivers/AMDVLK#162
+- pal: Bump PAL_MINIMUM_INTERFACE_MAJOR_VERSION up to 500
+- pal: Set presentable flag of image to gpumemory when opened shared gpu
+       memory object
+- pal: Add two new cmake files: PalOptions.cmake and PalOverrides.cmake
+       for clarity and easier version control
+- pal: Fix a nullptr crash when we set DisableAceCsPartialFlush = false
+       and fix some memtracker errors in the GPU profiler
+- pal: [cmake] Message Helper Functions
+- pal: Add compositeAlphaMode to SwapChainProperties so that client can
+       get it
+- llpc: Shader Tuning opts for different titles
+- llpc: Add shader_profiles/llpc to llpc feature
+
 * Thu May 28 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.147.0.20200528.gitfc576d9
 
 - xgl: Fix Vulkan RGP instruction tracing is not working
