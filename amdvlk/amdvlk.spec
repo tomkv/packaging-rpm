@@ -1,9 +1,9 @@
-%global amdvlk_commit       fe996fc7a460c58a59153480325055c8f747a9cd
-%global llvm_commit         da64bde85194f895002dbca05ec66e016f1a5a5d
-%global llpc_commit         48fff0a75bb413b55a5e89647cdb37e109aa9eb8
-%global xgl_commit          6e79dcb897452121463e79d8c4e21c6fc668a6fe
-%global pal_commit          b687ca1828258076ac79f08738f6fce3fa688d4a
-%global spvgen_commit       0179fdb99e3d4b51e50d1a4c6ef65f065b0df967
+%global amdvlk_commit       90a66445faa2e1a55892057f99b3d3f1b8641cdb
+%global llvm_commit         a458b2991a6fb6d345b088380f6a9a570a8031a5
+%global llpc_commit         6c94115883d99ce6f4c2edb16b0f7cd513289188
+%global xgl_commit          cc812115fd720dd47c9f0d603c5da3ac2fea6e53
+%global pal_commit          f632b07d42e9dc46f73e1d31c157130cb1647155
+%global spvgen_commit       3f41158716709d96b5748a9ff0458ba9d2880576
 %global metrohash_commit    712f76fee75d69b23a1ea8f6465752c3ccaaf9a2
 %global cwpack_commit       7387247eb9889ddcabbc1053b9c2052e253b088e
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200624
+%global commit_date         20200630
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.149
+Version:       2.150
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -136,7 +136,35 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
-* Thu Jun 24 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.149.0.20200624.gitfe996fc
+* Tue Jun 30 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.150.0.20200630.git90a6644
+
+- xgl: Add support for extension: VK_GOOGLE_user_type
+- xgl: Disable NGG for GS by default
+- xgl: Performance tuning for Remove Ghost Recon Breakpoint
+- xgl: Update Vulkan headers to 1.2.143
+- xgl: Performance tuning for Zombie Army 4: Dead War
+- xgl: Improve performance of pipeline compiler by using
+       PipelineAbiReader instead of Processor
+- pal: [DebugOverlay] Solve a hang/crash when alt-tabbing with graph
+       active
+- pal: Change UseDcc panel key name with Gfx prefix
+- pal: Bump version number to 263
+- pal: [cmake] Add new cmake file PalCompileDefinitions.cmake and move
+       calls to target_compile_definitions into their own files
+- pal: Fix /analyze warnings
+- pal: Add "Zero-copy" and "Reserve" semantics for ICacheLayer
+- pal: Fix wrong assertions issue
+- pal: Remove GPU CPU Sync from PAL Pipeline Creation in HwlInit
+- pal: Fix mismatching wave sizes in a merged shader by always preferring
+       the second stage (primary stage) and falling back to the first
+       stage otherwise
+- pal: [cmake] Move some modules from pal/cmake/Modules to pal/cmake
+- pal: Filter redundant SET_BASE packets
+- pal: Clean up other IsGfx10 references
+- pal: Avoid creating a dmaUploadRing in case there is no dma engine
+       available
+
+* Wed Jun 24 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.149.0.20200624.gitfe996fc
 
 - xgl: Fix Randr lease display is broken: find_package(XCB) is missed in
        cmake
