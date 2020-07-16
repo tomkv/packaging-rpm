@@ -1,9 +1,9 @@
-%global amdvlk_commit       90a66445faa2e1a55892057f99b3d3f1b8641cdb
-%global llvm_commit         a458b2991a6fb6d345b088380f6a9a570a8031a5
-%global llpc_commit         6c94115883d99ce6f4c2edb16b0f7cd513289188
-%global xgl_commit          cc812115fd720dd47c9f0d603c5da3ac2fea6e53
-%global pal_commit          f632b07d42e9dc46f73e1d31c157130cb1647155
-%global spvgen_commit       3f41158716709d96b5748a9ff0458ba9d2880576
+%global amdvlk_commit       c6404f768c9a77a978b8d7793643a80711377b0e
+%global llvm_commit         56e1f9b8df3d414ab7acc2fa07272d318725d440
+%global llpc_commit         be51df411e14ae19145ab046f95338ed38243b91
+%global xgl_commit          9a577aa9c496e2c77844fb91ede978da25b5afd3
+%global pal_commit          6604885c5d60be4a29346f1774a6f7e331879428
+%global spvgen_commit       e0e6fdae66d8e2cd9949e514f4e6ce6c7e21cce9
 %global metrohash_commit    712f76fee75d69b23a1ea8f6465752c3ccaaf9a2
 %global cwpack_commit       7387247eb9889ddcabbc1053b9c2052e253b088e
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200630
+%global commit_date         20200710
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.150
+Version:       2.151
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -136,6 +136,29 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu Jul 16 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.151.0.20200710.gitc6404f7
+
+- xgl: Redefine m_enabledFeatures in Device
+- xgl: Implementation of extension: VK_EXT_private_data
+- xgl: Update Vulkan headers to 1.2.145
+- xgl: Amend behavior of disableLoopUnrolls tuning option
+- xgl: Performance tuning of LLPC compiler for The Talos Principle in
+       ultra mode
+- xgl: Sort extension names as they appear in Khronos spec
+- xgl: Performance tuning for Doom: Eternal
+- xgl: Add support for extension: VK_EXT_extended_dynamic_state
+- pal: Expose RWLockData to the client for Util::RWLock and add a Wait on
+       RWLock for Util::ConditionalVariable
+- pal: Move call to StartLateDeviceInit to clients
+- pal: Add setting to override GbAddrConfigOverride input to AddrLib
+- pal: [RPM] Add FP16 GenMips shader.
+- pal: Performance tuning for Mad Max
+- pal: [cmake] Minor style changes
+- pal: [cmake] Fix GPU compile definitions
+- pal: [cmake] Fixup some GPU override code
+- pal: Add GFX9 support to Image Creation Developer Callback
+- pal: [cmake] Fix documentation issue
+
 * Tue Jun 30 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.150.0.20200630.git90a6644
 
 - xgl: Add support for extension: VK_GOOGLE_user_type
