@@ -1,9 +1,9 @@
-%global amdvlk_commit       c6404f768c9a77a978b8d7793643a80711377b0e
-%global llvm_commit         56e1f9b8df3d414ab7acc2fa07272d318725d440
-%global llpc_commit         be51df411e14ae19145ab046f95338ed38243b91
-%global xgl_commit          9a577aa9c496e2c77844fb91ede978da25b5afd3
-%global pal_commit          6604885c5d60be4a29346f1774a6f7e331879428
-%global spvgen_commit       e0e6fdae66d8e2cd9949e514f4e6ce6c7e21cce9
+%global amdvlk_commit       080542c8dbb54947dc1131f508508e2259d9ae19
+%global llvm_commit         319fe935a7a607e83d2885c881ae5aeff9b08b22
+%global llpc_commit         9acb06852cdf043b0e7b6867800be3cc3bf61383
+%global xgl_commit          39a4e9c63456ed421b1704179730e95883f26a1b
+%global pal_commit          ea5db60841dab7d067f5010f28a980ef222bdf81
+%global spvgen_commit       34ba176fc2fa8a9997a8a7bd0c731259e2578854
 %global metrohash_commit    712f76fee75d69b23a1ea8f6465752c3ccaaf9a2
 %global cwpack_commit       7387247eb9889ddcabbc1053b9c2052e253b088e
 %global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
@@ -14,11 +14,11 @@
 %global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
 %global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
 %global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200710
+%global commit_date         20200722
 %global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
 
 Name:          amdvlk-vulkan-driver
-Version:       2.151
+Version:       2.152
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -136,6 +136,32 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu Jul 23 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.152.0.20200722.git080542c
+
+- xgl: Prefer y-coordinate major swizzle modes for 3D color attachments
+       on GFX10
+- xgl: Update pNext Looping
+- xgl: Update api version to 1.2.146
+- xgl: Remove unnecessary NGG settings "EnableGsUse"
+- xgl: Move dynamicStatesInternal to vk_pipeline.h and use xgl naming
+       conventions
+- xgl: Add ICache adapter
+- xgl: Upate LLPC Interface in Vulkan to 40
+- pal: Support tmz shader ring on GFX6
+- pal: Disable metadata when TMZ enable
+- pal: Fixing shared metadata bug of gfx6
+- pal: Dead code removal - some methods were removed but the declarations
+       are still there
+- pal: Change doxygen style comments to non-doxygen
+- pal: Restrict pipelined cache flush optimization to only cases where
+       it's definitely legal
+- pal: Bump version number to 264
+- pal: Deferring chunk reuse as default
+- pal: Support tmz shader ring on GFX6
+- pal: Missing dcc state metadata init for InitMaskRam and
+       InitMetadataFill
+- pal: Don't disable alpha and color RB+ blend opts individually
+
 * Thu Jul 16 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.151.0.20200710.gitc6404f7
 
 - xgl: Redefine m_enabledFeatures in Device
