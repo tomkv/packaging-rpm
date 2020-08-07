@@ -1,24 +1,34 @@
-%global amdvlk_commit       080542c8dbb54947dc1131f508508e2259d9ae19
-%global llvm_commit         319fe935a7a607e83d2885c881ae5aeff9b08b22
-%global llpc_commit         9acb06852cdf043b0e7b6867800be3cc3bf61383
-%global xgl_commit          39a4e9c63456ed421b1704179730e95883f26a1b
-%global pal_commit          ea5db60841dab7d067f5010f28a980ef222bdf81
-%global spvgen_commit       34ba176fc2fa8a9997a8a7bd0c731259e2578854
-%global metrohash_commit    712f76fee75d69b23a1ea8f6465752c3ccaaf9a2
-%global cwpack_commit       7387247eb9889ddcabbc1053b9c2052e253b088e
-%global amdvlk_short_commit %(c=%{amdvlk_commit}; echo ${c:0:7})
-%global llvm_short_commit   %(c=%{llvm_commit}; echo ${c:0:7})
-%global llpc_short_commit   %(c=%{llpc_commit}; echo ${c:0:7})
-%global xgl_short_commit    %(c=%{xgl_commit}; echo ${c:0:7})
-%global pal_short_commit    %(c=%{pal_commit}; echo ${c:0:7})
-%global spvgen_short_commit %(c=%{spvgen_commit}; echo ${c:0:7})
-%global metrohash_short_commit %(c=%{metrohash_commit}; echo ${c:0:7})
-%global cwpack_short_commit %(c=%{cwpack_commit}; echo ${c:0:7})
-%global commit_date         20200722
-%global gitrel              .%{commit_date}.git%{amdvlk_short_commit}
+%global amdvlk_commit               24551b2702ab7c949596453bc5c4a5b81e9c31e6
+# commits from AMDVLK/default.xml
+%global llvm_commit                 319fe935a7a607e83d2885c881ae5aeff9b08b22
+%global llpc_commit                 897de5981ede47587bf4bd0205b860338eb45fa7
+%global xgl_commit                  f4a992dd7e556ed5e7e2ffa2c830f1cd79bd4596
+%global pal_commit                  477c8e78bc4f8c7f8b4cd312e708935b0e04b1cc
+%global spvgen_commit               8dc855026f2502ab3f45dadaf0bb802a57d6ad60
+%global metrohash_commit            712f76fee75d69b23a1ea8f6465752c3ccaaf9a2
+%global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
+# commits from spvgen/CHANGES
+%global glslang_commit              b919bc889e1d1032fcbad231b444ff96a541615d
+%global spirv_tools_commit          7a1af5878594cec2992a1bb00565b4c712490239
+%global spirv_headers_commit        11d7637e7a43cd88cfd4e42c99581dcb682936aa
+
+%global amdvlk_short_commit         %(c=%{amdvlk_commit}; echo ${c:0:7})
+%global llvm_short_commit           %(c=%{llvm_commit}; echo ${c:0:7})
+%global llpc_short_commit           %(c=%{llpc_commit}; echo ${c:0:7})
+%global xgl_short_commit            %(c=%{xgl_commit}; echo ${c:0:7})
+%global pal_short_commit            %(c=%{pal_commit}; echo ${c:0:7})
+%global spvgen_short_commit         %(c=%{spvgen_commit}; echo ${c:0:7})
+%global metrohash_short_commit      %(c=%{metrohash_commit}; echo ${c:0:7})
+%global cwpack_short_commit         %(c=%{cwpack_commit}; echo ${c:0:7})
+%global glslang_short_commit        %(c=%{glslang_commit}; echo ${c:0:7})
+%global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
+%global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
+%global commit_date                 20200806
+%global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
+%global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.152
+Version:       2.153
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -31,13 +41,16 @@ Source4:       %url/pal/archive/%{pal_commit}.tar.gz#/pal-%{pal_short_commit}.ta
 Source5:       %url/spvgen/archive/%{spvgen_commit}.tar.gz#/spvgen-%{spvgen_short_commit}.tar.gz
 Source6:       %url/MetroHash/archive/%{metrohash_commit}.tar.gz#/MetroHash-%{metrohash_short_commit}.tar.gz
 Source7:       %url/CWPack/archive/%{cwpack_commit}.tar.gz#/CWPack-%{cwpack_short_commit}.tar.gz
+Source8:       %khronos_url/glslang/archive/%{glslang_commit}.tar.gz#/glslang-%{glslang_short_commit}.tar.gz
+Source9:       %khronos_url/SPIRV-Tools/archive/%{spirv_tools_commit}.tar.gz#/SPIRV-Tools-%{spirv_tools_short_commit}.tar.gz
+Source10:      %khronos_url/SPIRV-Headers/archive/%{spirv_headers_commit}.tar.gz#/SPIRV-Headers-%{spirv_headers_short_commit}.tar.gz
 
 Requires:      vulkan
 Requires:      vulkan-filesystem
 
 BuildRequires: gcc
 BuildRequires: gcc-c++
-BuildRequires: cmake >= 3
+BuildRequires: cmake >= 3.13.4
 BuildRequires: make
 BuildRequires: python3
 BuildRequires: perl
@@ -52,6 +65,7 @@ BuildRequires: gtest-devel
 BuildRequires: wayland-devel
 BuildRequires: zlib-devel
 BuildRequires: openssl-devel
+BuildRequires: ninja-build
 
 %description
 The AMD Open Source Driver for Vulkan® is an open-source Vulkan driver
@@ -71,7 +85,7 @@ following AMD GPUs:
     Radeon™ W5700/W5500 Series
 
 %prep
-%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5 -a 6 -a 7
+%setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5 -a 6 -a 7 -a 8 -a 9 -a 10
 ln -s AMDVLK-%{amdvlk_commit} AMDVLK
 ln -s llvm-project-%{llvm_commit} llvm-project
 ln -s llpc-%{llpc_commit} llpc
@@ -81,15 +95,9 @@ ln -s spvgen-%{spvgen_commit} spvgen
 mkdir third_party
 ln -s ../MetroHash-%{metrohash_commit} third_party/metrohash
 ln -s ../CWPack-%{cwpack_commit} third_party/cwpack
-
-# workaround for AMDVLK#89, AMDVLK#117
-for i in xgl/icd/CMakeLists.txt llpc/llpc/CMakeLists.txt third_party/metrohash/CMakeLists.txt \
-  llvm-project/llvm/utils/benchmark/CMakeLists.txt llvm-project/llvm/utils/benchmark/test/CMakeLists.txt \
-  pal/src/core/imported/addrlib/CMakeLists.txt pal/src/core/imported/vam/CMakeLists.txt \
-  pal/shared/gpuopen/cmake/AMD.cmake
-do
-  sed -i "s/-Werror/-Wno-error=deprecated -Wno-error=deprecated-copy -Wno-redundant-move/g" $i
-done
+ln -s ../../glslang-%{glslang_commit} spvgen/external/glslang
+ln -s ../../SPIRV-Tools-%{spirv_tools_commit} spvgen/external/SPIRV-tools
+ln -s ../../SPIRV-Headers-%{spirv_headers_commit} spvgen/external/SPIRV-tools/external/SPIRV-Headers
 
 %build
 mkdir -p xgl/build && pushd xgl/build
@@ -97,17 +105,16 @@ mkdir -p xgl/build && pushd xgl/build
 cmake .. -DCMAKE_AR=`which gcc-ar` \
     -DCMAKE_NM=`which gcc-nm` \
     -DCMAKE_RANLIB=`which gcc-ranlib` \
-    -DCMAKE_VERBOSE_MAKEFILE=ON \
     -DCMAKE_C_FLAGS_RELEASE=-DNDEBUG \
     -DCMAKE_CXX_FLAGS_RELEASE=-DNDEBUG \
-    -DCMAKE_VERBOSE_MAKEFILE=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_SHARED_LIBS=OFF \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DBUILD_WAYLAND_SUPPORT=ON \
-    -DLLVM_ENABLE_WARNINGS=OFF
+    -DLLVM_ENABLE_WARNINGS=OFF \
+    -G Ninja
 
-%make_build
+ninja && ninja spvgen
 popd
 
 %clean
@@ -127,6 +134,7 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
     install -m 644 AMDVLK/json/Redhat/amd_icd32.json %{buildroot}%{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
     install -m 755 xgl/build/icd/amdvlk32.so %{buildroot}%{_libdir}
 %endif
+install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 
 %files
 %doc AMDVLK/LICENSE.txt AMDVLK/README.md AMDVLK/topLevelArch.png
@@ -134,8 +142,34 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %config %{_sysconfdir}/amd/amdPalSettings.cfg
 %{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
 %{_libdir}/amdvlk*.so
+%{_libdir}/spvgen.so
 
 %changelog
+* Fri Aug 07 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.153.0.20200806.git24551b2
+
+- xgl: Improve binding loop efficiency and logic in
+       Queue::BindSparseEntry
+- xgl: Follow up implementation for adding Write Multiplane Resource
+       Descriptor Support for Combined Image Sampler
+- xgl: DescriptorPool::Init needs to use passed in allocator
+- xgl: Update PAL interface to 613
+- xgl: Enable pipeline cache
+- xgl: Enable sharing metadata of images.
+- xgl: CmdBuffer::Begin() uses a non-const ref. This should be changed to
+       use a pointer
+- xgl: Add Write Multiplane Resource Descriptor Support for Combined
+       Image Sampler
+- pal: Fix for memory leak in VaMgr Singleton
+- pal: Load all elf sections
+- pal: Missing offset for CmdCloneImageData()
+- pal: CmdBufferLogger: Add dump Viewports
+- pal: Remove Legacy ELF Metadata
+- pal: Improve the implementation of defer-freeing command chunk in
+       QueueContext
+- pal: Bump PAL_MINIMUM_INTERFACE_MAJOR_VERSION to 551 update
+- pal: Remove unused enum type Gfx9InitMetaDataFill
+- pal: Add support for DispatchMeshIndirectMutli
+
 * Thu Jul 23 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.152.0.20200722.git080542c
 
 - xgl: Prefer y-coordinate major swizzle modes for 3D color attachments
