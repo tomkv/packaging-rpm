@@ -1,10 +1,10 @@
-%global amdvlk_commit               0fad196737d36523c6c2fe18987e64a5716412b6
+%global amdvlk_commit               7933159b1b0b7fde72d155cc52ca1ce0c5fb4b52
 # commits from AMDVLK/default.xml
-%global llvm_commit                 30cb97a1d0efebb4317f9abeec8d90a5a83d4837
-%global llpc_commit                 9b5cb15acc8ff789420ed9ed593e35c81303d10c
-%global xgl_commit                  598c6832a4983f5b75b38a589fca5be80a2f3bb0
-%global pal_commit                  609b2b8ad982f4f2028cf4411cc2e55fc5e6fcf3
-%global spvgen_commit               c054813a9a894e32aaaa04c6717a667c15f60cfd
+%global llvm_commit                 baf9929eed02f75d0a429fc72ba76b9286ba1996
+%global llpc_commit                 a3ac9d29e78d11a6cdc1bc1dd0be082e35dbfc0d
+%global xgl_commit                  6e4aaa87a128f91cc62d337642949ee8cfcaeec8
+%global pal_commit                  a52f7c12f9ce5aca5c0c7f799f72b1b3362121bc
+%global spvgen_commit               2557aaa0e96695c51de0d66903e24194a1af054e
 %global metrohash_commit            712f76fee75d69b23a1ea8f6465752c3ccaaf9a2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
 # commits from spvgen/CHANGES
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20200821
+%global commit_date                 20200912
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.155
+Version:       2.157
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -149,6 +149,35 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+
+* Mon Sep 14 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.157.0.20200912.git7933159
+
+- xgl: Fix the erasing elements from HashSet m_sparseBindMemory
+- xgl: Corruption observed in Detroit: Become Human on RX 5600XT
+- xgl: Update LLPC Interface in Vulkan to 41
+- xgl: Update Khronos Vulkan Headers to v1.2.152
+- xgl: Add override settings for LLPC Tuning
+- xgl: Change heap order for InternalPoolGpuReadOnlyCpuVisible
+- xgl: Correct setting of maxInterpolationOffset
+- xgl: Replace StencilOpsCombiner with draw time validation
+- xgl: Update PAL Interface in Vulkan to 624
+- xgl: Clean-up LLPC interface macros that are unnecessary below version
+       40
+- xgl: Add spvDisassembleSpirv check in case spvgen is not loaded in the
+       amdllpc
+- xgl: Update pNext Looping
+- xgl: Remove WaveBreak::DrawTime in LLPC interface
+- xgl: Use unsigned to replace uint32_t to keep LLPC style
+- pal: [cmake] Pal should set AMD_SOURCE_DIR
+- pal: Fix CmdUploadRing not being detected correctly.
+- pal: Add Shader Library Support to GpaSession
+- pal: Set initial GfxCmdBufferState barrier tracking flags based on the
+       command buffer's support flags.
+- pal: Bump version number to 268
+- pal: Rework Linux IsKeyPressed implementation
+- pal: Move color key related shader code out of ScaledCopy CS/GFX
+       pipelines
+- pal: Eliminate invisible copy of trace buffer on APU platforms
 
 * Sun Aug 30 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.155.0.20200821.git0fad196
 
