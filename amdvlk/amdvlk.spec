@@ -1,11 +1,11 @@
-%global amdvlk_commit               7933159b1b0b7fde72d155cc52ca1ce0c5fb4b52
+%global amdvlk_commit               0d3edb1312c3d8ed7127d3de93cc325571de62d7
 # commits from AMDVLK/default.xml
-%global llvm_commit                 baf9929eed02f75d0a429fc72ba76b9286ba1996
-%global llpc_commit                 a3ac9d29e78d11a6cdc1bc1dd0be082e35dbfc0d
-%global xgl_commit                  6e4aaa87a128f91cc62d337642949ee8cfcaeec8
-%global pal_commit                  a52f7c12f9ce5aca5c0c7f799f72b1b3362121bc
-%global spvgen_commit               2557aaa0e96695c51de0d66903e24194a1af054e
-%global metrohash_commit            712f76fee75d69b23a1ea8f6465752c3ccaaf9a2
+%global llvm_commit                 1a8b53e02a92dbc7d40087c483d03c45c6c63f2e
+%global llpc_commit                 6ff17fa6136e4bba8b6ae496e90e40c6e7750820
+%global xgl_commit                  07bb2eb097cd90983902118388cabd49f3530e8b
+%global pal_commit                  6fa4f8ac88b95688241d266ff9d8f02da6ec3c22
+%global spvgen_commit               fb798cb760a436e9496dbaab8827e4d183b74744
+%global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
 # commits from spvgen/CHANGES
 %global glslang_commit              b99a6a7273181deeb08859c0fdb0c77c7e8a4500
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20200912
+%global commit_date                 20200927
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.157
+Version:       2.159
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -149,6 +149,37 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Mon Sep 29 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.159.0.20200927.git0d3edb1
+
+- xgl: Junk Screen is observed during gameplay on Doom VFR Game on Navi10
+- xgl: Baldur's Gate 3 stops responding after enabling Vsync
+- xgl: Update PAL Interface in Vulkan to 628.2
+- xgl: Flickering corruption visible in shadows in Baldur's Gate 3
+- xgl: [cmake] Update cmake minimum required version to 3.13.4
+- xgl: Add shader read usage for presentable images
+- xgl: Enable extension VK_EXT_robustness2
+- xgl: Sample Locations being overwritten by renderpass
+- pal: Deprecate PAL_CLIENT_INTERFACE_MINOR_VERSION
+- pal: Add Linux Flip Status to PAL Overlay
+- pal: [cmake] Compile definitions PRIVATE/PUBLIC issues
+- pal: [cmake] Use CMAKE_DL_LIBS/FindThreads
+- pal: Make DMA updates the memory with Embedded allocated memory
+- pal: Add support for compute thread group scheduling using
+       numThreadGroupsPerCu.
+- pal: [cmake] Reduce public dependencies
+- pal: Allow TC Compatible fast clears to slices of color array resources
+- pal: Bump version number to 271
+- pal: Add shared bo table in Vam manager
+- pal: Scan Converter polygon offset with 16 bit fixed precision
+- pal: Refine amdgpu vam manager codes, preparing to add shared bo table
+       in class VamMgr
+- pal: CreateMultiQueue calls exit with Result::Unsupported when various
+       PAL layers are enabled
+- pal: Compute buffer fill for sizes > 4GB broken
+- pal: Reduce RMW usage for KEEP_TOGETHER_ENABLE
+- pal: Use PGO in CMake only if enabled
+- pal: Green color corruption flashes and disappears on launching the
+       jesse-cube demo
 
 * Mon Sep 14 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.157.0.20200912.git7933159
 
