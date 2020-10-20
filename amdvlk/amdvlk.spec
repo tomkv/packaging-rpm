@@ -1,9 +1,9 @@
-%global amdvlk_commit               0d3edb1312c3d8ed7127d3de93cc325571de62d7
+%global amdvlk_commit               7ee7a2fdf1f63e7c4cc756313f59fa2a98e0de6b
 # commits from AMDVLK/default.xml
-%global llvm_commit                 1a8b53e02a92dbc7d40087c483d03c45c6c63f2e
-%global llpc_commit                 6ff17fa6136e4bba8b6ae496e90e40c6e7750820
-%global xgl_commit                  07bb2eb097cd90983902118388cabd49f3530e8b
-%global pal_commit                  6fa4f8ac88b95688241d266ff9d8f02da6ec3c22
+%global llvm_commit                 61625276e878ae29f79a052e2d4b495616d8180c
+%global llpc_commit                 1d2d77c7533f41707ccf89b66db2e0feac3dea83
+%global xgl_commit                  99aaaa0cd14293edf100b986bc004c886e6b2ef6
+%global pal_commit                  3c0809b87958d3751bf2892e04579b6b1d03c7ad
 %global spvgen_commit               fb798cb760a436e9496dbaab8827e4d183b74744
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20200927
+%global commit_date                 20201020
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.159
+Version:       2.163
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -149,7 +149,55 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
-* Mon Sep 29 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.159.0.20200927.git0d3edb1
+* Tue Oct 20 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.163.0.20201020.git7ee7a2f
+
+- xgl: Update 3D tiling setting to apply to storage images
+- xgl: CmdPool::Create() should share allocation between xgl and pal
+       objects
+- xgl: Add heap override settings and app detects
+- xgl: Update Khronos Vulkan Headers to 1.2.156
+- xgl: Remove unnecessary depth expands/resummarizes
+- xgl: Use local heap for command buffers if heap is > 256 MBs
+- xgl: Disable shared cmd allocator
+- xgl: X-plane new update cause 50% drop in 4K low
+- xgl: Cpu performance optimization
+- xgl: Add support for extension: VK_EXT_shader_image_atomic_int64
+- xgl: Update PAL Interface in Vulkan to 629
+- pal: Allow ShaderWrite/CopyDst usages for compressed depth/stencil
+       images on GFX10+
+- pal: Color fast clear needs to examine usage flags to determine if
+       clear-to-reg can be supported
+- pal: GFX9/GFX10 Allows ShaderWrite usage for compressed MSAA color
+       images
+- pal: Add Util::Rename to rename a file/directory with Posix-ish
+       semantics
+- pal: Unspecified workaround disables htile for all d/s image < 8x8
+- pal: [GFX6-10] Trivial cleanup remove some unneeded std:: refs
+- pal: Util::File: Opening "-" gives you stdin or stdout
+- pal: Fix palThread.h to work if palMutex.h not already included
+- pal: Enable CS_PARTIAL_FLUSH events on ACE queues for gfx9+ if the CP
+       ucode bug is fixed
+- pal: [cmake] Delete unneccessary files
+- pal: [DbgOverlay] Add Date/Time to VisualConfirm
+- pal: Bump version number to 274
+- pal: [cmake] pal_override helper function
+- pal: Async compute work does not contribute to SPM
+- pal: Allow the command buffer state inheritence feature to work from
+       compute to graphics
+- pal: X-plane new update cause 50% drop in 4K low
+- pal: [G-Truc] Add more clamp type
+- pal: Reduce CPU overhead for ValidateDraw
+- pal: Surfaceflinger/swapbuffer performance issue
+- pal: [cmake] Deprecate PAL_ENABLE_LTO
+- pal: Connect panel settings to disable Z Compression and S Compression
+- pal: Cleanup interface for pipeline residency
+- pal: [cmake] Fix multiple GPU support issues
+- pal: Clarify style for testing booleans
+- pal: Improve CopyMemoryCs()
+- pal: Build display dcc by default but disable it by default on Linux
+       panel
+
+* Tue Sep 29 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.159.0.20200927.git0d3edb1
 
 - xgl: Junk Screen is observed during gameplay on Doom VFR Game on Navi10
 - xgl: Baldur's Gate 3 stops responding after enabling Vsync
