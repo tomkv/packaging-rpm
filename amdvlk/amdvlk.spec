@@ -1,9 +1,9 @@
-%global amdvlk_commit               247e0acb44671bd3d5f0d8aab6a184c7a5692b8b
+%global amdvlk_commit               57c3821bc59ca1cfb32be6d63037e819b76a738e
 # commits from AMDVLK/default.xml
-%global llvm_commit                 11778b213e0e979cbe185901b365f0b2e9a66522
-%global llpc_commit                 3b3506161572475b0c163a5d44444fd98922b7d8
-%global xgl_commit                  87430a6fa88da11473eed49603def2fa47b51fa0
-%global pal_commit                  4ae736bdbc5d5dee59851ac564c5e21d807b44b0
+%global llvm_commit                 7ff363c8283c1d41ecbdcdc45c8b724b52312d67
+%global llpc_commit                 d2180485db6cde18b2ead1eda0925be409507b78
+%global xgl_commit                  f623fc7ca78c3cec2123a16700a8819f3ccf0656
+%global pal_commit                  29117a3431d163a2e9e7bfe87e63d0d8d3c28b11
 %global spvgen_commit               fb798cb760a436e9496dbaab8827e4d183b74744
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20201105
+%global commit_date                 20201113
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.166
+Version:       2.167
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -149,6 +149,37 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Tue Nov 17 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.167.0.20201113.git57c3821
+
+- xgl: Update PAL Interface in Vulkan to 632
+- xgl: Update Khronos Vulkan Headers to 1.2.159
+- xgl: vk::ImportSemaphoreInfo::handleType should only contain a single
+       handle type
+- xgl: Remove the VertBufBindingMgr class and store the vertex buffer
+       binding data in the command buffer's m_state.perGpuState to keep
+       the 1280 bytes needed for each gpu out of the way when running
+       single GPU
+- xgl: [RGP] Fix Assert When vkInstance is Destroyed under DevMode
+- xgl: Shrink size of Memory object - 328 bytes to 184 bytes
+- pal: Bump version number to 279
+- pal: Client option for SQ Thread Trace stall behavior was not being
+       honored.
+- pal: NGG GS: Modify an assertion
+- pal: Align some of our AmdGpuMachineType's to their actual values.
+- pal: Fix ambiguous comments for acquire/release barrier path.
+- pal: Minor improvement for ValidateDraw
+- pal: Remove one unnecessary input parameter "setDataSize" for
+       Pm4Optimizer::OptimizePm4SetReg()
+- pal: Fix trivial doxygen comment issues seen by chance.
+- pal: Driver does not work with two videocards: radeon+amdgpu
+- pal: Add LPDDR5 support on PAL
+- pal: Assert Check failure on Recording GPU Memory Reference Event
+- pal: Clarify some alerts
+- pal: Tropico 4 demo: Corrpution observed during Game play
+- pal: [GpuDebug] Add GpuDebug layer.
+- pal: Optimize PAL ValidateDraw<PipelineDirty=false, StateDirty=false>
+       path
+
 * Thu Nov 05 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.166.0.20201105.git247e0ac
 
 - xgl: Remove redundant LLPC options
