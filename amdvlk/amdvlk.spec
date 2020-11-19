@@ -1,9 +1,9 @@
-%global amdvlk_commit               57c3821bc59ca1cfb32be6d63037e819b76a738e
+%global amdvlk_commit               2cd49c011457ec42fa4aa1b62039a839c40fc85f
 # commits from AMDVLK/default.xml
 %global llvm_commit                 7ff363c8283c1d41ecbdcdc45c8b724b52312d67
-%global llpc_commit                 d2180485db6cde18b2ead1eda0925be409507b78
-%global xgl_commit                  f623fc7ca78c3cec2123a16700a8819f3ccf0656
-%global pal_commit                  29117a3431d163a2e9e7bfe87e63d0d8d3c28b11
+%global llpc_commit                 38dcb76aadf729b67cabe15c2cc07a784020f704
+%global xgl_commit                  fc11e79aab63337702d8efc05e5433dec9efdf06
+%global pal_commit                  b1e752d402592628f61eb7e1aa2a802a205de798
 %global spvgen_commit               fb798cb760a436e9496dbaab8827e4d183b74744
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -25,7 +25,7 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20201113
+%global commit_date                 20201119
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
@@ -81,7 +81,8 @@ following AMD GPUs:
     Radeon™ RX 400/500 Series
     Radeon™ M200/M300/M400 Series
     Radeon™ RX Vega Series
-    Radeon™ RX 5700 Series
+    Radeon™ RX 5700/5500 Series
+    Radeon™ RX 6800 Series
     AMD FirePro™ Workstation Wx000/Wx100/Wx300 Series
     Radeon™ Pro WX x100 Series
     Radeon™ Pro 400/500 Series
@@ -149,6 +150,10 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Thu Nov 19 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.167.0.20201119.git2cd49c0
+
+- Support Navi21
+
 * Tue Nov 17 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.167.0.20201113.git57c3821
 
 - xgl: Update PAL Interface in Vulkan to 632
