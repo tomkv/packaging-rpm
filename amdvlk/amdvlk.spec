@@ -1,9 +1,9 @@
-%global amdvlk_commit               2cd49c011457ec42fa4aa1b62039a839c40fc85f
+%global amdvlk_commit               3940b58b2bea07f91143039d00c660e69ea13f2a
 # commits from AMDVLK/default.xml
-%global llvm_commit                 7ff363c8283c1d41ecbdcdc45c8b724b52312d67
-%global llpc_commit                 38dcb76aadf729b67cabe15c2cc07a784020f704
-%global xgl_commit                  fc11e79aab63337702d8efc05e5433dec9efdf06
-%global pal_commit                  b1e752d402592628f61eb7e1aa2a802a205de798
+%global llvm_commit                 a0777f49050191c9e215a4880c855395ba805508
+%global llpc_commit                 e2d38b0c8042efbc435e51696aba5c1abd256c88
+%global xgl_commit                  86f61a31988a626371131a1633547b0d0ebfcfcb
+%global pal_commit                  f92844ecbba39be3d2663717ad69c3dffc282211
 %global spvgen_commit               fb798cb760a436e9496dbaab8827e4d183b74744
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20201119
+%global commit_date                 20201214
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.167
+Version:       2.170
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -150,6 +150,69 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Tue Dec 15 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.170.0.20201214.git3940b58
+
+- xgl: Update Khronos Vulkan Headers to 1.2.162
+- xgl: Miss to update memory metadata for dedicated image
+- xgl: Update PAL Interface in Vulkan to 638
+- xgl: [NAVI21]Shadow of the Tomb Raider-LLPC performance tuning for
+       Navi21
+- xgl: Remove Image Format in VkToPalImageUsageFlags Conversion
+- xgl: Change DisableDisplayDccForMgpu from a bool to an enum
+       DisableDisplayDcc
+- xgl: Expose extension VK_EXT_shader_terminate_invocation
+- xgl: Propagating up the error to the caller
+- xgl: Move the PerGpuRenderState out of the CmdBuffer object and
+       allocate memory for it after the CmdBuffer object. Reduces the
+       memory for the xgl and pal command buffers
+- xgl: Use a more canonical way to merge low/high address
+- xgl: Change deviceUUID calculation method
+- xgl: Fix error format enum
+- xgl: Add build option to use external upstream spirv and Vulkan header
+       files
+- xgl: Update MALL no alloc tuning for Red Dead Redemption 2
+- xgl: Expose extension VK_KHR_fragment_shading_rate
+- pal: Fix unhandled exception and avoid assertion if  dummy chunk
+       repeatedly assigned
+- pal: TDR when running Maxon drawport test
+- pal: [GFX6] Wrong tile mode translated from amdgpu-tileMode to
+       pal-tileMode
+- pal: Fix crash when barrier targets contains nullptr
+- pal: [cmake] add pal_build_parameter
+- pal: Add detailed instruction tokens through configuring
+       threadTraceConfig instead of configuring
+       threadThreadShaderTypeMask.
+- pal: The HW requirement for the linear pitch during internal buffer to
+       image copy and vice-versa was not being honored for certain cases.
+- pal: Change name of IsDepthStencil because its misleading
+- pal: Do not issue StencilRef RMW if no state to update.
+- pal: Don't enable BigPage/LargePage/Iterate256 padding for local
+       visible heap in ResizeBarOff case
+- pal: Bump version number to 283
+- pal: [GpuDebug] Add check to make sure currently bound render targets
+       match the format of the bound pipeline.
+- pal: Ease of Use for Settings Generation Script
+- pal: Add mmSPI_SHADER_PGM_RSRC3_GS into nonshadowedList to fix assert
+- pal: Remove some tabs from the source code
+- pal: Another out of bound index case for "waIndexBufferZeroSize"
+- pal: Gfx9::Image::ImageSupportsShaderReadsAndWrites() is incorrect
+       (layout transition cleanup)
+- pal: Propagating up the error to the caller correctly when
+       InitSubresourceInfo failed
+- pal: [cmake] Get rid of warning
+- pal: Remove IDevice::GetValidFormatFeatureFlags because it is no longer
+       used or relevant
+- pal: Fix depthPitch calculation error when get external shared Image
+       with mipLevels
+- pal: Create section on memory allocation and initialization in PAL
+       coding guidelines
+- pal: [AMDVLK-179] Corruption in X-Plane 11.50
+- pal: [GFX10+] Remove unneeded shadow regs.
+- pal: Call Destroy() if Init() has failed for objects in src/core/layers
+- pal: Forbid Yoda conditions.
+- pal: Allow TC Compatible fast clears to slices of color array resources
+- pal: [ChipMerge] Handle multiple input files of a given type per-asic
+
 * Thu Nov 19 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.167.0.20201119.git2cd49c0
 
 - Support Navi21
