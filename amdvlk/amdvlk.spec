@@ -1,17 +1,17 @@
-%global amdvlk_commit               3940b58b2bea07f91143039d00c660e69ea13f2a
+%global amdvlk_commit               0b8a7192d4d1a121757b8ba0d5f7692bc04991d2
 # commits from AMDVLK/default.xml
-%global llvm_commit                 a0777f49050191c9e215a4880c855395ba805508
-%global llpc_commit                 e2d38b0c8042efbc435e51696aba5c1abd256c88
-%global xgl_commit                  86f61a31988a626371131a1633547b0d0ebfcfcb
-%global pal_commit                  f92844ecbba39be3d2663717ad69c3dffc282211
-%global spvgen_commit               fb798cb760a436e9496dbaab8827e4d183b74744
-%global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
-%global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
+%global llvm_commit                 29af2f2da062da84b4d482d48e9ea63b240601b
+%global llpc_commit                 44a22a1e3af35c3209c149c871897fac2b3d6e1
+%global xgl_commit                  3237b046add2809634e7f5f3fcdea1af4ad6613
+%global pal_commit                  26cb05f899cc587f9398399a3381ee22ab41f4c
+%global spvgen_commit               c3dc69a3f7762d4a9d567d9b12048ae2ee3e4ab
+%global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d
+%global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088
 # commits from spvgen/CHANGES
-%global glslang_commit              b99a6a7273181deeb08859c0fdb0c77c7e8a4500
-%global spirv_tools_commit          7a1af5878594cec2992a1bb00565b4c712490239
-%global spirv_headers_commit        11d7637e7a43cd88cfd4e42c99581dcb682936aa
-%global spirv_cross_commit          6575e451f5bffded6e308988362224dd076b0f2b
+%global glslang_commit              4d41da3b810bc11c1c8a954e516638e437360a67
+%global spirv_tools_commit          2c458414c0851b9a0d1b0493857b56a1089847ac
+%global spirv_headers_commit        104ecc356c1bea4476320faca64440cd1df655a3
+%global spirv_cross_commit          be527632a6c80291ab012a79758e0e41224ad5e2
 
 %global amdvlk_short_commit         %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit           %(c=%{llvm_commit}; echo ${c:0:7})
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20201214
+%global commit_date                 20210106
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.170
+Version:       2.172
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -127,6 +127,7 @@ rm -rf %{buildroot}
 
 %install
 mkdir -p %{buildroot}%{_datadir}/vulkan/icd.d
+mkdir -p %{buildroot}%{_datadir}/vulkan/implicit_layer.d
 mkdir -p %{buildroot}%{_libdir}
 
 mkdir -p %{buildroot}%{_sysconfdir}/amd
@@ -134,9 +135,11 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 
 %if 0%{?__isa_bits} == 64
     install -m 644 AMDVLK/json/Redhat/amd_icd64.json %{buildroot}%{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
+    install -m 644 AMDVLK/json/Redhat/amd_icd64.json %{buildroot}%{_datadir}/vulkan/implicit_layer.d/amd_icd.%{_arch}.json
     install -m 755 xgl/build/icd/amdvlk64.so %{buildroot}%{_libdir}
 %else
     install -m 644 AMDVLK/json/Redhat/amd_icd32.json %{buildroot}%{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
+    install -m 644 AMDVLK/json/Redhat/amd_icd32.json %{buildroot}%{_datadir}/vulkan/implicit_layer.d/amd_icd.%{_arch}.json
     install -m 755 xgl/build/icd/amdvlk32.so %{buildroot}%{_libdir}
 %endif
 install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
@@ -146,10 +149,74 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %dir %{_sysconfdir}/amd
 %config %{_sysconfdir}/amd/amdPalSettings.cfg
 %{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
+%{_datadir}/vulkan/implicit_layer.d/amd_icd.%{_arch}.json
 %{_libdir}/amdvlk*.so
 %{_libdir}/spvgen.so
 
 %changelog
+* Fri Jan 08 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.172.0.20210106.git0b8a719
+
+- xgl: Update due to argument IImage* retired from SignalNativeFence()
+- xgl: Remove Mutex::Init(), RWLock::Init(), and
+       ConditionVariable::Init() usage
+- xgl: [Navi21] X-Plane: LLPC performance tuning
+- xgl: Add scope to some settings
+- xgl: Add AMD switchable graphics layer to switch AMD Vulkan driver
+       between amdvlk and RADV
+- xgl: [Navi21] Madmax LLPC performance tuning
+- xgl: Fix memory alignment for memory dedicated allocation
+- xgl: [Navi21] Talos Principle: LLPC performance tuning
+- xgl: Update PAL Interface in Vulkan to 640
+- xgl: Update Khronos Vulkan Headers to 1.2.164
+- xgl: Remove DebugReportCallback::Message() and
+       DebugUtilsMessenger::Message() since they are unused
+- xgl: PhysicalDevice::m_memoryUsageTracker::trackerMutex corrputed
+- xgl: [Navi21] Rise of Tomb Raider-LLPC performance tuning
+- xgl: Move spirv-headers from XGL to LLPC
+- xgl: flags cleanup - meaningless const on return types
+- xgl: Enable NGG compactionless for GFX10.3+
+- xgl: [Navi21] F12017 LLPC performance tuning
+- pal: Add Mesh shader support
+- pal: ImageAspect Removal (clean up IsFullSubresRange asserts)
+- pal: Bump version number to 288
+- pal: Reorder start of CMakeLists.txt in pal root so that
+       TEST_BIG_ENDIAN works for stand alone builds
+- pal: Add declarative heap selection in GpuMemoryCreateInfo
+- pal: Fix warning (found in cmake build) that bltSyncToken is defined
+       twice
+- pal: [Navi21] Meta equation of multiple layer image is incorrect.
+- pal: Add new interface function to query command feedback status from
+       PAL Security Processor
+- pal: Remove Util::ConditionVariable::Init()
+- pal: Remove RWLock::Init() from PAL
+- pal: Ensure there is a fallback to local visible memory when requesting
+       invisible memory for RGP traces
+- pal: Move initialization of Util::ConditionVariable to constructor
+- pal: Initialize Util::RWLock in constructor
+- pal: Fix several issues in error handling
+- pal: Fence style barrier signaling and waiting, part1
+- pal: Remove Mutex::Init()
+- pal: File::Rseek & File::FastForward Added
+- pal: [Navi21] Meta equation of 4/8xMsaa image is incorrect
+- pal: Update UserDataMapping enum
+- pal: Add Tonga back to null device tables
+- pal: Fix DRI3, Wayland and DRM traces
+- pal: Remove several dead settings
+- pal: Allow Util::Vector to qualify as a `range_expression` concept
+- pal: Generate different RPM shaders on diff milestones of a chip
+- pal: YV12 format update
+- pal: Inconsistent layout masks for ResolveSrc/ResolveDst
+- pal: Initialize Mutex in the constructor
+- pal: [GFX9/10] Remove RMW for DB_RENDER_OVERRIDE in most cases
+- pal: Remove ImageAspect from PAL interface (replaced with plane index),
+       and add numPlanes to SubresRange
+- pal: Fix invalid SET_PREDICATION asserts
+- pal: [cmake] Created PalBuildParameters.cmake
+- pal: Add a nodiscard helper
+- pal: Minor mistake on handling exception in palElfProcessorImpl.h
+- pal: Missing DrawDispatchInfo in CmdBufferLogger output
+- pal: [Navi10] RPCS3  Corruption observed on Game window
+
 * Tue Dec 15 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.170.0.20201214.git3940b58
 
 - xgl: Update Khronos Vulkan Headers to 1.2.162
