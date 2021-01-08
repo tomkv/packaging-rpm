@@ -1,12 +1,12 @@
 %global amdvlk_commit               0b8a7192d4d1a121757b8ba0d5f7692bc04991d2
 # commits from AMDVLK/default.xml
-%global llvm_commit                 29af2f2da062da84b4d482d48e9ea63b240601b
-%global llpc_commit                 44a22a1e3af35c3209c149c871897fac2b3d6e1
-%global xgl_commit                  3237b046add2809634e7f5f3fcdea1af4ad6613
-%global pal_commit                  26cb05f899cc587f9398399a3381ee22ab41f4c
-%global spvgen_commit               c3dc69a3f7762d4a9d567d9b12048ae2ee3e4ab
-%global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d
-%global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088
+%global llvm_commit                 29af2f2da062da84b4d482d48e9ea63b240601bc
+%global llpc_commit                 44a22a1e3af35c3209c149c871897fac2b3d6e17
+%global xgl_commit                  3237b046add2809634e7f5f3fcdea1af4ad6613d
+%global pal_commit                  26cb05f899cc587f9398399a3381ee22ab41f4c2
+%global spvgen_commit               c3dc69a3f7762d4a9d567d9b12048ae2ee3e4ab9
+%global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
+%global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
 # commits from spvgen/CHANGES
 %global glslang_commit              4d41da3b810bc11c1c8a954e516638e437360a67
 %global spirv_tools_commit          2c458414c0851b9a0d1b0493857b56a1089847ac
@@ -154,7 +154,7 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
-* Fri Jan 08 2020 Tomas Kovar <tkov_fedoraproject.org> - 2.172.0.20210106.git0b8a719
+* Fri Jan 08 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.172.0.20210106.git0b8a719
 
 - xgl: Update due to argument IImage* retired from SignalNativeFence()
 - xgl: Remove Mutex::Init(), RWLock::Init(), and
