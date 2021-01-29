@@ -1,17 +1,17 @@
-%global amdvlk_commit               0b8a7192d4d1a121757b8ba0d5f7692bc04991d2
+%global amdvlk_commit               cfbfe47bfda08e1a9726ca9986fd251bd04e9091
 # commits from AMDVLK/default.xml
-%global llvm_commit                 29af2f2da062da84b4d482d48e9ea63b240601bc
-%global llpc_commit                 44a22a1e3af35c3209c149c871897fac2b3d6e17
-%global xgl_commit                  3237b046add2809634e7f5f3fcdea1af4ad6613d
-%global pal_commit                  26cb05f899cc587f9398399a3381ee22ab41f4c2
-%global spvgen_commit               c3dc69a3f7762d4a9d567d9b12048ae2ee3e4ab9
+%global llvm_commit                 1551e626ea6b19f81928d2e4eddab657eb82af9b
+%global llpc_commit                 86ed348f405120042a2540ec3157e28baf45dc81
+%global xgl_commit                  88a4f8c5657824f93790eefe3c9e078806c2a768
+%global pal_commit                  57cd977c79e4321c28dcb1a18a4aa23880aa48f4
+%global spvgen_commit               6b84106b7e107173428647850b4ba93a75b23d84
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
 # commits from spvgen/CHANGES
-%global glslang_commit              4d41da3b810bc11c1c8a954e516638e437360a67
-%global spirv_tools_commit          2c458414c0851b9a0d1b0493857b56a1089847ac
-%global spirv_headers_commit        104ecc356c1bea4476320faca64440cd1df655a3
-%global spirv_cross_commit          be527632a6c80291ab012a79758e0e41224ad5e2
+%global glslang_commit              3de5cfe50edecd001e6d703555284d9b10b3dd57
+%global spirv_tools_commit          8383bd5d6f26c51d9b6b0b1fd1a001be07aedd8d
+%global spirv_headers_commit        f027d53ded7e230e008d37c8b47ede7cd308e19d
+%global spirv_cross_commit          9acb9ec31f5a8ef80ea6b994bb77be787b08d3d1
 
 %global amdvlk_short_commit         %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit           %(c=%{llvm_commit}; echo ${c:0:7})
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20210106
+%global commit_date                 20210129
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.172
+Version:       2.174
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -75,14 +75,14 @@ The AMD Open Source Driver for Vulkan® is an open-source Vulkan driver
 for Radeon™ graphics adapters on Linux®. It is designed to support the
 following AMD GPUs:
 
-    Radeon™ HD 7000 Series
-    Radeon™ HD 8000M Series
+    Radeon™ RX 6900/6800 Series
+    Radeon™ RX 5700/5600/5500 Series
+    Radeon™ RX Vega Series
     Radeon™ R5/R7/R9 200/300 Series
     Radeon™ RX 400/500 Series
     Radeon™ M200/M300/M400 Series
-    Radeon™ RX Vega Series
-    Radeon™ RX 5700/5500 Series
-    Radeon™ RX 6800 Series
+    Radeon™ HD 8000M Series
+    Radeon™ HD 7000 Series
     AMD FirePro™ Workstation Wx000/Wx100/Wx300 Series
     Radeon™ Pro WX x100 Series
     Radeon™ Pro 400/500 Series
@@ -154,6 +154,55 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Fri Jan 29 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.174.0.20210129.gitcfbfe47
+
+- xgl: Clean up Fullscreen Manager
+- xgl: Vulkaninfo crash when VK_LAYER_AMD_switchable_graphics enabled
+- xgl: Update PAL Interface in Vulkan to 644
+- xgl: Update Khronos Vulkan Headers to 1.2.167
+- xgl: Fix Run-Time Check Failure: Stack around the variable
+       'pSrdMemorys' was corrupted
+- xgl: Fix the GetMemoryRequirements for images
+- xgl: vkAllocateDescriptorSets should return error if allocating dynamic
+       descriptor set from pool that doesn't support dynamic
+- xgl: Fix wrongly assert in ImageBarrierPolicy GetLayouts
+- xgl: [RGP] Crash if instance fails to acquire debug VMID
+- xgl: Disables queue timing when kernel context handle is unavailable
+- xgl: Clean Up Unused Classes
+- xgl: Minor change related to ForceDisableDcc
+- xgl: Doom Eternal: Performance tuning on Navi21
+- xgl: DOOM: Performance tuning on Navi21
+- xgl: Wolfenstein II: Performance tuning on Navi21
+- xgl: Wolfenstein-Youngblood: Performance tuning on Navi21
+- pal: Apply final keyword to classes
+- pal: Update Mesh/TaskShader entries per ring to 256 per SE
+- pal: Bump version number to 294
+- pal: Build error with Mutex Init
+- pal: Add a checked version of StringToValueType
+- pal: Update coding standard to require "final" keyword on leaf classes
+- pal: Add DDR5 related enum and informations
+- pal: The Barrier in LateExpandResolveSrcHelper doesn't have a reason
+- pal: Update coding standards to allow anonymous namespaces
+- pal: Shareable YUV images are non-functional
+- pal: CPU Perf Remove some binning settings
+- pal: Ensure three plane YUV images (YV12) have the plane data in the
+       correct order
+- pal: TDR when running Maxon drawport test
+- pal: Make loader scripts run on python3
+- pal: Remove useless code found in debugging
+- pal: Expose maximum number of format planes
+- pal: Add setting of RLC_SPM_ACCUM_MODE to PerfExperiment
+- pal: The previous AssociateNativeFence() implementation is not that
+       correct
+- pal: Update copyright dates for 2021
+- pal: Enable Depth+Stencil compute-based decompress BLT
+- pal: Add support in PAL for YUV P210 format and MM formats for DCC for
+       YUV
+- pal: Access violation if BestFitAllocator was initialized failed
+- pal: Fix typo in palLib.h
+- pal: Adding comments describing shadow state register ranges to improve
+       code readability
+
 * Fri Jan 08 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.172.0.20210106.git0b8a719
 
 - xgl: Update due to argument IImage* retired from SignalNativeFence()
