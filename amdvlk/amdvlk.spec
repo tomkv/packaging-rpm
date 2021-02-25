@@ -149,7 +149,7 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %dir %{_sysconfdir}/amd
 %config %{_sysconfdir}/amd/amdPalSettings.cfg
 %{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
-%{_datadir}/vulkan/implicit_layer.d/amd_icd.%{_arch}.json
+#%{_datadir}/vulkan/implicit_layer.d/amd_icd.%{_arch}.json
 %{_libdir}/amdvlk*.so
 %{_libdir}/spvgen.so
 
