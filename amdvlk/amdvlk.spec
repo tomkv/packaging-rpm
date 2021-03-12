@@ -1,9 +1,9 @@
-%global amdvlk_commit               ab996a7d0f3010b09cd16254b203e01da85b5165
+%global amdvlk_commit               56170eba73d7f07a4106f0f94f07fbb039ac1a14
 # commits from AMDVLK/default.xml
-%global llvm_commit                 90d06712ff54e242b7bd225321e4fc8629292d46
-%global llpc_commit                 2692228d80d8be2221641b719eb7135f52bc34aa
-%global xgl_commit                  e5c5ad454049892ed803b0adcc15ef6fb27ec50e
-%global pal_commit                  575d41ff01c856d9566168d65b31e4b49db4734b
+%global llvm_commit                 0d4ae425cd44beba347958d9494ba301e6ec2ad4
+%global llpc_commit                 cd4a476d56fd7676eeca31da98a6b30e6b57048d
+%global xgl_commit                  0c029b1501d13fe23956223adc937a909cd8292c
+%global pal_commit                  a8cf07c212059bae9d018c05fc896e1115a2f077
 %global spvgen_commit               59823e6c3557cb7f3fae4a9f2760ad3f6b694997
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20210225
+%global commit_date                 20210312
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.177
+Version:       2.179
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -154,6 +154,53 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+
+* Fri Mar 12 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.179.0.20210312.git56170eb
+
+- xgl: Add missing VK_PIPELINE_STAGE_2 flags
+- xgl: Update PAL Interface in Vulkan to 659
+- xgl: Expose the device extension VK_KHR_sampler_ycbcr_conversion
+- xgl: Fix WaitEventsSync2ToSync1
+- xgl: [cmake] cmake clang llvm-ar named llvm-ar-6.0 on 18.04 ubuntu
+- xgl: VK_KHR_synchronization2 fix the
+       CmdBuffer::PipelineBarrierSync2ToSync1
+- xgl: Reduce work in CmdBuffer::Reset() if cmd buffer was never begun
+- xgl: Expose the extension VK_KHR_synchronization2
+- xgl: Expose the extension VK_EXT_4444_formats
+- xgl: Use -fPIC compile parameter for cmake builds
+- xgl: Fix issues with pipeline cache uuid
+- xgl: Update Khronos Vulkan Headers to 1.2.170
+- xgl: VK_KHR_synchronization2 fix CmdBuffer::ExecuteAcquireRelease
+- xgl: In RPBeginSubpass(), only create the VirtualStackFrame if we are
+       going to use it
+- xgl: Fix CmdBindBorderColorPalette in PalCmdBufferBegin
+- xgl: BindDescriptorSets changed to operate on device mask
+- xgl: Fix wrong pointer alignment in PatchedDynamicDataFromHandle()
+- xgl: Disallow Copy Constructors
+- xgl: Store settings we need to CmdBuffer functions in the CmdBuffer
+       object to avoid following the pointer to the device
+- xgl: Add shader activity logging for 'disableLoopUnrolls' and
+       'wavePrioOnStartup'
+- pal: Dota2 : ~20% perf drop with Re-Size bar enable
+- pal: Use upstream vmid support
+- pal: Bump version number to 300
+- pal: Code refactoring of mmpipelines up to possible extent.
+- pal: Update interface logger and add a bunch of static asserts
+- pal: Remove pal code object elf header validation from "init from
+       binary" functions
+- pal: [NAVI21][PAL] Updating DMA command to use subresource for the
+       corresponding plane when programming
+- pal: Rename function to avoid shadowing
+- pal: Remove some cruft from Barrier and RsrcProcMgr
+- pal: [GpuDebug] Add Surface Capture functionality
+- pal: Add UUID support to PAL
+- pal: Csc changes and HDR shaders modification by removing studio/full
+       ragne conversions from the kernels
+- pal: Fix interface logger assert/error
+- pal: Add pal code object elf header validation to "init from binary"
+       functions
+- pal: Add Developer::CallbackType::SurfRegData handling to layer
+       callback functions to avoid asserts
 
 * Thu Feb 25 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.177.0.20210225.gitab996a7
 
