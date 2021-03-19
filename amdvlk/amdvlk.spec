@@ -1,9 +1,9 @@
-%global amdvlk_commit               56170eba73d7f07a4106f0f94f07fbb039ac1a14
+%global amdvlk_commit               f404771a8eb95455227c4f7f3827990b6d98f185
 # commits from AMDVLK/default.xml
 %global llvm_commit                 0d4ae425cd44beba347958d9494ba301e6ec2ad4
-%global llpc_commit                 cd4a476d56fd7676eeca31da98a6b30e6b57048d
-%global xgl_commit                  0c029b1501d13fe23956223adc937a909cd8292c
-%global pal_commit                  a8cf07c212059bae9d018c05fc896e1115a2f077
+%global llpc_commit                 d69e5fb103b9c7394d4a098b23930ac5d5a99e6f
+%global xgl_commit                  484d8e1f46e0f4b3dcd16ca491253fbef41698a0
+%global pal_commit                  4ea0bad02244d155423be0a77d702c3a5a6e950f
 %global spvgen_commit               59823e6c3557cb7f3fae4a9f2760ad3f6b694997
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -25,7 +25,7 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20210312
+%global commit_date                 20210319
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
@@ -75,7 +75,7 @@ The AMD Open Source Driver for Vulkan® is an open-source Vulkan driver
 for Radeon™ graphics adapters on Linux®. It is designed to support the
 following AMD GPUs:
 
-    Radeon™ RX 6900/6800 Series
+    Radeon™ RX 6900/6800/6700 Series
     Radeon™ RX 5700/5600/5500 Series
     Radeon™ RX Vega Series
     Radeon™ R5/R7/R9 200/300 Series
@@ -154,6 +154,10 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+
+* Fri Mar 19 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.179.0.20210319.gitf404771
+
+- xgl, pal: Add Navi22 support
 
 * Fri Mar 12 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.179.0.20210312.git56170eb
 
