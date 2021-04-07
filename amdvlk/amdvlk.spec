@@ -1,9 +1,9 @@
-%global amdvlk_commit               f404771a8eb95455227c4f7f3827990b6d98f185
+%global amdvlk_commit               f1b97f7e6b1cf6b8c7a1fb56fdf53e8bb234ab8a
 # commits from AMDVLK/default.xml
-%global llvm_commit                 0d4ae425cd44beba347958d9494ba301e6ec2ad4
-%global llpc_commit                 d69e5fb103b9c7394d4a098b23930ac5d5a99e6f
-%global xgl_commit                  484d8e1f46e0f4b3dcd16ca491253fbef41698a0
-%global pal_commit                  4ea0bad02244d155423be0a77d702c3a5a6e950f
+%global llvm_commit                 b0392f639492720b268697f4261aaccfa3459537
+%global llpc_commit                 a8ec3c6e6372dcfd812a2ea592141a821e9584b1
+%global xgl_commit                  e1be7ee14c39d3a36d9d1aacd00caf3acc437cde
+%global pal_commit                  83635fbee82fb21662a4737e34437c41172c6fe0
 %global spvgen_commit               59823e6c3557cb7f3fae4a9f2760ad3f6b694997
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20210319
+%global commit_date                 20210407
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.179
+Version:       2.181
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -154,6 +154,49 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+
+* Wed Apr 07 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.181.0.20210407.gitf1b97f7
+
+- xgl: Add Navi12 support
+- xgl: Driver Implementation for VK_KHR_synchronization2
+- xgl: Update PAL Interface in Vulkan to 664
+- xgl: Update Khronos Vulkan Headers to 1.2.173
+- xgl: Add support for no alloc to our resource optimizer
+- xgl: Add new DCC settings and update the DCC defaults for Navi10+
+- xgl: Update settings file to add top level DriverState Field
+- xgl: Generate the json file by template
+- xgl: Fix memory leak on create device queues failure
+- xgl: Cleanup unnecessary code in CmdBuffer::BindPipeline()
+- xgl: Fix potential issues in AMD switchable graphics layer
+- xgl: Remove settings for dispatch tunneling
+- pal: Add Navi12 support
+- pal: [GpuDebug] Avoid GpuDebug making a token-style CmdBuffer for
+       nested command buffers
+- pal: Fix DmaCmdBuffer::GetMemImageCopyMethod for Gfx10
+- pal: If there is no AMD GPU in the system, then return Initialization
+       Failed error
+- pal: PWS on legacy barrier to expose more wait stages
+- pal: Fix Reported MaxEventId for EA block on Gfx10
+- pal: Fix software stream-out event packet write asserts
+- pal: Indirect Command Generation creates long chain of NOPs
+- pal: [cmake] Improve Pal configure speed
+- pal: PAL writes two copies of the compute user-data registers
+- pal: Adding cmd Submit into WriteUniversalPreamble() to prevent
+       exceededing the cmd "reserve_limit"
+- pal: Panel setting for inlining nested command buffers. Useful for
+       logging the buffers at submit time.
+- pal: Fix usage of ::std::random_device()
+- pal: Add a public settings disableDebugOverlayVisualConfirm to disable
+       debug overlay after Platform initialization
+- pal: Add back the deprecated event-based AcqRel interface functions
+- pal: Fix memory leaks on create failures with layers enabled
+- pal: Add option to add DrawDispatchInfo for only true app-draws
+- pal: Add the interface and support in PAL to prime cache
+- pal: Avoid flushing gfx-only caches on async compute
+- pal: AQL path update
+- pal: Rename GenericAllocatorAuto to GenericAllocatorTracked and only
+       define it if PAL_MEMTRACK=1 otherwise alias it to GenericAllocator
+- pal: Fix the reported VGPR allocation granularity
 
 * Fri Mar 19 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.179.0.20210319.gitf404771
 
