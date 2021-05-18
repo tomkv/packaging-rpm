@@ -1,10 +1,10 @@
-%global amdvlk_commit               d42d2c7fbbc1c7ebbc72257702639980e303252a
+%global amdvlk_commit               8acc216dbfa3f9e5034cbdfaf073a1495965edcf
 # commits from AMDVLK/default.xml
-%global llvm_commit                 d2e97f4879565c9292f9177debbc7c65ead6ab84
-%global llpc_commit                 28c4e99487ebe0a8b5801f56b876df6b33903554
-%global xgl_commit                  f1467f0dfd3dccd643214574ebfbe456a55d03bd
-%global pal_commit                  0168557a0715bf47a55ffe9858276cde1e74cc1d
-%global spvgen_commit               59823e6c3557cb7f3fae4a9f2760ad3f6b694997
+%global llvm_commit                 95783cc95c317154202ca84d5d91619e0a097c13
+%global llpc_commit                 f6a6db59d49977cefa79dab3346a1eba2ecfca3c
+%global xgl_commit                  d81362ec6baf91a98895572d721ce7497efc8eeb
+%global pal_commit                  de5f376ca30a108f1fc1fd5cdf33fdfe9f9d5dbb
+%global spvgen_commit               faf9ff1722d3eac902481401252c2529c6988782
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
 # commits from spvgen/CHANGES
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20210428
+%global commit_date                 20210517
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.184
+Version:       2.186
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -154,6 +154,47 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+
+* Tue May 18 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.186.0.20210517.git8acc216
+
+- xgl: Change PipelineProfile::PipelineProfileEntry array to use dynamic
+       memory
+- xgl: XGL's AmdCMakeHelper.cmake has hidden dependency on pal's
+       AmdCMakeHelper.cmake
+- xgl: Update PAL Interface in Vulkan to 666
+- xgl: XGL + VK_KHR_synchronization2 support: Invalid assertion failure
+       triggers in PAL when transfering owership from compute to
+       universal queue fam
+- xgl: Update Khronos Vulkan Headers to 1.2.177
+- xgl: Disallow Copy Constructors
+- pal: Add more than one heap preference support to GpuMemory Events to
+       PAL and deprecate "preferredHeap”
+- pal: Initialize gang-submit semaphore
+- pal: Inconsistent layout masks for ResolveSrc/ResolveDst
+- pal: Changing the name of the iterate256 panel setting
+- pal: Disallow iterate256 only for Vulkan and samples>=4 on Navi21
+- pal: Remove Deprecated ISA Database Chunk from RGP Files in GpaSession
+- pal: [Wayland] Fix warning in building WaylandWindowSystem
+- pal: Fix segfaults in dev callbacks on non-x11 linux
+- pal: Use source file hacks for Wayland to fix Linux builds
+- pal: Adds support for the RmtVersion event so the tool can properly
+       identify which RMT spec version is being used for emitted RMT
+       tokens
+- pal: CPU Perf Calculate Pipeline binning on/off at pipeline creation
+       time
+- pal: Fix performance issue in Dawn of War 3 and Civilization 6
+- pal: [cmake] Improve PAL configure/generate speed with 3.12/3.13
+       functionality
+- pal: Support dynamic enable of color writes
+- pal: Extend format support on Wayland
+- pal: Fix segfaults in CmdBufferLogger
+- pal: Fix ExecuteIndirect Changes
+- pal: [GpuDebug] Add Depth Stencil Support to Surface Capture
+- pal: Hook up CPU present path on Linux to a setting
+- pal: Vulkan apps ignoring previously created shader cache and creating
+       new duplicate cache
+- pal: Indirect Command Generation creates long chain of NOPs
+- pal: Allow use of 256B swizzle modes in PAL
 
 * Wed Apr 28 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.184.0.20210428.gitd42d2c7
 
