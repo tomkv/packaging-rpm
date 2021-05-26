@@ -1,9 +1,9 @@
-%global amdvlk_commit               8acc216dbfa3f9e5034cbdfaf073a1495965edcf
+%global amdvlk_commit               29fd70ae768dbe0c6743db67fd92052eeb1e5985
 # commits from AMDVLK/default.xml
-%global llvm_commit                 95783cc95c317154202ca84d5d91619e0a097c13
-%global llpc_commit                 f6a6db59d49977cefa79dab3346a1eba2ecfca3c
-%global xgl_commit                  d81362ec6baf91a98895572d721ce7497efc8eeb
-%global pal_commit                  de5f376ca30a108f1fc1fd5cdf33fdfe9f9d5dbb
+%global llvm_commit                 63e124668883cfb5f714cd2e77ee7b78a59da29a
+%global llpc_commit                 2c4b1bdb39e3e8357f1eab27ed6de86e378199c6
+%global xgl_commit                  9b77f6008d4316922cde45baf39d079b4d328893
+%global pal_commit                  9786fa8c34df6d9baddeff40d331106799fcbb07
 %global spvgen_commit               faf9ff1722d3eac902481401252c2529c6988782
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20210517
+%global commit_date                 20210526
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.186
+Version:       2.188
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -134,12 +134,10 @@ mkdir -p %{buildroot}%{_sysconfdir}/amd
 echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettings.cfg
 
 %if 0%{?__isa_bits} == 64
-    install -m 644 AMDVLK/json/Redhat/amd_icd64.json %{buildroot}%{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
-#    install -m 644 AMDVLK/json/Redhat/amd_icd64.json %{buildroot}%{_datadir}/vulkan/implicit_layer.d/amd_icd.%{_arch}.json
+    install -m 644 xgl/build/icd/amd_icd64.json %{buildroot}%{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
     install -m 755 xgl/build/icd/amdvlk64.so %{buildroot}%{_libdir}
 %else
-    install -m 644 AMDVLK/json/Redhat/amd_icd32.json %{buildroot}%{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
-#    install -m 644 AMDVLK/json/Redhat/amd_icd32.json %{buildroot}%{_datadir}/vulkan/implicit_layer.d/amd_icd.%{_arch}.json
+    install -m 644 xgl/build/icd/amd_icd32.json %{buildroot}%{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
     install -m 755 xgl/build/icd/amdvlk32.so %{buildroot}%{_libdir}
 %endif
 install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
@@ -149,11 +147,28 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %dir %{_sysconfdir}/amd
 %config %{_sysconfdir}/amd/amdPalSettings.cfg
 %{_datadir}/vulkan/icd.d/amd_icd.%{_arch}.json
-#%{_datadir}/vulkan/implicit_layer.d/amd_icd.%{_arch}.json
 %{_libdir}/amdvlk*.so
 %{_libdir}/spvgen.so
 
 %changelog
+
+* Wed May 26 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.188.0.20210526.git29fd70a
+
+- xgl: Expose VK_EXT_custom_border_color
+- xgl: Expose VK_EXT_color_write_enable
+- xgl: [AMDVLK] Generate driver package through CMake/CPack
+- xgl: Update Khronos Vulkan Headers to 1.2.178
+- xgl: Update PAL Interface in Vulkan to 667
+- xgl: Add support for memory and leak sanitizer
+- xgl: VK_EXT_color_write_enable - Driver Implementation
+- pal: Bump version number to 312
+- pal: Remove public references to ThreadTraceViewer
+- pal: [cmake] Move shared, res, include functionality to the appropriate
+       locations
+- pal: Enable shader write compression for Depth+Stencil images on GFX10
+- pal: [GpuDebug] SurfaceCapture add missing barriers
+- pal: CPU Perf Simplify Binning code
+- pal: [PAL]gfx9CommandGenerator using wrong packet to set index_type
 
 * Tue May 18 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.186.0.20210517.git8acc216
 
