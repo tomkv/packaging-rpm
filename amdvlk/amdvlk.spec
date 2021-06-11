@@ -1,9 +1,9 @@
-%global amdvlk_commit               29fd70ae768dbe0c6743db67fd92052eeb1e5985
+%global amdvlk_commit               c29e047d95ee36b8560c75f7403ad761ebe0b456
 # commits from AMDVLK/default.xml
-%global llvm_commit                 63e124668883cfb5f714cd2e77ee7b78a59da29a
-%global llpc_commit                 2c4b1bdb39e3e8357f1eab27ed6de86e378199c6
-%global xgl_commit                  9b77f6008d4316922cde45baf39d079b4d328893
-%global pal_commit                  9786fa8c34df6d9baddeff40d331106799fcbb07
+%global llvm_commit                 a85ea7baf89016f72d7cb7c94db4c996d70d9898
+%global llpc_commit                 c89f405e3632f0b639faafe61cd03cb851492f4e
+%global xgl_commit                  14397c77fbc0c760397dd3162482407b2721a825
+%global pal_commit                  02ac99ba650afb3aebff3eb8006862ce93d31968
 %global spvgen_commit               faf9ff1722d3eac902481401252c2529c6988782
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20210526
+%global commit_date                 20210610
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.188
+Version:       2.189
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -151,6 +151,22 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+
+* Fri Jun 11 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.289.0.20210610.git7387247
+
+- xgl: Disable the settings ImplicitExternalSynchronization for Gpu's
+       above Gfx8
+- xgl: Fix implicit synchronization in renderpass for gpu below gfx9 for
+       implicitExternalOutgoing = 1
+- xgl: Update Khronos Vulkan Headers to 1.2.179
+- xgl: Fix profile script randomly breaking on empty folders
+- xgl: [RGP][RenderDoc] Unable to capture due to "trigger mode" getting
+       wiped mid-capture
+- pal: Bump version number to 314
+- pal: Fix the SQ's LEVEL counters in SPM traces
+- pal: Deprecate PAL_BUILD_GPUOPEN / PAL_ENABLE_DEVDRIVER_USAGE
+- pal: [MGPU][wayland] Corruption Observed while running Wayland render
+       tests
 
 * Wed May 26 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.188.0.20210526.git29fd70a
 
