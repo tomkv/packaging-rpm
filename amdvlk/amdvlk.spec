@@ -1,10 +1,10 @@
-%global amdvlk_commit               c29e047d95ee36b8560c75f7403ad761ebe0b456
+%global amdvlk_commit               9d6960267596f1e653800267d9db258269234d0a
 # commits from AMDVLK/default.xml
-%global llvm_commit                 a85ea7baf89016f72d7cb7c94db4c996d70d9898
-%global llpc_commit                 c89f405e3632f0b639faafe61cd03cb851492f4e
-%global xgl_commit                  14397c77fbc0c760397dd3162482407b2721a825
-%global pal_commit                  02ac99ba650afb3aebff3eb8006862ce93d31968
-%global spvgen_commit               faf9ff1722d3eac902481401252c2529c6988782
+%global llvm_commit                 b9916620f254f7cf91e8c1fb86e7869c20d5c1e0
+%global llpc_commit                 1e493d3dced3f4963cc9d2b6b86b1c523c247860
+%global xgl_commit                  393fca7a5645923a6dbd7f948bded5b14302211b
+%global pal_commit                  66f4ef75eed4d098f7652739b9f7dd3cd8bda6e6
+%global spvgen_commit               8ac72283650fbeb3da2ab18c20ad98d45e3d12e1
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
 # commits from spvgen/CHANGES
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20210610
+%global commit_date                 20210624
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.189
+Version:       2.190
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -78,15 +78,9 @@ following AMD GPUs:
     Radeon™ RX 6900/6800/6700 Series
     Radeon™ RX 5700/5600/5500 Series
     Radeon™ RX Vega Series
-    Radeon™ R5/R7/R9 200/300 Series
     Radeon™ RX 400/500 Series
-    Radeon™ M200/M300/M400 Series
-    Radeon™ HD 8000M Series
-    Radeon™ HD 7000 Series
-    AMD FirePro™ Workstation Wx000/Wx100/Wx300 Series
-    Radeon™ Pro WX x100 Series
-    Radeon™ Pro 400/500 Series
-    Radeon™ W5700/W5500 Series
+    Radeon™ Pro WX 9100, x200 Series
+    Radeon™ Pro W5700/W5500 Series
 
 %prep
 %setup -q -c -n %{name}-%{version} -a 0 -a 1 -a 2 -a 3 -a 4 -a 5 -a 6 -a 7 -a 8 -a 9 -a 10 -a 11
@@ -151,6 +145,29 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+
+* Fri Jun 25 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.290.0.20210624.git9d69602
+
+- xgl: Consolidate where the app profiles are done
+- xgl: Memory leaks in the driver during full CTS run
+- xgl: Clean up viewFlags argument in ImageView::BuildDepthStencilView()
+       and ImageView::Create()
+- xgl: Require final keyword on leaf classes
+- xgl: Update PAL Interface in Vulkan to 668
+- xgl: VK_EXT_extended_dynamic_state2 - Driver Implementation
+- xgl: Cleanup usePalPipelineCaching use
+- pal: Add CmdDispatchAce to be called from RPM
+- pal: Disable LoadIndexObjectBinds by default
+- pal: Fix hole GfxBltState flag wrongly cleared by
+       range-checked-target-stall
+- pal: Retire Pre-Polaris and Pre-Raven specific code
+- pal: Tweak the FCE optimization in acquire release path and some other
+       clean up
+- pal: [GFX10] Remove DB_PRELOAD_CONTROL
+- pal: Rename useGraphicsFastDepthStencilClear
+- pal: Bump version number to 316
+- pal: VK_EXT_extended_dynamic_state2 - Driver Implementation
+- pal: Support monotonic raw clocks
 
 * Fri Jun 11 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.289.0.20210610.git7387247
 
