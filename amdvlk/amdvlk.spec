@@ -1,17 +1,17 @@
-%global amdvlk_commit               9d6960267596f1e653800267d9db258269234d0a
+%global amdvlk_commit               dc6c848e60239d9b547185d7e07b531723504e1a
 # commits from AMDVLK/default.xml
-%global llvm_commit                 b9916620f254f7cf91e8c1fb86e7869c20d5c1e0
-%global llpc_commit                 1e493d3dced3f4963cc9d2b6b86b1c523c247860
-%global xgl_commit                  393fca7a5645923a6dbd7f948bded5b14302211b
-%global pal_commit                  66f4ef75eed4d098f7652739b9f7dd3cd8bda6e6
-%global spvgen_commit               8ac72283650fbeb3da2ab18c20ad98d45e3d12e1
+%global llvm_commit                 84bf997c8b569e551ef73d39cf391e72d2f6c682
+%global llpc_commit                 b2e47a684ac1ba9bcddfc87afa9d2fffffd15c06
+%global xgl_commit                  682b4a3d4a49b2db24ad10b31ff192d03ecca097
+%global pal_commit                  ad699adac6f9f331bbc454050f6b40d1549ce752
+%global spvgen_commit               051b6997c7c34f1167cfd400e3205ed6d4b728ef
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
 # commits from spvgen/CHANGES
-%global glslang_commit              3de5cfe50edecd001e6d703555284d9b10b3dd57
-%global spirv_tools_commit          8383bd5d6f26c51d9b6b0b1fd1a001be07aedd8d
-%global spirv_headers_commit        f027d53ded7e230e008d37c8b47ede7cd308e19d
-%global spirv_cross_commit          9acb9ec31f5a8ef80ea6b994bb77be787b08d3d1
+%global glslang_commit              9431c53c84c14fa9e9cd37678262ebba55c62c87
+%global spirv_tools_commit          1020e394cb1267332d58497150d2b024371a8e41
+%global spirv_headers_commit        85b7e00c7d785962ffe851a177c84353d037dcb6
+%global spirv_cross_commit          2e1b5fb39ebc2ef4cb77005f8267e4f3a6241ba1
 
 %global amdvlk_short_commit         %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit           %(c=%{llvm_commit}; echo ${c:0:7})
@@ -25,12 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20210624
+%global commit_date                 20210709
 %global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.190
+Version:       2.192
 Release:       0%{gitrel}%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -145,6 +145,36 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Fri Jul 09 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.292.0.20210709.gitdc6c848
+
+- xgl: Fix missing calls to DestroyLineStipple() and DestroyFragmentShadingRate()
+- xgl: Update Khronos Vulkan Headers to 1.2.182
+- xgl: Remove redundant Pal::CmdSetPerDrawVrsRate() calls if VRS state is static
+- xgl: Remove dimension correction to blocks for compressed image formats
+       for CmdColorSpaceConversionCopy and ScaledCopy
+- xgl: Align return types of functions with API functions
+- xgl: Enable interpMode patch
+- xgl: vkGet*MemoryRequirements should not return device coherent memory
+       types when extension is disabled
+- xgl: VK_KHR_shader_subgroup_uniform_control_flow - Expose the extension
+- xgl: Improve the multi-pipeline cache files init
+- xgl: Change bools in GraphicsPipeline's CreateInfo to flags
+- xgl: Update PAL Interface in Vulkan to 670
+- xgl: VK_EXT_extended_dynamic_state2 - Driver Implementation
+- xgl: [Navi10] DCC Tuning
+- xgl: Add Pal::GpuHeapGartUswc to the compatible memory types available
+       for host memory allocations using the
+       VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT
+- xgl: Change how resource keys are built
+- pal: Remove core LoadIndex path support from the PipelineUploader
+- pal: Fix ATC perfcounters on navi2
+- pal: Add support for 2D_RECTANGLE VGT_PRIMITIVE_TYPE
+- pal: Some checks for IsGfx103 would never be true as they were
+       preceeded by IsGfx10 checks
+- pal: Retire Pre-Polaris and Pre-Raven specific code
+- pal: Fix for synchronization issue when using pinned memory
+- pal: Bump version number to 319
+- pal: Remove stack alignment compiler options
 
 * Fri Jun 25 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.290.0.20210624.git9d69602
 
