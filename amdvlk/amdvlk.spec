@@ -1,9 +1,9 @@
-%global amdvlk_commit               dc6c848e60239d9b547185d7e07b531723504e1a
+%global amdvlk_commit               099e036d25f38e332e7f5652683ca77f7429f5bf
 # commits from AMDVLK/default.xml
-%global llvm_commit                 84bf997c8b569e551ef73d39cf391e72d2f6c682
-%global llpc_commit                 b2e47a684ac1ba9bcddfc87afa9d2fffffd15c06
-%global xgl_commit                  682b4a3d4a49b2db24ad10b31ff192d03ecca097
-%global pal_commit                  ad699adac6f9f331bbc454050f6b40d1549ce752
+%global llvm_commit                 3558c46649a7ef673ff95c58266e59b09626abf0
+%global llpc_commit                 64a67716cf85de1a6bf7e1891acb10794d9bb56e
+%global xgl_commit                  9210b6802b964cd875628aa67a52fa44a4ec5017
+%global pal_commit                  3e6d3ab088f3b7b405250e75de112df37c49398a
 %global spvgen_commit               051b6997c7c34f1167cfd400e3205ed6d4b728ef
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -25,13 +25,12 @@
 %global spirv_tools_short_commit    %(c=%{spirv_tools_commit}; echo ${c:0:7})
 %global spirv_headers_short_commit  %(c=%{spirv_headers_commit}; echo ${c:0:7})
 %global spirv_cross_short_commit    %(c=%{spirv_cross_commit}; echo ${c:0:7})
-%global commit_date                 20210709
-%global gitrel                      .%{commit_date}.git%{amdvlk_short_commit}
 %global khronos_url                 https://github.com/KhronosGroup/
 
 Name:          amdvlk-vulkan-driver
-Version:       2.192
-Release:       0%{gitrel}%{?dist}
+Epoch:         1
+Version:       2021.Q3.2
+Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
 Url:           https://github.com/GPUOpen-Drivers
@@ -145,6 +144,26 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Thu Jul 22 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.2
+
+- xgl: Add missing checks for dynamicStateFlags
+- xgl: Fix ignored structs for rasterization disabled
+- xgl: VK_KHR_fragment_shading_rate: pFragmentShadingRateAttachment can
+       be NULL
+- xgl: VK_EXT_extended_dynamic_state2 - Expose the extension
+- xgl: VK_KHR_copy_commands2 - Expose the extension
+- xgl: Update PAL Interface in Vulkan to 673
+- xgl: Enable implicit external synchronization for all GPUs
+- pal: Fix references to compute state in dynamic launch changes
+- pal: Removing PAL_INLINE from util
+- pal: Fix bug of image view of X8_Unorm format
+- pal: Adding dumpCmdBufPerFrame setting
+- pal: Fix hole in nested CB reset logic
+- pal: Fix NdGpuMemory alloc alignment bug
+- pal: [AcqRelBarrier] BottomOfPipe wait stage needs to sync CPDMA
+- pal: Correct SDMA Predication logic for GFX9
+- pal: Put last chip hdrs in namespace
+
 * Fri Jul 09 2021 Tomas Kovar <tkov_fedoraproject.org> - 2.292.0.20210709.gitdc6c848
 
 - xgl: Fix missing calls to DestroyLineStipple() and DestroyFragmentShadingRate()
