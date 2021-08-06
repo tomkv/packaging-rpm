@@ -1,9 +1,9 @@
-%global amdvlk_commit               099e036d25f38e332e7f5652683ca77f7429f5bf
+%global amdvlk_commit               958c11c2418211d94fb679997617cf440d0dc0c1
 # commits from AMDVLK/default.xml
-%global llvm_commit                 3558c46649a7ef673ff95c58266e59b09626abf0
-%global llpc_commit                 64a67716cf85de1a6bf7e1891acb10794d9bb56e
-%global xgl_commit                  9210b6802b964cd875628aa67a52fa44a4ec5017
-%global pal_commit                  3e6d3ab088f3b7b405250e75de112df37c49398a
+%global llvm_commit                 d3ad9a01687d912773e4fe802ddc85143b7e66d1
+%global llpc_commit                 9a3ae083e7400d38790dd9a251731b20aae0d31a
+%global xgl_commit                  b135615f415f318c4e910e4b4f44aba2b5ea2e7f
+%global pal_commit                  f2be9e29a870305e2b2ff1641c0f230725685ef3
 %global spvgen_commit               051b6997c7c34f1167cfd400e3205ed6d4b728ef
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2021.Q3.2
+Version:       2021.Q3.3
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,51 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+
+* Fri Aug 06 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.3
+
+- xgl: Cache the number of PAL devices (m_pDevice->NumPalDevices()) in
+       the command buffer
+- xgl: Change DeviceFeatures to be a bitfield instead of using VkBool32
+- xgl: Rename DirtyState to DirtyGraphicsState
+- xgl: Add ASTC Gpu decode pass
+- xgl: Reduce Driver Binary Size - Device::Create
+- xgl: [Rage2] Disable DCC for an individual resource instead of all
+       color attachments
+- xgl: Update Khronos Headers to 1.2.185
+- xgl: Limit maxExtent.depth for 2D_ARRAY_COMPATIBLE
+- xgl: Update Reporting of Limits maxImageDimension3D and
+       maxFramebufferLayers
+- xgl: Turn off the ImplicitExternalSynchronization for affected apps.
+- xgl: Update PAL Interface in Vulkan to 674
+- xgl: [pipeline_cache] driver uses wrong pipeline cache between
+       enable/disable fp16
+- xgl: Turn off the ImplicitExternalSynchronization for Mad Max, Doom
+       Eternal, Rage 2, World War Z
+- xgl: Adjust the Fragment Shading Rate Properties to spec limits.
+- pal: Fix relocs for unmapped sections
+- pal: Amdgpu Back-end incorrectly reporting gang-submission support is
+       enabled.
+- pal: [AMDVLK #228][The Surge 2] kernel driver crash if the game has
+       been started with RADV before
+- pal: Run CmdGen shaders using ganged ACE.
+- pal: Add support for OpenSSL v1.0.x
+- pal: Fix all invalid asserts
+- pal: Add support for R_AMDGPU_REL16 relocation
+- pal: Miss to update pBarrierOps->layoutTransitions.updateDcc
+- pal: Consistent comments in config files
+- pal: Add cached setting for 32b pred emu
+- pal: Support 32bit predicates on the universal engine on GFX6-8.
+- pal: Remove PAL_INLINE from public headers
+- pal: [Vulkan] Valheim crashes when GPU profiler is enabled in
+- pal: Add operator == and != for OsWindowHandle on Linux
+- pal: [PAL] Add view instancing for task shaders
+- pal: Support tile swizzle values per plane instead of per image
+- pal: Send absolute frequencies instead of ratios
+- pal: Exposing C++ standard version that PAL is compiled with
+- pal: palUtil: Allow open-source standalone LLPC build on Windows
+- pal: Supply full address to SRD's.
+
 * Thu Jul 22 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.2
 
 - xgl: Add missing checks for dynamicStateFlags
