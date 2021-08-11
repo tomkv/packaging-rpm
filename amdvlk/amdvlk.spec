@@ -1,8 +1,8 @@
-%global amdvlk_commit               958c11c2418211d94fb679997617cf440d0dc0c1
+%global amdvlk_commit               463d4697fe2b74fbf6b447d5076d39708edc6a3d
 # commits from AMDVLK/default.xml
 %global llvm_commit                 d3ad9a01687d912773e4fe802ddc85143b7e66d1
 %global llpc_commit                 9a3ae083e7400d38790dd9a251731b20aae0d31a
-%global xgl_commit                  b135615f415f318c4e910e4b4f44aba2b5ea2e7f
+%global xgl_commit                  ec89b84f0b8a83aa2b29ed25cfd741c90f9e2688
 %global pal_commit                  f2be9e29a870305e2b2ff1641c0f230725685ef3
 %global spvgen_commit               051b6997c7c34f1167cfd400e3205ed6d4b728ef
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2021.Q3.3
+Version:       2021.Q3.4
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,9 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Wed Aug 11 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.4
+
+- xgl: Fix horrifically broken switchable graphics layer
 
 * Fri Aug 06 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.3
 
