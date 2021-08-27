@@ -1,10 +1,10 @@
-%global amdvlk_commit               463d4697fe2b74fbf6b447d5076d39708edc6a3d
+%global amdvlk_commit               1c696b6deadae76dbb1a1b2d19c045fc30269745
 # commits from AMDVLK/default.xml
-%global llvm_commit                 d3ad9a01687d912773e4fe802ddc85143b7e66d1
-%global llpc_commit                 9a3ae083e7400d38790dd9a251731b20aae0d31a
-%global xgl_commit                  ec89b84f0b8a83aa2b29ed25cfd741c90f9e2688
-%global pal_commit                  f2be9e29a870305e2b2ff1641c0f230725685ef3
-%global spvgen_commit               051b6997c7c34f1167cfd400e3205ed6d4b728ef
+%global llvm_commit                 e32a5e65b5a2e821f3442908399ba097b610b495
+%global llpc_commit                 72c9697660a901e888d119ad921b021c7800fd54
+%global xgl_commit                  e6ae9d1025c879035b34c353095362d89d20e30b
+%global pal_commit                  cd4f8b28b5d923e8d65a1ef1d3dee5137a89d6bd
+%global spvgen_commit               985d66ad5f62595b344c12746de0edfda201377e
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
 # commits from spvgen/CHANGES
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2021.Q3.4
+Version:       2021.Q3.5
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,16 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Fri Aug 27 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.5
+
+- xlg: Add Navi23 support
+- xlg: Support uber-fetch shader in Vulkan driver
+- xlg: Make DeviceGroupMemory a POD struct
+- pal: Add settings to override bin size calculation
+- pal: Fix CmdGenUsingAce when MS HWS is enabled
+- pal: [AcqRelBarrier] InitMaskRam needs l2 flush and invalidation for
+       meta cache misalignment WA
+
 * Wed Aug 11 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.4
 
 - xgl: Fix horrifically broken switchable graphics layer
