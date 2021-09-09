@@ -1,9 +1,9 @@
-%global amdvlk_commit               1c696b6deadae76dbb1a1b2d19c045fc30269745
+%global amdvlk_commit               87fb643c917e48e80b38abb03a0722d55a199d82
 # commits from AMDVLK/default.xml
-%global llvm_commit                 e32a5e65b5a2e821f3442908399ba097b610b495
-%global llpc_commit                 72c9697660a901e888d119ad921b021c7800fd54
-%global xgl_commit                  e6ae9d1025c879035b34c353095362d89d20e30b
-%global pal_commit                  cd4f8b28b5d923e8d65a1ef1d3dee5137a89d6bd
+%global llvm_commit                 b7a843f97612b6bf53eced6fea3ce2016f067727
+%global llpc_commit                 a1145b1ee3fd323d2d9f72c604e96114ee1b7b7f
+%global xgl_commit                  d8bb7dee18bb03f829b74a44aa5c8265e0737316
+%global pal_commit                  8e5baae7cfdd885974013337e556e9dc955b6737
 %global spvgen_commit               985d66ad5f62595b344c12746de0edfda201377e
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2021.Q3.5
+Version:       2021.Q3.6
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,52 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Thu Sep 09 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.6
+
+- xgl: Update PAL Interface in Vulkan to 675
+- xgl: Cleanup use of VK_INLINE
+- xgl: Fix wrong use of pDepthStencilResolveAttachment in
+       SubpassDescription::Init
+- xgl: Don't put cmdbufs in local when memory oversubscription is allowed
+- xgl: [XGL issue#126] Switchable graphics layer filters out cards AMDVLK
+       dropped support for
+- xgl: Cleanup unused argument pCmdAllocator to
+       CmdBuffer::PalCmdBufferReset()
+- xgl: VK_EXT_load_store_op_none - Expose the extension
+- xgl: VK_KHR_zero_initialize_workgroup_memory - Expose the extension
+- xgl: Add exclusion for implicit external synchronization if there is no
+       layout transition.
+- xgl: Heavy flickering observed while performing ALT-TAB in Ghost Recon:
+       Breakpoint Vulkan
+- xgl: Disable enableBackfaceCulling for conservative rasterization
+       overestimation
+- xgl: Buffer creation enhancements
+- xgl: Update Khronos Headers to 1.2.188
+- xgl: Overrides of mallNoAllocCtPolicy and mallNoAllocCtSsrPolicy should
+       use enums
+- xgl: PalCmdResolveImage for device groups
+- xgl: Valhiem shader optimization
+- xgl: Revert a change causing hang of dEQP-VK.memory.allocation.*
+- pal: CMake cleanup
+- pal: Move PA_STATE_STEREO_X reg from UCmdBuf to UQueueCtx
+- pal: Fix corruption issue when turning on DebugOverlayEnable
+- pal: Some cmdbuffer/dispatch cleanup
+- pal: [cmake] Replace pal_build_parameter
+- pal: Debug BitfieldIsSet assertion in ScaledCopyImageGraphics
+- pal: [genSetting] Add more complex BuildType support for setting
+- pal: SPI_PERF_RA_* counters report 0 on all GFX9 hardware
+- pal: Create new PalAbi namespace for future handling of multiple ABI's
+- pal: Replace constexpr with inline
+- pal: RPCS3 Corruption is observed on game window
+- pal: GPU Profiler: per-draw SPM traces can clobber each other
+- pal: Prevent PM4Optimizer from splitting
+- pal: Remove PAL_INLINE
+- pal: Remove DB_PRELOAD_CONTROL
+- pal: Fix untracked cmdAllocator destroying before cmdBuffer is deleted
+- pal: [CMDLOGGER] Remove shaderWrite flag from Presentable surface
+- pal: [GFX10] The "array_pitch" field of the SRD determines
+- pal: [AMDVLK][#236] Confusing implementation of VK_EXT_hdr_metadata
+
 * Fri Aug 27 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.5
 
 - xlg: Add Navi23 support
