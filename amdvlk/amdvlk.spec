@@ -1,12 +1,12 @@
-%global amdvlk_commit               87fb643c917e48e80b38abb03a0722d55a199d82
+%global amdvlk_commit               e4a5c9f48ff98fe6f37f54c6c850e8dfad7dfac4
 # commits from AMDVLK/default.xml
-%global llvm_commit                 b7a843f97612b6bf53eced6fea3ce2016f067727
-%global llpc_commit                 a1145b1ee3fd323d2d9f72c604e96114ee1b7b7f
-%global xgl_commit                  d8bb7dee18bb03f829b74a44aa5c8265e0737316
+%global llvm_commit                 2108ca319b3f5d5e84603e6644365cd14a58c0de
+%global llpc_commit                 b8ba5f3626f07dbf76026a05394bc2b5c99fe713
+%global xgl_commit                  9244bd33f361bbfd23df14789e82457a63d70d5d
 %global pal_commit                  8e5baae7cfdd885974013337e556e9dc955b6737
-%global spvgen_commit               985d66ad5f62595b344c12746de0edfda201377e
+%global spvgen_commit               ac9911afeff0e33ee240c01a593b156f0bc6f6af
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
-%global cwpack_commit               7387247eb9889ddcabbc1053b9c2052e253b088e
+%global cwpack_commit               39f8940199e60c44d4211cf8165dfd12876316fa
 # commits from spvgen/CHANGES
 %global glslang_commit              9431c53c84c14fa9e9cd37678262ebba55c62c87
 %global spirv_tools_commit          1020e394cb1267332d58497150d2b024371a8e41
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2021.Q3.6
+Version:       2021.Q3.7
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,49 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Thu Sep 30 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.7
+
+- xgl: Misc cleanup changes
+- xgl: Set shader*Float64Atomic in GetFeatures2()
+- xgl: Support defer compile optimized pipeline for early compile
+- xgl: VK_EXT_pageable_device_local_memory - implementation
+- xgl: Update PAL version in Vulkan to 678
+- xgl: Removed unnecessary checks.
+- xgl: Set Quad Sample Pattern State Bug Fixes
+- xgl: Enable extension: VK_KHR_shader_integer_dot_product
+- xgl: [AMDVLK-203][DXVK-1.8]Skyrim Special Edition: Rendering issues
+       with menu spell effects
+- xgl: Enable extension:
+       VK_EXT_shader_atomic_float/VK_EXT_shader_atomic_float2
+- xgl: Update Khronos Headers to 1.2.191
+- xgl: Support cache convert shader module
+- xgl: Workaround for Quake II RTX performance until bug is fixed
+- xgl: Support uber-fetch shader in Vulkan driver
+- xgl: Enable flat scratch for navi21
+- xgl: Fix SwapChain::Create
+- xgl: Update PAL version in Vulkan to 677
+- xgl: Align subpasses in RenderPassCreateInfo
+- xgl: Disable module cache for x86 build
+- pal: CMake cleanup
+- pal: Move PA_STATE_STEREO_X reg from UCmdBuf to UQueueCtx
+- pal: Fix corruption issue when turning on DebugOverlayEnable
+- pal: Some cmdbuffer/dispatch cleanup
+- pal: [cmake] Replace pal_build_parameter
+- pal: Debug BitfieldIsSet assertion in ScaledCopyImageGraphics
+- pal: [genSetting] Add more complex BuildType support for setting
+- pal: SPI_PERF_RA_* counters report 0 on all GFX9 hardware
+- pal: Create new PalAbi namespace for future handling of multiple ABI's
+- pal: Replace constexpr with inline
+- pal: RPCS3 Corruption is observed on game window
+- pal: GPU Profiler: per-draw SPM traces can clobber each other
+- pal: Prevent PM4Optimizer from splitting
+- pal: Remove PAL_INLINE
+- pal: Remove DB_PRELOAD_CONTROL
+- pal: Fix untracked cmdAllocator destroying before cmdBuffer is deleted
+- pal: [CMDLOGGER] Remove shaderWrite flag from Presentable surface
+- pal: [GFX10] The "array_pitch" field of the SRD determines
+- pal: [AMDVLK][#236] Confusing implementation of VK_EXT_hdr_metadata
+
 * Thu Sep 09 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.6
 
 - xgl: Update PAL Interface in Vulkan to 675
