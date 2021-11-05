@@ -1,10 +1,10 @@
-%global amdvlk_commit               e4a5c9f48ff98fe6f37f54c6c850e8dfad7dfac4
+%global amdvlk_commit               ab3f291f48bf5867b8d614f9fbd501b51bb2e769
 # commits from AMDVLK/default.xml
-%global llvm_commit                 2108ca319b3f5d5e84603e6644365cd14a58c0de
-%global llpc_commit                 b8ba5f3626f07dbf76026a05394bc2b5c99fe713
-%global xgl_commit                  9244bd33f361bbfd23df14789e82457a63d70d5d
-%global pal_commit                  8e5baae7cfdd885974013337e556e9dc955b6737
-%global spvgen_commit               ac9911afeff0e33ee240c01a593b156f0bc6f6af
+%global llvm_commit                 3ced1fbbcda4583e7070f0089829467c53ece98b
+%global llpc_commit                 c937b09ac21acb5bc50d992ee4e0fc3a2a39377c
+%global xgl_commit                  477361f6a225d7dc1bfc2fe7d6431af4caaf39f5
+%global pal_commit                  d5826cb5d1a353156ece858dbfecab1ec66ebaa5
+%global spvgen_commit               e0855d9a0370652ca14718758d71057c24403dd0
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               39f8940199e60c44d4211cf8165dfd12876316fa
 # commits from spvgen/CHANGES
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2021.Q3.7
+Version:       2021.Q4.1
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,65 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Fri Nov 05 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q4.1
+
+- xgl: Runtime Setting `PipelineCachingEnvironmentVariable' Incorrect
+       Behavior
+- xgl: Add app profile for angle
+- xgl: Handle all flag combinations in VkToPalWaitPipePoint()
+- xgl: Update PAL Version in XGL 685
+- xgl: Remove CreatePartialPipelineBinary()
+- xgl: Implement Dispatch Tunneling
+- xgl: Add optional preferred present mode for XWayland
+- xgl: Fix compiler warnings
+- xgl: limit the maximun memory size of pipeline cache in 32-bit system
+- xgl: Update Khronos Vulkan Headers to 1.2.195
+- xgl: Fix memory size requirements
+- xgl: Assert if the gpu address is not found
+- xgl: Support VK_EXT_ycbcr_image_arrays extension implementation.
+- pal: Fix pal language support issues
+- pal: Missed overriding this default for Gfx9+
+- pal: Fix c++14 constexpr warnings
+- pal: Add RGP detailed thread trace support for compute
+- pal: Clean up gfx9 image GetAddrHi/Lo helper functions
+- pal: Remove redundant parse of metadata that is unused afterwards
+- pal: Fix a typo in GfxCmdBuffer::LeakPerPipelineStateChanges
+- pal: DCC Present Pal Setting
+- pal: Replace indirect multi draws in execute indirects IB2 with
+       indirect draws
+- pal: Resource correlation
+- pal: Remove PAL_DBG_COMMAND_COMMENTS
+- pal: PAL: Need to program the high address bits for CB and DB
+       interaction
+- pal: Fix resolvePipelineStatsQuery
+- pal: Don’t allow to remove the layer system at build time
+- pal: Add StringBag and msgpack things
+- pal: Minor code cleanup, pal events
+- pal: Fix minor logging issue
+- pal: Do not call BitMaskScan intrinsics if the mask is zero
+- pal: Fix taking reference of local variable
+- pal: Move SPI_SHADER_IDX_FORMAT
+- pal: Better return values for all file ops
+- pal: Fix deadlock in MemoryCacheLayer: double locking in LRU
+       functionality
+- pal: Add support for the HSA ABI in PAL's native compute pipeline paths
+- pal: Optimize DbCountControl reg logic
+- pal: Disable D swizzle mode for RBPlus + BC + Gfx10 (Rearrange)
+- pal: Fix mapping of ENOSPC to Result
+- pal: Add supportFloatAtomics flag
+- pal: RELEASE_MEM EOS event should avoid issuing GCR_CNTL
+- pal: Fix some msaa rpm shader problem
+- pal: Fix missing pixel copy on pre-gfx9 asics
+- pal: Remove 'WaveRdy' token from "SqttTokenConfigNoInst"
+- pal: TDR observed with SPECviewperf2020 Energy on 4k display with ReBAR
+       enabled
+- pal: Allow Util::File to work with 64-bit file sizes
+- pal: Don't use graphics copy if not supported.
+- pal: Add optional preferred present mode for XWayland
+- pal: Implement the new version of the gfx10 "SQ counters cannot be
+       stopped" workaround
+- pal: Logger init fails should not fail all init
+
 * Thu Sep 30 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q3.7
 
 - xgl: Misc cleanup changes
