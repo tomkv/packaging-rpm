@@ -1,17 +1,17 @@
-%global amdvlk_commit               ab3f291f48bf5867b8d614f9fbd501b51bb2e769
+%global amdvlk_commit               8d70d12b7b3887622dddca01ae2d8f0312876d98
 # commits from AMDVLK/default.xml
-%global llvm_commit                 3ced1fbbcda4583e7070f0089829467c53ece98b
-%global llpc_commit                 c937b09ac21acb5bc50d992ee4e0fc3a2a39377c
-%global xgl_commit                  477361f6a225d7dc1bfc2fe7d6431af4caaf39f5
-%global pal_commit                  d5826cb5d1a353156ece858dbfecab1ec66ebaa5
-%global spvgen_commit               e0855d9a0370652ca14718758d71057c24403dd0
+%global llvm_commit                 63581e1504f3854df7d1ea7aab6af935da1b515d
+%global llpc_commit                 80b124752f5f689b21d46a3fd459b2df659de187
+%global xgl_commit                  da1a583a51c69c115f9144b68ec2bdf5b6519056
+%global pal_commit                  61409c1cea19a2ca5ad00461b1e75b3ab46c4389
+%global spvgen_commit               0aa19873514a8272dfdc5cb8861859a52f5de503
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               39f8940199e60c44d4211cf8165dfd12876316fa
 # commits from spvgen/CHANGES
-%global glslang_commit              9431c53c84c14fa9e9cd37678262ebba55c62c87
-%global spirv_tools_commit          1020e394cb1267332d58497150d2b024371a8e41
-%global spirv_headers_commit        85b7e00c7d785962ffe851a177c84353d037dcb6
-%global spirv_cross_commit          2e1b5fb39ebc2ef4cb77005f8267e4f3a6241ba1
+%global glslang_commit              b9ba4c5743997abbc0df858f2458a86d62af6a25
+%global spirv_tools_commit          4578db3c419a9300485155fd8b81f6b1d822b5fb
+%global spirv_headers_commit        19e8350415ed9516c8afffa19ae2c58559495a67
+%global spirv_cross_commit          e4243b898ca5e1e19e48725a991ada1e5744691c
 
 %global amdvlk_short_commit         %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit           %(c=%{llvm_commit}; echo ${c:0:7})
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2021.Q4.1
+Version:       2021.Q4.2
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,85 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+
+* Fri Dec 10 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q4.2
+
+- xgl: Fixed memory leak in ImportWin32Fence by moving = nullptr.
+- xgl: Add ColorTargetInfo and DepthTargetInfo to ShaderEarlyCompileInfo
+- xgl: Stop allocating framebuffer memory for immutable descriptors
+- xgl: Fix segfault in resource opt
+- xgl: dEQP-GLES2.functional.clipping.point.wide_point_clip fail on angle
+- xgl: Implement fast-link mode
+- xgl: Enable extension VK_EXT_index_type_uint8
+- xgl: Fix assert in PalToVkSwapChainFormat
+- xgl: Implementation of indirect pipelinel layout scheme
+- xgl: Update Khronos Vulkan Headers to 1.2.197
+- xgl: VkGraphicsPipelineCreateInfo::flags should not inherit from
+       library
+- xgl: Move some of multisampling states to FOI
+- xgl: VK_KHR_format_feature_flags2 - Expose the extension
+- xgl: Reduce size of extensions class
+- xgl: Early_fragment_test: Add depth and stencil state for pipelineInfo
+- xgl: Update PAL Version in XGL 687
+- xgl: VK_EXT_border_color_swizzle - Expose the extension
+- xgl: VK_KHR_dynamic_rendering Expose Extension
+- xgl: Refactor code about pipeline layout for the new scheme
+- xgl: VK_EXT_primitive_topology_list_restart - Expose the extension
+- xgl: Expose VK_EXT_pageable_device_local_memory
+- xgl: VK_KHR_format_feature_flags2 - Expose the extension
+- xgl: Fix include issue about vk_pipeline.h
+- xgl: VK_EXT_ycbcr_image_arrays - Expose the extension
+- xgl: Separate shader early compilation from BuildShaderModule()
+- xgl: Change opensource package libssl dependency to soft dependency
+- xgl: Build resouce mapping if PRS or FGS is available
+- xgl: Sets sample pattern before DS clears/resolves
+- xgl: World War Z: Aftermath - Tuning Opts
+- xgl: Segmentfault when build with VKI_DYNAMIC_RENDERING=ON using
+       gcc>=6.1
+- xgl: Disable NGG culling for Rainbow Six Siege perf
+- pal: Trace data and RDF file fix
+- pal: Adds a Public Setting to control whether the ACE is used for
+       Indirect Cmd Generation
+- pal: Remove gl2uncached from GpaSession
+- pal: Update pal_lz4 to LZ4 version 1.9.3
+- pal: Cleanup pal subprojects
+- pal: Fix invalid memory access issue
+- pal: Fix access violation issue in Hashmap DPWARN
+- pal: PalVersionHelper cleanup
+- pal: Added include guards for all PAL Trace related code
+- pal: Fix settings generation
+- pal: Update Hash Map tuning params
+- pal: Initializes a trace session within PAL
+- pal: 12 bit MM format support
+- pal: Bring LZ4 back into PAL source
+- pal: Use delete in PAL_DISALLOW_COPY_AND_ASSIGN /
+       PAL_DISALLOW_DEFAULT_CTOR
+- pal: modify settings in running state
+- pal: Add Gs/Ngg guard
+- pal: RDF lib latest update
+- pal: Output HexValue in JsonWriter as string
+- pal: Handle zero metadata on cross GPU BOs
+- pal: Add helper to detect debugger
+- pal: Add "HexValue" to JsonWriter
+- pal: For non-BC views, set pitch=0
+- pal: Signal error from gen script exit status
+- pal: Add missing override in SetHdrMetaData
+- pal: Replaced pure virtual method with virtual method
+- pal: sqtt_file_format.h file updates
+- pal: Missed setting cmake flag in PAL
+- pal: Add logging for CmdBindStreamOutTargets
+- pal: Initial implementation for trace data I/O
+- pal: AUTO_FLUSH_MODE Workaround Implemented
+- pal: Make sure all pairs of
+       AddCommandStreamReference/RemoveCommandStreamReference are called
+       under the same conditions.
+- pal: Remove ComputePipeline::pipeBinary() which is not used
+- pal: Fix "unknown option '/std:c++11'"
+- pal: Fix an assert on Navi
+- pal: [CMake] Fix 2 CMake Issues
+- pal: PAL restricts YUV planar image views to 1 layer which is against
+       the spec
+
 * Fri Nov 05 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q4.1
 
 - xgl: Runtime Setting `PipelineCachingEnvironmentVariable' Incorrect
