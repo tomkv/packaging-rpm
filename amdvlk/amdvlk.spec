@@ -1,9 +1,9 @@
-%global amdvlk_commit               8d70d12b7b3887622dddca01ae2d8f0312876d98
+%global amdvlk_commit               a85e01fc82fb2cceb2d9ef62842bae49a0e7ea32
 # commits from AMDVLK/default.xml
-%global llvm_commit                 63581e1504f3854df7d1ea7aab6af935da1b515d
-%global llpc_commit                 80b124752f5f689b21d46a3fd459b2df659de187
-%global xgl_commit                  da1a583a51c69c115f9144b68ec2bdf5b6519056
-%global pal_commit                  61409c1cea19a2ca5ad00461b1e75b3ab46c4389
+%global llvm_commit                 2524f51bb8df0dff1cd7facc8207d129261c8647
+%global llpc_commit                 87df95ca4b58cc508f4fced3bcacddd728616615
+%global xgl_commit                  86d18df827679ab72c3a7b2c701d0d0155e57e86
+%global pal_commit                  bcec463efe5260776d486a5e3da0c549bc0a75d2
 %global spvgen_commit               0aa19873514a8272dfdc5cb8861859a52f5de503
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               39f8940199e60c44d4211cf8165dfd12876316fa
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2021.Q4.2
+Version:       2021.Q4.3
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,60 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+
+* Mon Dec 27 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q4.3
+
+- xgl: TilingOptMode::OptForSpace cannot be used with block compressed
+       format
+- xgl: VkFormatProperties.bufferFeatures should be zero for depth/stencil
+       formats
+- xgl: Initialize enabled features for device
+- xgl: bufferFeatures for Depth/Stencil formats
+- xgl: Update PAL Version in XGL 692
+- xgl: dEQP-VK.dynamic_rendering.*cmdbuffer* - failing on Linux
+- xgl: VK_EXT_global_priority_query - Expose the extension
+- xgl: Improve check for privateData
+- xgl: Update Khronos Vulkan Headers to 1.2.201
+- xgl: Update XGL driver reported CTS Compliance version
+- xgl: Minor rework of physical device properties
+- xgl: Check compareFunc before set the truncateCoords flag
+- xgl: Support SPIR-V 1.5 upgrade to SPIR-V 1.6
+- xgl: Add a conversion from vkgc to vk shader stage
+- xgl: Fixed memory leak of DeferredHostOperation
+- xgl: Fix another leak of fence memory
+- xgl: Avoid shader module caching by default
+- xgl: Update hash func for VRS render state cache objects
+- xgl: Set disableSingleMipAnisoOverride=1
+- xgl: [LLPC] Enable xnack code gen only if it is enabled in the driver
+- xgl: Convert DbgBarrierCmd to 64bit
+- pal: Add ReadSetting cross-platform wrapper
+- pal: Correct RereadSetting name
+- pal: dEQP-VK.dynamic_rendering.*cmdbuffer* - failing on Linux
+- pal: Incorrect CPU logical cores shown in the RGP Device Configuration
+- pal: WriteBufferImmediate  CP copydata top: ME->PFP and Cleanup
+- pal: Implementation of device info trace source
+- pal: Add option to open shared memory with globalGpuVa
+- pal: [Streaming SDK 1.5] Pass frame index from the app to KMD
+- pal: Debug logging support in PAL
+- pal: Fixup Linux ArchiveFile implementation
+- pal: Adjust default tessFactorBufferSizePerSe
+- pal: Tweak Shader Cache Hash Map settings to reduce memory usage
+- pal: StringView class implementation
+- pal:  Hook up memory budget value in PAL to SW addrlib
+- pal: Add ICmdBuffer::CmdCopyMemoryByGpuVa
+- pal: Fix settings script
+- pal: PAL_NOT_IMPLEMENTED Assert triggers with MGPU
+- pal: Fix for SPM regr
+- pal: Remove pointless cache layer alerts
+- pal: Null device dummy values for swizzling
+- pal: Add utility function to read a file into memory
+- pal: Use old SPM layout until RGP is ready
+- pal: Ubuntu21.04+Wayland Vulkan perf ~40% lower compared U20.04
+- pal: Add sample info to ShaderEarlyCompileInfo
+- pal: Fix InitBusAddressableGpuMemory decorator
+- pal: Updated waForce1kHtileMin size in Gfx9
+- pal: RDF lib update
+- pal: Clean up NullDevice tables
 
 * Fri Dec 10 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q4.2
 
