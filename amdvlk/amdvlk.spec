@@ -1,10 +1,10 @@
-%global amdvlk_commit               a85e01fc82fb2cceb2d9ef62842bae49a0e7ea32
+%global amdvlk_commit               9f829604d89370cdc7377cef981ec56552cc9f35
 # commits from AMDVLK/default.xml
-%global llvm_commit                 2524f51bb8df0dff1cd7facc8207d129261c8647
-%global llpc_commit                 87df95ca4b58cc508f4fced3bcacddd728616615
-%global xgl_commit                  86d18df827679ab72c3a7b2c701d0d0155e57e86
-%global pal_commit                  bcec463efe5260776d486a5e3da0c549bc0a75d2
-%global spvgen_commit               0aa19873514a8272dfdc5cb8861859a52f5de503
+%global llvm_commit                 665a520d8f74057333d70cf7261ce46ec4afef44
+%global llpc_commit                 4f9ca6cdeb6b64f0f30b24a9060367234c2dcf44
+%global xgl_commit                  d01032b9f8f7f3b7ce54a3078e9aae149386b716
+%global pal_commit                  0a0a4ae4ab062d31fcd68863c35952967a8060ee
+%global spvgen_commit               6c2f36bcf0f8ff7ba8d20c8b789ca6346d1e16b1
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               39f8940199e60c44d4211cf8165dfd12876316fa
 # commits from spvgen/CHANGES
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2021.Q4.3
+Version:       2022.Q1.1
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -74,7 +74,7 @@ The AMD Open Source Driver for Vulkan® is an open-source Vulkan driver
 for Radeon™ graphics adapters on Linux®. It is designed to support the
 following AMD GPUs:
 
-    Radeon™ RX 6900/6800/6700 Series
+    Radeon™ RX 6900/6800/6700/6600/6500 Series
     Radeon™ RX 5700/5600/5500 Series
     Radeon™ RX Vega Series
     Radeon™ RX 400/500 Series
@@ -144,6 +144,32 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Thu Jan 20 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q1.1
+
+- xgl: Add Navi24 support
+- xgl: Move pointSizeUsed to PipelineMetadata
+- xgl: Enhance ASTC software Gpu decode pass: add cache for pipeline
+       binaries, improve CPU performance,fix memory leak
+- xgl: Update PAL Version in XGL to 696
+- xgl: Change order of exception handling, and add attachment count guard
+- xgl: Sampler compareFunc with disabled data comparison
+- xgl: PAL Version in XGL Clean Up
+- xgl: Cleanup VK_IGNORE macros
+- xgl: Extract command buffer ring to new class
+- xgl: Add change to enable overriding the VRAM size with a value higher
+       than actually present on the GPU
+- xgl: Add 3rd heap choice
+- xgl: Avoid redundant get PAL device props call
+- pal: Add Navi24 support
+- pal: Use atomic increment on swizzle index
+- pal: Replace static const char* with constexpr const char*
+- pal: Remove OSS1 and OSS2 functionality
+- pal: Let Util::Vector handle moved values
+- pal: Add a nullptr check for the pipeline
+- pal: Silent a wait point assertion
+- pal: Add usage hints to linux archivefile impl and remove datasync
+- pal: For chips that are sufficiently small, disable NGG Late Alloc
+- pal: Add missing macros in conversion function of AsicInfoTraceSource
 
 * Mon Dec 27 2021 Tomas Kovar <tkov_fedoraproject.org> - 2021.Q4.3
 
