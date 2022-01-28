@@ -1,9 +1,9 @@
-%global amdvlk_commit               9f829604d89370cdc7377cef981ec56552cc9f35
+%global amdvlk_commit               39f8940199e60c44d4211cf8165dfd12876316fa
 # commits from AMDVLK/default.xml
-%global llvm_commit                 665a520d8f74057333d70cf7261ce46ec4afef44
-%global llpc_commit                 4f9ca6cdeb6b64f0f30b24a9060367234c2dcf44
-%global xgl_commit                  d01032b9f8f7f3b7ce54a3078e9aae149386b716
-%global pal_commit                  0a0a4ae4ab062d31fcd68863c35952967a8060ee
+%global llvm_commit                 7a66188b14010f5fdb65a3edf1e2cb5ffef0da80
+%global llpc_commit                 a9be3c24b81816b092282f25948b966f6b35a877
+%global xgl_commit                  7f50fdca1959454bd6e27f984fa2b29e7d5a8789
+%global pal_commit                  b638e90ca4e6e5a6fc4f00029d62f8e064aa18eb
 %global spvgen_commit               6c2f36bcf0f8ff7ba8d20c8b789ca6346d1e16b1
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               39f8940199e60c44d4211cf8165dfd12876316fa
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2022.Q1.1
+Version:       2022.Q1.2
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,33 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Fri Jan 28 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q1.2
+
+- xgl: VK_EXT_provoking_vertex - Expose the extension
+- xgl: Enable SPIRV 1.6 in Cmake builds
+- xgl: Expose VK_EXT_depth_clip_control
+- xgl: Add XGL_ENABLE_PRINTS_ASSERTS cmake option
+- xgl: Enable Vulkan API 1.3 build by default
+- xgl: Update Khronos Vulkan Headers to 1.3.203
+- xgl: Update PAL Version in XGL 697
+- xgl: Disable NGGCulling when using relocatable to compile shader
+- xgl: Fix build error when enable astc decompress layer
+- xgl: OverrideShaderStage panel setting is inconsistent with driver enum
+       definition
+- xgl: Remove unnecessary const in type to fix warning
+- pal: Handle both SPM DB chunk types in the GPU profiler
+- pal: HSA ABI: Let the client set the thread group size in
+       ComputePipelineCreateInfo.
+- pal: Fix bug related to setting for disabling ExecuteIndirect
+       CmdGeneration using ACE
+- pal: Upgrade devdriver
+- pal: Add visualization for the debugger for StringBag
+- pal: Add FMASK swizzle mode in metadata
+- pal: Add support for MALL SPM
+- pal: Fix comparing the string returned by pfnXcbRandrGetOutputInfo
+       after free
+- pal: Make some util headers not depend on pal core
+
 * Thu Jan 20 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q1.1
 
 - xgl: Add Navi24 support
