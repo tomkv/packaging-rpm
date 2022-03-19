@@ -1,17 +1,17 @@
-%global amdvlk_commit               39f8940199e60c44d4211cf8165dfd12876316fa
+%global amdvlk_commit               a5c5765efbec508b44088a456b4b631854c861e1
 # commits from AMDVLK/default.xml
-%global llvm_commit                 7a66188b14010f5fdb65a3edf1e2cb5ffef0da80
-%global llpc_commit                 a9be3c24b81816b092282f25948b966f6b35a877
-%global xgl_commit                  7f50fdca1959454bd6e27f984fa2b29e7d5a8789
-%global pal_commit                  b638e90ca4e6e5a6fc4f00029d62f8e064aa18eb
-%global spvgen_commit               6c2f36bcf0f8ff7ba8d20c8b789ca6346d1e16b1
+%global llvm_commit                 1749013595eaedc15e635627ef2a618da48de75f
+%global llpc_commit                 232e3aa5802b16a2274d734462a3bc211e42c7f5
+%global xgl_commit                  1ce25b1ed8829c27645edd646a3289e4c524c84c
+%global pal_commit                  2483d46fa27c30502e497ea169ee53b142e9fa06
+%global spvgen_commit               95304f054cb80a35fb46d5de9c0f9be6e1c9f081
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               39f8940199e60c44d4211cf8165dfd12876316fa
 # commits from spvgen/CHANGES
-%global glslang_commit              b9ba4c5743997abbc0df858f2458a86d62af6a25
-%global spirv_tools_commit          4578db3c419a9300485155fd8b81f6b1d822b5fb
-%global spirv_headers_commit        19e8350415ed9516c8afffa19ae2c58559495a67
-%global spirv_cross_commit          e4243b898ca5e1e19e48725a991ada1e5744691c
+%global glslang_commit              6624e1367309630b2f6df3cf93a5f864e89973f9
+%global spirv_tools_commit          8a40f6de57d7b78bc431678d90aa8a570d1631f2
+%global spirv_headers_commit        b8047fbe45f426f5918fadc67e8408f5b108c3c9
+%global spirv_cross_commit          a1bb29ccbb285618028a24efb3fe4f6718cee0b5
 
 %global amdvlk_short_commit         %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit           %(c=%{llvm_commit}; echo ${c:0:7})
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2022.Q1.2
+Version:       2022.Q1.3
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,40 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Sat Mar 19 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q1.3
+
+- xgl: Ignore vertex input when mesh stage presents
+- xgl: Set provoking vertex mode to GraphicsPipelineBuildInfo
+- xgl: Fix pNext chain in vk_buffer
+- xgl: Update Khronos Vulkan Headers to 1.3.205
+- xgl: Fix mismatch between indirect and compact pipeline layouts
+- xgl: Implement VK_KHR_maintenance4
+- xgl: Update PAL Version to 701
+- xgl: Fix BuildClearBox logical error
+- xgl: Ignore unknown feature structs
+- xgl: Include node name/index in pipeline cache id calculation
+- xgl: Fix the CSGO corruption observed on character helmet and fonts
+- xgl: Reduce size of dynamic descriptor data
+- pal: Add a 'BitIter' helper
+- pal: Add multikeyboard support to PAL GPU Profiler on Linux
+- pal: Apply trimming to CmdAllocator
+- pal: Make freeing Deque<PodType> faster
+- pal: App-detect initial DCC clear value
+- pal: Implement VK_KHR_maintenance4
+- pal: palHashLiteralString: fix bytes >= 0x80
+- pal: Add UserData SpillTable support for ExecuteIndirect packet
+- pal: Add a ClockMode setting to the GPU Profiler
+- pal: New Util::Span
+- pal: Fix bug in ValidateGraphicsUserData
+- pal: Fix coord warnings when using SDMA upload path w/ Framebenches
+- pal:  Copy metadata header by pfp to solve RenderDoc corruption
+- pal: Redirect Decorator's GetTraceSession()
+- pal: Re-write spill table if pipeline changed
+- pal: Debug logging support in PAL
+- pal: Fix gles cts failure
+       'GLES3.functional.polygon_offset.fixed16_render_with_units',
+       vulkan as angle backend
+
 * Fri Jan 28 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q1.2
 
 - xgl: VK_EXT_provoking_vertex - Expose the extension
