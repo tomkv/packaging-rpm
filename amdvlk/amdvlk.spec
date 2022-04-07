@@ -1,10 +1,10 @@
-%global amdvlk_commit               a5c5765efbec508b44088a456b4b631854c861e1
+%global amdvlk_commit               e7e058da85413c179c6191137f4bb2eb0cecf7df
 # commits from AMDVLK/default.xml
-%global llvm_commit                 1749013595eaedc15e635627ef2a618da48de75f
-%global llpc_commit                 232e3aa5802b16a2274d734462a3bc211e42c7f5
-%global xgl_commit                  1ce25b1ed8829c27645edd646a3289e4c524c84c
-%global pal_commit                  2483d46fa27c30502e497ea169ee53b142e9fa06
-%global spvgen_commit               95304f054cb80a35fb46d5de9c0f9be6e1c9f081
+%global llvm_commit                 219f568b0b603b2d9a64a44264db5f64ec5e9802
+%global llpc_commit                 c0dbc976ccaed1873272f99e1e254b2a1114a50b
+%global xgl_commit                  25569e8bf7ade7cd304697c18f49a8ff893b07fa
+%global pal_commit                  1ff58cafbae03aa571b0dde83aefd0d1fdfb8a9b
+%global spvgen_commit               87983dba34c24ce5ac4f9c17d9ddea0890758e33
 %global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
 %global cwpack_commit               39f8940199e60c44d4211cf8165dfd12876316fa
 # commits from spvgen/CHANGES
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2022.Q1.3
+Version:       2022.Q2.1
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,51 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Thu Apr 07 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q2.1
+
+- xgl: Update PAL Version to XGL 720
+- xgl: Update Khronos Vulkan Headers to 1.3.208
+- xgl: Fix GFXR crash when replaying Doom.E RT trace
+- xgl: Expose the extension VK_KHR_workgroup_memory_explicit_layout
+- xgl: Fix X4 Foundations MSAA 2x Corruption
+- xgl: Fix Valheim Corruption
+- xgl: Fix Corruption in God of War DXVK
+- xgl: Update physical device entry points with a new type
+- xgl: Fix the issue where Vulkan timeline semaphore layer not working
+- xgl: Hook up vkCmdTrimCommandPool
+- xgl: Use imported/xxx codes by default
+- xgl: Fix Dota2 crashes with Vulkan driver on Ubuntu22.04
+- xgl: Fix CTS testcase
+       dEQP-VK.api.external.semaphore.sync_fd.info_timeline failure on
+       linux
+- xgl: Fix llpc with multiple GPUs
+- pal: Implement ViewInstancing for EI Packet
+- pal: Account for gpu mem offset in base offset calculation
+- pal: Optimize DCC fast clear to dispatch once instead of per slice
+- pal: Fix corruption at top of Youtube video w/ RIS and Hardware
+       Acceleration enabled
+- pal: Add call to destroy RPC server when a tool ignores the driver
+- pal: Split float atomic flag into 2 flags of 32- and 64-bit types
+- pal: GPU profiler capture trigger key implementation
+- pal: GLInterop updating svm support
+- pal: Fix terminator position in StringBag
+- pal: Fix cmd buffer dumper for ganged streams
+- pal: Add StringView in StringBag
+- pal: Remove PAL's memory barrier helper functions and permit use of
+       std::atomic
+- pal: update devdriver to v22.02.28.1
+- pal: FrameTraceController implementation
+- pal: Add interface version check for enableEIPacket
+- pal: Center guardband origin within viewport(s) center
+- pal: SQTT WA for chips with RB harvesting
+- pal: Override default enableExecuteIndirectPacket for Gfx10
+- pal: Initial VBTable support for ExecuteIndirect
+- pal: ApiInfoTraceSource implementation
+- pal: Handle RGP Markers on Ganged ACE
+- pal: Rework how Settings would invoke EI Packet path.
+- pal: Add Gfx9 and Gfx10.1 support for ExecuteIndirect Packet
+- pal: Support for new ExecuteIndirect packet
+
 * Sat Mar 19 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q1.3
 
 - xgl: Ignore vertex input when mesh stage presents
