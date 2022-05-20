@@ -1,17 +1,17 @@
-%global amdvlk_commit               e7e058da85413c179c6191137f4bb2eb0cecf7df
+%global amdvlk_commit               cab8f8631d99240a6503872083bd544fe85f628f
 # commits from AMDVLK/default.xml
 %global llvm_commit                 219f568b0b603b2d9a64a44264db5f64ec5e9802
-%global llpc_commit                 c0dbc976ccaed1873272f99e1e254b2a1114a50b
-%global xgl_commit                  25569e8bf7ade7cd304697c18f49a8ff893b07fa
-%global pal_commit                  1ff58cafbae03aa571b0dde83aefd0d1fdfb8a9b
-%global spvgen_commit               87983dba34c24ce5ac4f9c17d9ddea0890758e33
-%global metrohash_commit            3c566dd9cda44ca7fd97659e0b53ac953f9037d2
-%global cwpack_commit               39f8940199e60c44d4211cf8165dfd12876316fa
+%global llpc_commit                 be276de91f44263a838c35fdd3fa28a1598e7b42
+%global xgl_commit                  9478a913fc7d2ceb4b6eae84bb87fa3e64f08521
+%global pal_commit                  ca98822bbccc5821a18aa78fb76b43e0ff29f8ef
+%global spvgen_commit               cd629c08af16529587e1a6486f8b9afa0a475636
+%global metrohash_commit            18893fb28601bb9af1154cd1a671a121fff6d8d3
+%global cwpack_commit               4f8cf0584442a91d829d269158567d7ed926f026
 # commits from spvgen/CHANGES
-%global glslang_commit              6624e1367309630b2f6df3cf93a5f864e89973f9
-%global spirv_tools_commit          8a40f6de57d7b78bc431678d90aa8a570d1631f2
-%global spirv_headers_commit        b8047fbe45f426f5918fadc67e8408f5b108c3c9
-%global spirv_cross_commit          a1bb29ccbb285618028a24efb3fe4f6718cee0b5
+%global glslang_commit              6d937739953b871453dbca46d91268901ac51b85
+%global spirv_tools_commit          b3c1790632737f6be2c0e1c2ea5bd844da9f17a9
+%global spirv_headers_commit        4995a2f2723c401eb0ea3e10c81298906bf1422b
+%global spirv_cross_commit          44691aa9754d9db9f8c0828e5ca6d2909c671200
 
 %global amdvlk_short_commit         %(c=%{amdvlk_commit}; echo ${c:0:7})
 %global llvm_short_commit           %(c=%{llvm_commit}; echo ${c:0:7})
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2022.Q2.1
+Version:       2022.Q2.2
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,63 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Fri May 20 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q2.2
+
+- xgl: BasemarkGPU1.2: amdvlk performs 5-10% lower than RADV
+- xgl: Force default sample pattern with preBindDefaultState setting
+- xgl: Fix angle failures: add support for flag lowZplanePolyOffsetBits
+- xgl: Consistently touch vk_physical_device.cpp on each build
+- xgl: Change setting default to disable acquire-release interface
+- xgl: Update Khronos Vulkan Headers to 1.3.212
+- xgl: Fix for blit-copy test failures on gfx9
+- xgl: Add missing CmdSetMsaaQuadSamplePattern calls
+- xgl: Update PAL Version to 729
+- xgl: Re-enable shader prefetching
+- xgl: move m_sharedCmdAllocator to be a bit in m_flags
+- xgl: Break Barrier infos into chunks and call PAL multiple times
+- xgl: Disable fragmentShadingRateWithShaderSampleMask
+- pal: Build-time Settings Generation
+- pal: Add full-range copy support for EQAA image
+- pal: Cleanup and fixes Gfx9 APUs having ViewInstancing ExecuteIndirect
+       failures.
+- pal: Add isShaderWriteable to BuildImageViewInfo
+- pal: Add flag lowZplanePolyOffsetBits
+- pal: Optimize BarrierAcquire() to group all non-ranged changed acquire
+       sync into global sync
+- pal: Fix AcePreambleStream when compute engine is disabled
+- pal: Update devdriver to v22.04.19
+- pal: PS_DONE doesn't guarantee VS_DONE if no PS wave
+- pal: Fmask saturate error in RsrcProcMgr::ClearFmask
+- pal: Fix typo in RsrcPropMgr: pitchInMetaBlks should be mask down to 7
+       bits and sliceBits should be mask down to 6 bit
+- pal: Make optimization of clearing csBltActive to false more
+       aggressively
+- pal: Reset gfxBltExecEopFenceVal/csBltExecEopFenceVal in
+       GfxCmdBuffer::ResetState()
+- pal: Optimize GcrCntl only case in IssueReleaseSync()
+- pal: Remove command chunk's CPU reference counter
+- pal: Align SpillTable to cacheline size to prevent IB2 from reading
+       potentially wrong data
+- pal: Fix ACE Offload Flag in ChipPropertes
+- pal: Validate Pipeline depth clamp
+- pal: Fix uint8 cast for RMT slice count
+- pal: Add Util::Abi::GfxIpVersionToMachineType
+- pal: Initial support for spoof any asic
+- pal: Add fixes for ExecuteIndirect packet
+- pal: Rework CmdAllocator's Trim to use a temp hash map
+- pal: Set proper stencilLayout in CopyDepthStencilImageGraphics
+- pal: Fix bug in MAX_PRIMS_PER_BATCH
+- pal: Fix CopyDepthStencilImageGraphics and ScaledCopyImageGraphics
+- pal: Fix the corruption observed on Door
+- pal: Add HIP API type enum for GpaSession
+- pal: Remove useAcqRelInterface flag
+- pal: AMF PugetBench performance enhancement through VCN decode power
+       profile
+- pal: Add a "bool freeMemory" parameter to ICmdAllocator::Reset
+- pal: Add support for KMD Framelock
+- pal: Add settings service support
+- pal: Allow clients to set specific guardband clip ratios
+
 * Thu Apr 07 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q2.1
 
 - xgl: Update PAL Version to XGL 720
