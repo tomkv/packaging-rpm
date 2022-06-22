@@ -1,10 +1,10 @@
-%global amdvlk_commit               cab8f8631d99240a6503872083bd544fe85f628f
+%global amdvlk_commit               f5f3eced60fd0ba2125fb2b3de8be0f892fbf2dc
 # commits from AMDVLK/default.xml
-%global llvm_commit                 219f568b0b603b2d9a64a44264db5f64ec5e9802
-%global llpc_commit                 be276de91f44263a838c35fdd3fa28a1598e7b42
-%global xgl_commit                  9478a913fc7d2ceb4b6eae84bb87fa3e64f08521
-%global pal_commit                  ca98822bbccc5821a18aa78fb76b43e0ff29f8ef
-%global spvgen_commit               cd629c08af16529587e1a6486f8b9afa0a475636
+%global llvm_commit                 ff4dc0eccd74424c9352f8d8ee80f3b4913df35f
+%global llpc_commit                 61aabddf65ae7395ec934bce96fa4b7dd0e8880c
+%global xgl_commit                  a9a73115ee5c2d8c717ea39fc31a9d2ae1de8044
+%global pal_commit                  a40241a1e6f5970a9313efe686a79c0a429ea5eb
+%global spvgen_commit               eaa8c1dafbdb8db174b30919fcba424579a8c991
 %global metrohash_commit            18893fb28601bb9af1154cd1a671a121fff6d8d3
 %global cwpack_commit               4f8cf0584442a91d829d269158567d7ed926f026
 # commits from spvgen/CHANGES
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2022.Q2.2
+Version:       2022.Q2.3
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -144,6 +144,53 @@ install -m 755 xgl/build/spvgen/spvgen.so %{buildroot}%{_libdir}
 %{_libdir}/spvgen.so
 
 %changelog
+* Wed Jun 22 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q2.3
+
+- xgl: Fix CTS Failures observed with Latest Vulkan Loader
+- xgl: Update PAL Version in XGL to 739
+- xgl: Update Khronos Vulkan Headers to 1.3.216
+- xgl: Add GPU path for ETC2 buffer copy to image
+- xgl: Pass resource layout to comipler
+- xgl: Add check for FORMAT_FEATURE_FRAGMENT_SHADING_RATE
+- xgl: Check supportImageViewMinLod
+- xgl: Fix/silence pylint warnings
+- xgl: Fix corruption in Shadow of the Tomb Raider
+- xgl: Support DXT5 Gpu encode pass for cloud gaming
+- xgl: Fix Vulkan32 driver crash when testing amf samples
+- xgl: Users don't need to provide layout if they don't want to create a
+       library without PRS or FGS
+- xgl: Fix comiling error on the linux redhat machine
+- xgl: stableHash should not include "adaptForFastLink"
+- xgl: Cleanup definitions for Vega20, Raven2, and Renoir in cmake files
+- xgl: Fix CTS dEQP-VK.info.instance_extensions and
+       dEQP-VK.info.instance_layers failures
+- pal: Fix two potential bugs in acquire release barrier path
+- pal: Debug logging support in PAL
+- pal: Implement workaround for image metadata L2 channel misaligned
+       access
+- pal: update devdriver to v22.05.31
+- pal: Track aceCmdStream when callee contains task stage
+- pal: Barrier code cleanup and improvement
+- pal: Fix Vulkan CTS pipeline.cache cases
+- pal: Add INTERPOLATE_COMP_Z to fix depth buffer corruption in HW
+- pal: Move VrsRate to draw time validation with null vrs image opt
+- pal: Fix Incorrect CSThreadGroups counter results reported on RX 6800
+       hardware
+- pal: Add numActiveRbs to gfxipProperties.shaderCore
+- pal: PAL Static VMID Support
+- pal: Fix typo in SQTT CU index selection
+- pal: Expand gfxipProperties.flags.supportFloat32Atomics
+- pal: Fix potential racing issue of flushing RB cache
+- pal: Allow selection of custom WGP for profiling through panel settings
+- pal: Fix RMV showing Invisible heap allocations when SAM is enabled
+- pal: Move DisablePaBroadcast programming
+- pal: Add clientApiId to PlatformCreateInfo
+- pal: Add 'DisablePaBroadcast' setting
+- pal: Clarify the max SQ trace buffer size is 128MB in setting description
+- pal: Make sure all pairs of
+       AddCommandStreamReference/RemoveCommandStreamReference are called
+       under the same conditions
+
 * Fri May 20 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q2.2
 
 - xgl: BasemarkGPU1.2: amdvlk performs 5-10% lower than RADV
