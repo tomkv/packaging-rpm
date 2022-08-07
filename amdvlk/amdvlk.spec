@@ -1,9 +1,9 @@
-%global amdvlk_commit               48b5af58f794073656cccea458929f52ac4a3b49
+%global amdvlk_commit               17041c4fe6ad4abc88f138c07747903f7847c6ca
 # commits from AMDVLK/default.xml
-%global llvm_commit                 48f1931b2b7afd7e0800fa084b7c0c2176dabfd4
-%global llpc_commit                 d4763a9dcab538955bc5ad4b5c6e0139d8fe8949
-%global xgl_commit                  394cbffcf388482354c7874a841a30d386d9abc8
-%global pal_commit                  8a99ffaa533ee561af7075d413f6052ea37a1a04
+%global llvm_commit                 fe6c373e23704edb06c404c2610f6fb9a90f889d
+%global llpc_commit                 44dd0e37f17788d7ab94e49e8dcf49783fbf954d
+%global xgl_commit                  5efb8f835e0c2fae7be3ddcbe386ea52b6b9c1c9
+%global pal_commit                  f37604d37883165c21b6e929a87936d4a39392ba
 %global spvgen_commit               3b61d0ce836d3832e19931be198f6f619206de4c
 %global metrohash_commit            18893fb28601bb9af1154cd1a671a121fff6d8d3
 %global cwpack_commit               4f8cf0584442a91d829d269158567d7ed926f026
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2022.Q3.1
+Version:       2022.Q3.2
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -142,6 +142,59 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+
+* Sun Aug 07 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q3.2
+
+- xgl: Add Tuning Support for OverrideThreadGroupSwizzling in LLPC
+- xgl: Add capture replay support for sparse buffers
+- xgl: Add null set layouts with non-independent sets
+- xgl: Update Khronos vulkan Headers to 1.3.221
+- xgl: Setting to keep ACE shader prefetch enabled by default
+- xgl: Fix ASTC/ETC2 gpu decode path hang when load renderdoc capture
+- xgl: Add Support to tune OverrideThreadGroupSize
+- xgl: Update driverInfo with compiler info
+- xgl: Remove extra CmdSetMsaaQuadSamplePattern calls
+- xgl: Removed generic profiles, added new tuning parameter to Navi21
+       LLPC for Doom Eternal
+- xgl: Redefine the pipeline optimizer key to allow for a any amount of
+       shaders
+- xgl: Fix depth stencil ResolveAttachments
+- xgl: OverrideHeapChoiceToLocal=1 provides 1.6% gain in SniperElite5
+- xgl: Disable ACE Shader L2 Cache Warming
+- xgl: Cleanup Dynamic Rendering Resolve
+- xgl: Disable NoSignedZeros flag for SOTR
+- xgl: Fix primitive shading rate issue
+- xgl: Update PAL Version in XGL to 748
+- pal: If the metadata already contains entries for the user-data map,
+       don't attempt to parse the registers for that stage
+- pal: remove unused platform settings
+- pal: Move dist factors to PAL Public Settings struct & new defaults
+- pal: Let tools program Sq and SqWgp shader stage masks independently
+- pal: Fix conflict with Xlib under linux
+- pal: Refactor and optimize CmdReleaseThenAcquire path
+- pal: Fix for WriteEventCmd
+- pal: Override non-local heap size in amdgpuDevice by Platform settings
+- pal: Update debug overlay
+- pal: Compartmentalizing Pm4/GfxCmdBuffer cleanup
+- pal: Shrink pipelineStage and cacheCoherency flag sting length to avoid
+       run out of MaxPayloadSize (256)
+- pal: Debug logging support in PAL
+- pal: Ensure the transmitted tile swizzle mode is the actual tile
+       swizzle mode set for the image
+- pal: Fix
+       dEQP-VK.fragment_shading_rate.renderpass2.monolithic.fragstencil
+       .dynamic.noattachment* CTS failures on Navi2x
+- pal: Move m_computeRestoreState from GfxCmdBuffer to pm4CmdBuffer
+- pal: Clean up CmdAcquire/CmdReleaseEvent/CmdAcquireEvent asserts and
+       doxygen
+- pal: namespace resolution
+- pal: Remove unused core settings
+- pal: Deprecate BarrierInfo.pSplitBarrierGpuEvent/flags
+       .splitBarrierEarlyPhase/flags.splitBarrierLatePhase
+- pal: Only support NumSlotsPerEvent=1 and clean up related codes
+- pal: Remove the assert for numInterpolants when it set false
+- pal: Add a Gfx10RpmViewsBypassMallOnCbDbWrite field to the existing
+       "rpmViewsBypassMall" panel setting
 
 * Tue Jul 19 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q3.1
 
