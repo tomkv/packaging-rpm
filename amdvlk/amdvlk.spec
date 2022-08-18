@@ -1,9 +1,9 @@
-%global amdvlk_commit               17041c4fe6ad4abc88f138c07747903f7847c6ca
+%global amdvlk_commit               a6732d132aaeabc9845ba3ca20f1740c56805b9e
 # commits from AMDVLK/default.xml
-%global llvm_commit                 fe6c373e23704edb06c404c2610f6fb9a90f889d
-%global llpc_commit                 44dd0e37f17788d7ab94e49e8dcf49783fbf954d
-%global xgl_commit                  5efb8f835e0c2fae7be3ddcbe386ea52b6b9c1c9
-%global pal_commit                  f37604d37883165c21b6e929a87936d4a39392ba
+%global llvm_commit                 dc78f4c4b2455e6a29a2e19d80034654fb0d455d
+%global llpc_commit                 716cd8e5d6934bde88c086645551a2d064289894
+%global xgl_commit                  43fc25d001917232d01995bb99f1a29be905545f
+%global pal_commit                  f80b95b308a42eb8f54d22b14961f3ea53674584
 %global spvgen_commit               3b61d0ce836d3832e19931be198f6f619206de4c
 %global metrohash_commit            18893fb28601bb9af1154cd1a671a121fff6d8d3
 %global cwpack_commit               4f8cf0584442a91d829d269158567d7ed926f026
@@ -29,7 +29,7 @@
 
 Name:          amdvlk-vulkan-driver
 Epoch:         1
-Version:       2022.Q3.2
+Version:       2022.Q3.3
 Release:       1%{?dist}
 Summary:       AMD Open Source Driver For Vulkan
 License:       MIT
@@ -142,6 +142,40 @@ echo "MaxNumCmdStreamsPerSubmit,4" > %{buildroot}%{_sysconfdir}/amd/amdPalSettin
 %{_libdir}/amdvlk*.so
 
 %changelog
+* Thu Aug 18 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q3.3
+
+- xgl: Update PAL Version in XGL to 756
+- xgl: Fixed GetFirstMatchingShader in OverrideThreadGroupSwizzleMode to
+       use index instead of stage
+- xgl: Add shader profile for Navi21 LLPC Rage2
+- xgl: Update Khronos Vulkan Headers to 1.3.223
+- xgl: Added OverrideThreadGroupSwizzling support for LLPC
+- xgl: Apply the -fms-extensions flag to gcc and clang
+- xgl: Fix the issue that false build time shader profile never cause a
+       build failure
+- xgl: Remove XGL constant engine type count assumption
+- xgl: Make VK_EXT_private_data more robust
+- xgl: Fix patchControlPoints setup
+- xgl: Cleanup of ICD generator Python scripts
+- xgl: Setup extension VK_EXT_shader_module_identifier
+- pal: RPM refactor - Put P2P WA to Gfx9 rpm
+- pal: Update threadTraceTargetCu validation
+- pal: SDMA Reorganization
+- pal: Fix if statement to avoid asserts
+- pal: Fix build error in gpuDebugCmdBuffer.cpp
+- pal: Pm4::ComputeCmdBuffer and file renaming
+- pal: Replace PIPELINESTAT_START with STOP in preamble
+- pal: Pm4 Cleanup 2 on PAL
+- pal: Optimize CacheFlags in ReleaseThenAcquire call and avoid
+       unnecessary invalidation for caches like V$|K$|M$
+- pal: Add new code-object metadata
+- pal: RPM - Put the graphics copy version for CmdCopyImage and
+       CmdScaledCopyImage into new class Pm4RsrcProcMgr, derived from
+       rsrcProcMgr
+- pal: Non Render Target UAV should use compute for DCC decompress
+- pal: add support for ib2 dump
+- pal: Update CmdBufferBuildInfo w/ tess distribution factors, deprecate
+       public settings implementation
 
 * Sun Aug 07 2022 Tomas Kovar <tkov_fedoraproject.org> - 2022.Q3.2
 
